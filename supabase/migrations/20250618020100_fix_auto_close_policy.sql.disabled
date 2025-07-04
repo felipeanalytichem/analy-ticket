@@ -1,0 +1,16 @@
+-- 20250618020100_fix_auto_close_policy.sql
+-- Correct column reference in auto_close_schedule INSERT policy.
+
+DROP POLICY IF EXISTS auto_close_schedule_insert ON public.auto_close_schedule;
+
+CREATE POLICY auto_close_schedule_insert ON public.auto_close_schedule
+  FOR INSERT WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM public.tickets_new t
+      WHERE t.id = ticket_id -- reference column directly
+        AND (t.user_id = auth.uid() OR t.assigned_to = auth.uid())
+    )
+    OR EXISTS (
+      SELECT 1 FROM public.users u WHERE u.id = auth.uid() AND u.role IN ('agent','admin')
+    )
+  );

@@ -1,0 +1,15 @@
+-- Migration: Allow users to delete their own notifications
+-- Adds RLS policy so DELETE works from the app
+-- Author: o3 assistant
+
+-- Ensure RLS is enabled
+ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
+
+-- Replace existing policy (if any)
+DROP POLICY IF EXISTS "Allow owner to delete own notifications" ON public.notifications;
+
+-- Create delete policy
+CREATE POLICY "Allow owner to delete own notifications"
+  ON public.notifications
+  FOR DELETE
+  USING (user_id = auth.uid());

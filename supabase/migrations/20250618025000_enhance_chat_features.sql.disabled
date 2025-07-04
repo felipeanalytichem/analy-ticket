@@ -1,0 +1,136 @@
+-- Migration to enhance chat features
+-- Add support for message reactions, file attachments, and better message status tracking
+
+-- Create message reactions table
+CREATE TABLE IF NOT EXISTS chat_message_reactions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    message_id UUID NOT NULL REFERENCES chat_messages(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    emoji VARCHAR(10) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    UNIQUE(message_id, user_id, emoji)
+);
+
+-- Add status column to chat_messages if it doesn't exist
+DO $$ 
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'chat_messages' AND column_name = 'status'
+    ) THEN
+        ALTER TABLE chat_messages ADD COLUMN status VARCHAR(20) DEFAULT 'sent' 
+        CHECK (status IN ('sending', 'sent', 'delivered', 'read', 'failed'));
+    END IF;
+END $$;
+
+-- Add reply_to column to chat_messages if it doesn't exist
+DO $$ 
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'chat_messages' AND column_name = 'reply_to'
+    ) THEN
+        ALTER TABLE chat_messages ADD COLUMN reply_to UUID REFERENCES chat_messages(id) ON DELETE SET NULL;
+    END IF;
+END $$;
+
+-- Create storage bucket for chat attachments if it doesn't exist
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('chat-attachments', 'chat-attachments', false)
+ON CONFLICT (id) DO NOTHING;
+
+-- Set up RLS policies for message reactions
+ALTER TABLE chat_message_reactions ENABLE ROW LEVEL SECURITY;
+
+-- Users can view reactions on messages they can see
+CREATE POLICY "Users can view reactions on accessible messages" ON chat_message_reactions
+FOR SELECT USING (
+    message_id IN (
+        SELECT cm.id FROM chat_messages cm
+        JOIN ticket_chats tc ON cm.chat_id = tc.id
+        JOIN tickets_new t ON tc.ticket_id = t.id
+        WHERE t.user_id = auth.uid() OR t.assigned_to = auth.uid()
+        OR EXISTS (
+            SELECT 1 FROM users 
+            WHERE id = auth.uid() 
+            AND role IN ('admin', 'agent')
+        )
+    )
+);
+
+-- Users can add/remove their own reactions
+CREATE POLICY "Users can manage their own reactions" ON chat_message_reactions
+FOR ALL USING (user_id = auth.uid());
+
+-- Set up storage policies for chat attachments
+CREATE POLICY "Users can upload chat attachments" ON storage.objects
+FOR INSERT WITH CHECK (
+    bucket_id = 'chat-attachments' 
+    AND auth.uid() IS NOT NULL
+);
+
+CREATE POLICY "Users can view chat attachments for their tickets" ON storage.objects
+FOR SELECT USING (
+    bucket_id = 'chat-attachments'
+    AND auth.uid() IS NOT NULL
+    -- Additional logic would be needed to check if user has access to the specific chat
+);
+
+-- Grant permissions
+GRANT SELECT, INSERT, UPDATE, DELETE ON chat_message_reactions TO authenticated;
+GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO authenticated;
+
+-- Create indexes for better performance
+CREATE INDEX IF NOT EXISTS idx_chat_message_reactions_message_id ON chat_message_reactions(message_id);
+CREATE INDEX IF NOT EXISTS idx_chat_message_reactions_user_id ON chat_message_reactions(user_id);
+CREATE INDEX IF NOT EXISTS idx_chat_messages_reply_to ON chat_messages(reply_to);
+CREATE INDEX IF NOT EXISTS idx_chat_messages_status ON chat_messages(status);
+
+-- Function to get message reactions count
+CREATE OR REPLACE FUNCTION get_message_reactions(message_uuid UUID)
+RETURNS TABLE(emoji VARCHAR(10), reaction_count BIGINT, user_names TEXT[])
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        cmr.emoji,
+        COUNT(cmr.id) as reaction_count,
+        ARRAY_AGG(u.full_name ORDER BY cmr.created_at) as user_names
+    FROM chat_message_reactions cmr
+    JOIN users u ON cmr.user_id = u.id
+    WHERE cmr.message_id = message_uuid
+    GROUP BY cmr.emoji
+    ORDER BY reaction_count DESC;
+END;
+$$;
+
+-- Grant execute permission on the function
+GRANT EXECUTE ON FUNCTION get_message_reactions(UUID) TO authenticated;
+
+-- Update chat_messages to include content column if using message column
+DO $$ 
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'chat_messages' AND column_name = 'content'
+    ) THEN
+        -- Add content column and copy data from message column if it exists
+        ALTER TABLE chat_messages ADD COLUMN content TEXT;
+        
+        -- Copy data from message to content if message column exists
+        IF EXISTS (
+            SELECT 1 FROM information_schema.columns 
+            WHERE table_name = 'chat_messages' AND column_name = 'message'
+        ) THEN
+            UPDATE chat_messages SET content = message WHERE content IS NULL;
+        END IF;
+    END IF;
+END $$;
+
+-- Enable real-time for new tables
+ALTER TABLE chat_message_reactions REPLICA IDENTITY FULL;
+
+-- Log completion
+SELECT 'Enhanced chat features migration completed successfully' as status;

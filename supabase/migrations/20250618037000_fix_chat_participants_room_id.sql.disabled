@@ -1,0 +1,23 @@
+-- Migration to fix room_id column in chat_participants table
+-- Make room_id nullable or remove it since we're using chat_id instead
+
+DO $$
+BEGIN
+    -- Check if room_id column exists and make it nullable
+    IF EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_schema = 'public' AND table_name = 'chat_participants' AND column_name = 'room_id'
+    ) THEN
+        -- Make room_id nullable
+        ALTER TABLE chat_participants ALTER COLUMN room_id DROP NOT NULL;
+        
+        -- Set room_id to chat_id for existing records where room_id is null
+        UPDATE chat_participants SET room_id = chat_id WHERE room_id IS NULL;
+        
+        RAISE NOTICE 'Made room_id column nullable in chat_participants';
+    ELSE
+        RAISE NOTICE 'room_id column does not exist in chat_participants';
+    END IF;
+END $$;
+
+SELECT 'Chat participants room_id fix completed' as status; 

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" rx="64" fill="#1e40af"/>
+  
+  <!-- Chemistry Flask -->
+  <path d="
+    M 256 80
+    L 296 240
+    L 376 400
+    Q 380 408 380 416
+    Q 380 440 363 453
+    Q 346 466 322 466
+    L 190 466
+    Q 166 466 149 453
+    Q 132 440 132 416
+    Q 132 408 136 400
+    L 216 240
+    L 256 80
+    Z
+  " fill="#ffffff" opacity="0.9"/>
+  
+  <!-- Flask Neck -->
+  <rect x="236" y="80" width="40" height="60" fill="#ffffff"/>
+  
+  <!-- Liquid Level -->
+  <path d="
+    M 136 400
+    Q 132 408 132 416
+    Q 132 440 149 453
+    Q 166 466 190 466
+    L 322 466
+    Q 346 466 363 453
+    Q 380 440 380 416
+    Q 380 408 376 400
+    L 340 360
+    L 172 360
+    Z
+  " fill="#60a5fa"/>
+  
+  <!-- Bubbles -->
+  <circle cx="220" cy="390" r="12" fill="#93c5fd"/>
+  <circle cx="260" cy="400" r="8" fill="#93c5fd"/>
+  <circle cx="290" cy="385" r="10" fill="#93c5fd"/>
+  
+  <!-- Text -->
+  <text x="256" y="280" font-family="Arial Black, sans-serif" font-size="72" fill="#1e40af" text-anchor="middle" font-weight="900">ACS</text>
+</svg> 

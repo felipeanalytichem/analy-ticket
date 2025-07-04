@@ -1,0 +1,379 @@
+-- Enhanced Knowledge Base Migration
+-- Step 1: Admin Interface, Rich Text Editor, Basic Workflow, File Upload
+
+-- Update knowledge_articles table with enhanced fields
+ALTER TABLE knowledge_articles DROP CONSTRAINT IF EXISTS knowledge_articles_category_id_fkey;
+
+-- Add new columns for enhanced functionality
+ALTER TABLE knowledge_articles ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'draft' CHECK (status IN ('draft', 'review', 'published', 'archived'));
+ALTER TABLE knowledge_articles ADD COLUMN IF NOT EXISTS tags TEXT[] DEFAULT '{}';
+ALTER TABLE knowledge_articles ADD COLUMN IF NOT EXISTS excerpt TEXT;
+ALTER TABLE knowledge_articles ADD COLUMN IF NOT EXISTS featured BOOLEAN DEFAULT false;
+ALTER TABLE knowledge_articles ADD COLUMN IF NOT EXISTS likes_count INTEGER DEFAULT 0;
+ALTER TABLE knowledge_articles ADD COLUMN IF NOT EXISTS dislikes_count INTEGER DEFAULT 0;
+ALTER TABLE knowledge_articles ADD COLUMN IF NOT EXISTS helpful_count INTEGER DEFAULT 0;
+ALTER TABLE knowledge_articles ADD COLUMN IF NOT EXISTS not_helpful_count INTEGER DEFAULT 0;
+ALTER TABLE knowledge_articles ADD COLUMN IF NOT EXISTS last_reviewed_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE knowledge_articles ADD COLUMN IF NOT EXISTS last_reviewed_by UUID REFERENCES users(id) ON DELETE SET NULL;
+ALTER TABLE knowledge_articles ADD COLUMN IF NOT EXISTS version INTEGER DEFAULT 1;
+ALTER TABLE knowledge_articles ADD COLUMN IF NOT EXISTS meta_description TEXT;
+ALTER TABLE knowledge_articles ADD COLUMN IF NOT EXISTS reading_time_minutes INTEGER;
+
+-- Create knowledge_article_versions table for version history
+CREATE TABLE IF NOT EXISTS knowledge_article_versions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    article_id UUID REFERENCES knowledge_articles(id) ON DELETE CASCADE,
+    version INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    content TEXT NOT NULL,
+    excerpt TEXT,
+    tags TEXT[],
+    meta_description TEXT,
+    changed_by UUID REFERENCES users(id) ON DELETE SET NULL,
+    change_notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create knowledge_article_attachments table for file uploads
+CREATE TABLE IF NOT EXISTS knowledge_article_attachments (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    article_id UUID REFERENCES knowledge_articles(id) ON DELETE CASCADE,
+    filename TEXT NOT NULL,
+    original_filename TEXT NOT NULL,
+    file_url TEXT NOT NULL,
+    file_size INTEGER,
+    mime_type TEXT,
+    alt_text TEXT,
+    caption TEXT,
+    sort_order INTEGER DEFAULT 0,
+    uploaded_by UUID REFERENCES users(id) ON DELETE SET NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create knowledge_article_feedback table for user feedback
+CREATE TABLE IF NOT EXISTS knowledge_article_feedback (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    article_id UUID REFERENCES knowledge_articles(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    rating INTEGER CHECK (rating IN (1, -1)), -- 1 for helpful, -1 for not helpful
+    feedback_text TEXT,
+    is_anonymous BOOLEAN DEFAULT false,
+    user_ip TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    UNIQUE(article_id, user_id) -- Prevent duplicate feedback from same user
+);
+
+-- Create knowledge_categories table (separate from ticket categories)
+CREATE TABLE IF NOT EXISTS knowledge_categories (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name TEXT NOT NULL,
+    slug TEXT NOT NULL UNIQUE,
+    description TEXT,
+    icon TEXT,
+    color TEXT,
+    sort_order INTEGER DEFAULT 0,
+    is_active BOOLEAN DEFAULT true,
+    parent_id UUID REFERENCES knowledge_categories(id) ON DELETE CASCADE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Update knowledge_articles to use new category system
+ALTER TABLE knowledge_articles ADD COLUMN IF NOT EXISTS knowledge_category_id UUID REFERENCES knowledge_categories(id) ON DELETE SET NULL;
+
+-- Create indexes for performance
+CREATE INDEX IF NOT EXISTS idx_knowledge_articles_status ON knowledge_articles(status);
+CREATE INDEX IF NOT EXISTS idx_knowledge_articles_featured ON knowledge_articles(featured);
+CREATE INDEX IF NOT EXISTS idx_knowledge_articles_knowledge_category_id ON knowledge_articles(knowledge_category_id);
+CREATE INDEX IF NOT EXISTS idx_knowledge_articles_tags ON knowledge_articles USING GIN(tags);
+CREATE INDEX IF NOT EXISTS idx_knowledge_articles_view_count ON knowledge_articles(view_count);
+CREATE INDEX IF NOT EXISTS idx_knowledge_articles_created_at ON knowledge_articles(created_at);
+CREATE INDEX IF NOT EXISTS idx_knowledge_article_versions_article_id ON knowledge_article_versions(article_id);
+CREATE INDEX IF NOT EXISTS idx_knowledge_article_attachments_article_id ON knowledge_article_attachments(article_id);
+CREATE INDEX IF NOT EXISTS idx_knowledge_article_feedback_article_id ON knowledge_article_feedback(article_id);
+CREATE INDEX IF NOT EXISTS idx_knowledge_categories_slug ON knowledge_categories(slug);
+CREATE INDEX IF NOT EXISTS idx_knowledge_categories_parent_id ON knowledge_categories(parent_id);
+
+-- Create trigger to update article stats when feedback is added/updated
+CREATE OR REPLACE FUNCTION update_article_feedback_stats()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        IF NEW.rating = 1 THEN
+            UPDATE knowledge_articles 
+            SET helpful_count = helpful_count + 1 
+            WHERE id = NEW.article_id;
+        ELSIF NEW.rating = -1 THEN
+            UPDATE knowledge_articles 
+            SET not_helpful_count = not_helpful_count + 1 
+            WHERE id = NEW.article_id;
+        END IF;
+        RETURN NEW;
+    ELSIF TG_OP = 'UPDATE' THEN
+        -- Remove old rating
+        IF OLD.rating = 1 THEN
+            UPDATE knowledge_articles 
+            SET helpful_count = helpful_count - 1 
+            WHERE id = OLD.article_id;
+        ELSIF OLD.rating = -1 THEN
+            UPDATE knowledge_articles 
+            SET not_helpful_count = not_helpful_count - 1 
+            WHERE id = OLD.article_id;
+        END IF;
+        -- Add new rating
+        IF NEW.rating = 1 THEN
+            UPDATE knowledge_articles 
+            SET helpful_count = helpful_count + 1 
+            WHERE id = NEW.article_id;
+        ELSIF NEW.rating = -1 THEN
+            UPDATE knowledge_articles 
+            SET not_helpful_count = not_helpful_count + 1 
+            WHERE id = NEW.article_id;
+        END IF;
+        RETURN NEW;
+    ELSIF TG_OP = 'DELETE' THEN
+        IF OLD.rating = 1 THEN
+            UPDATE knowledge_articles 
+            SET helpful_count = helpful_count - 1 
+            WHERE id = OLD.article_id;
+        ELSIF OLD.rating = -1 THEN
+            UPDATE knowledge_articles 
+            SET not_helpful_count = not_helpful_count - 1 
+            WHERE id = OLD.article_id;
+        END IF;
+        RETURN OLD;
+    END IF;
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER knowledge_article_feedback_stats_trigger
+    AFTER INSERT OR UPDATE OR DELETE ON knowledge_article_feedback
+    FOR EACH ROW EXECUTE FUNCTION update_article_feedback_stats();
+
+-- Create function to save article version before updates
+CREATE OR REPLACE FUNCTION save_article_version()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Only save version if content actually changed
+    IF OLD.title != NEW.title OR OLD.content != NEW.content OR OLD.excerpt != NEW.excerpt THEN
+        INSERT INTO knowledge_article_versions (
+            article_id, version, title, content, excerpt, tags, meta_description, 
+            changed_by, change_notes
+        ) VALUES (
+            OLD.id, OLD.version, OLD.title, OLD.content, OLD.excerpt, 
+            OLD.tags, OLD.meta_description, NEW.author_id, 'Auto-saved version'
+        );
+        
+        -- Increment version number
+        NEW.version = OLD.version + 1;
+    END IF;
+    
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER knowledge_article_version_trigger
+    BEFORE UPDATE ON knowledge_articles
+    FOR EACH ROW EXECUTE FUNCTION save_article_version();
+
+-- Create function to calculate reading time
+CREATE OR REPLACE FUNCTION calculate_reading_time(content TEXT)
+RETURNS INTEGER AS $$
+DECLARE
+    word_count INTEGER;
+    reading_speed INTEGER := 200; -- Average words per minute
+BEGIN
+    -- Simple word count (split by spaces and filter empty strings)
+    word_count := array_length(string_to_array(regexp_replace(content, '<[^>]*>', '', 'g'), ' '), 1);
+    
+    -- Calculate reading time in minutes (minimum 1 minute)
+    RETURN GREATEST(1, CEIL(word_count::FLOAT / reading_speed));
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create trigger to auto-calculate reading time
+CREATE OR REPLACE FUNCTION update_reading_time()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.reading_time_minutes = calculate_reading_time(NEW.content);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER knowledge_article_reading_time_trigger
+    BEFORE INSERT OR UPDATE ON knowledge_articles
+    FOR EACH ROW EXECUTE FUNCTION update_reading_time();
+
+-- Insert default knowledge categories
+INSERT INTO knowledge_categories (name, slug, description, icon, color, sort_order) VALUES
+('Getting Started', 'getting-started', 'Basic guides and tutorials for new users', 'BookOpen', '#3B82F6', 1),
+('Account Management', 'account-management', 'User accounts, passwords, and profile settings', 'User', '#10B981', 2),
+('Technical Support', 'technical-support', 'Technical issues and troubleshooting', 'Wrench', '#F59E0B', 3),
+('Policies & Procedures', 'policies-procedures', 'Company policies and standard procedures', 'FileText', '#8B5CF6', 4),
+('FAQ', 'faq', 'Frequently asked questions', 'HelpCircle', '#EF4444', 5)
+ON CONFLICT (slug) DO NOTHING;
+
+-- Enable RLS on new tables
+ALTER TABLE knowledge_article_versions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE knowledge_article_attachments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE knowledge_article_feedback ENABLE ROW LEVEL SECURITY;
+ALTER TABLE knowledge_categories ENABLE ROW LEVEL SECURITY;
+
+-- RLS Policies for knowledge_article_versions
+CREATE POLICY "Everyone can view published article versions" ON knowledge_article_versions
+    FOR SELECT USING (
+        EXISTS (
+            SELECT 1 FROM knowledge_articles 
+            WHERE id = article_id AND status = 'published'
+        )
+    );
+
+CREATE POLICY "Authors and admins can view all versions" ON knowledge_article_versions
+    FOR SELECT USING (
+        EXISTS (
+            SELECT 1 FROM users 
+            WHERE id = auth.uid() AND role IN ('admin', 'agent')
+        )
+        OR EXISTS (
+            SELECT 1 FROM knowledge_articles 
+            WHERE id = article_id AND author_id = auth.uid()
+        )
+    );
+
+-- RLS Policies for knowledge_article_attachments
+CREATE POLICY "Everyone can view attachments for published articles" ON knowledge_article_attachments
+    FOR SELECT USING (
+        EXISTS (
+            SELECT 1 FROM knowledge_articles 
+            WHERE id = article_id AND status = 'published'
+        )
+    );
+
+CREATE POLICY "Authors and admins can manage attachments" ON knowledge_article_attachments
+    FOR ALL USING (
+        EXISTS (
+            SELECT 1 FROM users 
+            WHERE id = auth.uid() AND role IN ('admin', 'agent')
+        )
+        OR EXISTS (
+            SELECT 1 FROM knowledge_articles 
+            WHERE id = article_id AND author_id = auth.uid()
+        )
+    );
+
+-- RLS Policies for knowledge_article_feedback
+CREATE POLICY "Everyone can view feedback for published articles" ON knowledge_article_feedback
+    FOR SELECT USING (
+        EXISTS (
+            SELECT 1 FROM knowledge_articles 
+            WHERE id = article_id AND status = 'published'
+        )
+    );
+
+CREATE POLICY "Users can create feedback" ON knowledge_article_feedback
+    FOR INSERT WITH CHECK (auth.uid() IS NOT NULL);
+
+CREATE POLICY "Users can update their own feedback" ON knowledge_article_feedback
+    FOR UPDATE USING (user_id = auth.uid());
+
+-- RLS Policies for knowledge_categories
+CREATE POLICY "Everyone can view active categories" ON knowledge_categories
+    FOR SELECT USING (is_active = true);
+
+CREATE POLICY "Admins can manage categories" ON knowledge_categories
+    FOR ALL USING (
+        EXISTS (
+            SELECT 1 FROM users 
+            WHERE id = auth.uid() AND role = 'admin'
+        )
+    );
+
+-- Update existing RLS policies for knowledge_articles
+DROP POLICY IF EXISTS "Everyone can view published articles" ON knowledge_articles;
+DROP POLICY IF EXISTS "Authors can manage their articles" ON knowledge_articles;
+DROP POLICY IF EXISTS "Admins can manage all articles" ON knowledge_articles;
+
+CREATE POLICY "Everyone can view published articles" ON knowledge_articles
+    FOR SELECT USING (status = 'published');
+
+CREATE POLICY "Authors can view their own articles" ON knowledge_articles
+    FOR SELECT USING (author_id = auth.uid());
+
+CREATE POLICY "Admins and agents can view all articles" ON knowledge_articles
+    FOR SELECT USING (
+        EXISTS (
+            SELECT 1 FROM users 
+            WHERE id = auth.uid() AND role IN ('admin', 'agent')
+        )
+    );
+
+CREATE POLICY "Authors can create articles" ON knowledge_articles
+    FOR INSERT WITH CHECK (author_id = auth.uid());
+
+CREATE POLICY "Authors can update their own articles" ON knowledge_articles
+    FOR UPDATE USING (author_id = auth.uid());
+
+CREATE POLICY "Admins can update all articles" ON knowledge_articles
+    FOR UPDATE USING (
+        EXISTS (
+            SELECT 1 FROM users 
+            WHERE id = auth.uid() AND role = 'admin'
+        )
+    );
+
+CREATE POLICY "Authors can delete their own draft articles" ON knowledge_articles
+    FOR DELETE USING (author_id = auth.uid() AND status = 'draft');
+
+CREATE POLICY "Admins can delete any article" ON knowledge_articles
+    FOR DELETE USING (
+        EXISTS (
+            SELECT 1 FROM users 
+            WHERE id = auth.uid() AND role = 'admin'
+        )
+    );
+
+-- Create function to increment view count
+CREATE OR REPLACE FUNCTION increment_article_view_count(article_id UUID)
+RETURNS void AS $$
+BEGIN
+    UPDATE knowledge_articles 
+    SET view_count = COALESCE(view_count, 0) + 1 
+    WHERE id = article_id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create function to get article statistics
+CREATE OR REPLACE FUNCTION get_knowledge_article_stats(article_id UUID)
+RETURNS TABLE (
+    total_views INTEGER,
+    helpful_votes INTEGER,
+    not_helpful_votes INTEGER,
+    total_feedback INTEGER,
+    helpfulness_ratio NUMERIC
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        COALESCE(ka.view_count, 0) as total_views,
+        COALESCE(ka.helpful_count, 0) as helpful_votes,
+        COALESCE(ka.not_helpful_count, 0) as not_helpful_votes,
+        COALESCE(ka.helpful_count, 0) + COALESCE(ka.not_helpful_count, 0) as total_feedback,
+        CASE 
+            WHEN COALESCE(ka.helpful_count, 0) + COALESCE(ka.not_helpful_count, 0) = 0 THEN 0
+            ELSE ROUND(
+                COALESCE(ka.helpful_count, 0)::NUMERIC / 
+                (COALESCE(ka.helpful_count, 0) + COALESCE(ka.not_helpful_count, 0))::NUMERIC * 100, 
+                1
+            )
+        END as helpfulness_ratio
+    FROM knowledge_articles ka
+    WHERE ka.id = article_id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Update trigger for knowledge_categories
+CREATE TRIGGER knowledge_categories_updated_at_trigger
+    BEFORE UPDATE ON knowledge_categories
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column(); 

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/icons/icon-base.svg" />
+    <link rel="alternate icon" type="image/png" href="/icons/favicon-32x32.png" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ACS Ticket - Help Desk System</title>
+    <meta name="description" content="Enterprise Help Desk System for AnalytiChem GmbH" />
+    <meta name="author" content="AnalytiChem GmbH" />
+    <meta name="theme-color" content="#1e40af" />
+
+    <!-- OpenGraph -->
+    <meta property="og:title" content="ACS Ticket - Help Desk System" />
+    <meta property="og:description" content="Enterprise Help Desk System for AnalytiChem GmbH" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://acsticket.vercel.app/og-image.png" />
+    <meta property="og:url" content="https://acsticket.vercel.app/" />
+    <meta property="og:site_name" content="ACS Ticket" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="ACS Ticket - Help Desk System" />
+    <meta name="twitter:description" content="Enterprise Help Desk System for AnalytiChem GmbH" />
+    <meta name="twitter:image" content="https://acsticket.vercel.app/og-image.png" />
+
+    <script>
+      // Theme handling script
+      (function() {
+        try {
+          const storedTheme = localStorage.getItem('vite-ui-theme');
+          if (storedTheme && ['dark', 'light', 'system'].includes(storedTheme)) {
+            if (storedTheme === 'system') {
+              const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+              document.documentElement.classList.add(systemTheme);
+            } else {
+              document.documentElement.classList.add(storedTheme);
+            }
+          } else {
+            const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            document.documentElement.classList.add(systemTheme);
+          }
+        } catch (e) {
+          document.documentElement.classList.add('light');
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

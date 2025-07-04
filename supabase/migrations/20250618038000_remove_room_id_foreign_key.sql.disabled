@@ -1,0 +1,29 @@
+-- Migration to remove foreign key constraint on room_id in chat_participants
+-- The room_id column references a non-existent chat_rooms table
+
+DO $$
+BEGIN
+    -- Drop the foreign key constraint if it exists
+    IF EXISTS (
+        SELECT 1 FROM information_schema.table_constraints
+        WHERE table_schema = 'public' 
+        AND table_name = 'chat_participants' 
+        AND constraint_name = 'chat_participants_room_id_fkey'
+        AND constraint_type = 'FOREIGN KEY'
+    ) THEN
+        ALTER TABLE chat_participants DROP CONSTRAINT chat_participants_room_id_fkey;
+        RAISE NOTICE 'Dropped foreign key constraint chat_participants_room_id_fkey';
+    ELSE
+        RAISE NOTICE 'Foreign key constraint chat_participants_room_id_fkey does not exist';
+    END IF;
+
+    -- Make room_id nullable if it isn't already
+    ALTER TABLE chat_participants ALTER COLUMN room_id DROP NOT NULL;
+    
+    -- Set room_id to null for all records since we're not using it
+    UPDATE chat_participants SET room_id = NULL;
+    
+    RAISE NOTICE 'Removed room_id foreign key constraint and set all room_id values to null';
+END $$;
+
+SELECT 'Room ID foreign key constraint removal completed' as status; 

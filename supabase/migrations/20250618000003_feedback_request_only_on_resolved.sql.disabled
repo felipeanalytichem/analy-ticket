@@ -1,0 +1,41 @@
+-- Migration: Send feedback request notification only when ticket is marked as RESOLVED
+-- Purpose: Adjust function request_feedback_on_ticket_close to exclude 'closed' status
+-- Author: o3 assistant
+
+-- Recreate function with updated logic
+CREATE OR REPLACE FUNCTION request_feedback_on_ticket_close()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Only proceed if status changed to 'resolved'
+    IF (NEW.status = 'resolved') AND (OLD.status IS NULL OR OLD.status != 'resolved') THEN
+        -- Insert feedback request notification for the ticket creator
+        INSERT INTO public.notifications (
+            user_id,
+            type,
+            title,
+            message,
+            priority,
+            ticket_id,
+            read,
+            created_at
+        ) VALUES (
+            NEW.user_id,
+            'feedback_request',
+            'Avalie seu atendimento',
+            'Seu chamado foi resolvido! Que tal avaliar o atendimento recebido? Sua opinião é muito importante para nós.',
+            'medium',
+            NEW.id,
+            FALSE,
+            NOW()
+        );
+
+        -- Log the action
+        RAISE NOTICE 'Feedback request notification created for user % on ticket %', NEW.user_id, NEW.id;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- No changes to existing trigger (trigger_request_feedback_on_close) are necessary
+-- as it will point to the updated function automatically.

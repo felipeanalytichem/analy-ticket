@@ -1,0 +1,72 @@
+-- 20250618011500_reset_chat_participants_policies.sql
+-- Purpose: Ensure **only** safe, non-recursive RLS policies exist for
+-- `chat_participants` by (1) dropping everything that currently exists and
+-- (2) recreating a minimal, recursion-free set.
+
+--------------------------------------------------------------------------------
+-- 1. Drop **all** existing policies on chat_participants (whatever their names)
+--------------------------------------------------------------------------------
+DO $$
+DECLARE
+    p RECORD;
+BEGIN
+    FOR p IN
+        SELECT policyname AS polname
+        FROM pg_policies
+        WHERE schemaname = 'public'
+          AND tablename  = 'chat_participants'
+    LOOP
+        EXECUTE format('DROP POLICY IF EXISTS %I ON public.chat_participants', p.polname);
+    END LOOP;
+END$$;
+
+--------------------------------------------------------------------------------
+-- 2. Recreate minimal, recursion-free policies
+--------------------------------------------------------------------------------
+
+-- Read: row belongs to user OR the user is an agent/admin
+CREATE POLICY chat_participants_read_safe ON chat_participants
+    FOR SELECT USING (
+        user_id = auth.uid()
+        OR EXISTS (
+            SELECT 1
+            FROM users u
+            WHERE u.id = auth.uid()
+              AND u.role IN ('agent', 'admin')
+        )
+    );
+
+-- Insert: only agent/admin can add participants
+CREATE POLICY chat_participants_insert_safe ON chat_participants
+    FOR INSERT WITH CHECK (
+        EXISTS (
+            SELECT 1
+            FROM users u
+            WHERE u.id = auth.uid()
+              AND u.role IN ('agent', 'admin')
+        )
+    );
+
+-- Update: only agent/admin can update participant rows (e.g. silence user)
+CREATE POLICY chat_participants_update_safe ON chat_participants
+    FOR UPDATE USING (
+        EXISTS (
+            SELECT 1
+            FROM users u
+            WHERE u.id = auth.uid()
+              AND u.role IN ('agent', 'admin')
+        )
+    );
+
+-- Delete: same rule as update
+CREATE POLICY chat_participants_delete_safe ON chat_participants
+    FOR DELETE USING (
+        EXISTS (
+            SELECT 1
+            FROM users u
+            WHERE u.id = auth.uid()
+              AND u.role IN ('agent', 'admin')
+        )
+    );
+
+-- End of migration 

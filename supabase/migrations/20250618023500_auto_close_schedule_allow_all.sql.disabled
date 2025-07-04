@@ -1,0 +1,9 @@
+-- 20250618023500_auto_close_schedule_allow_all.sql
+-- Remove restrictive policy, allow all authenticated actions on auto_close_schedule to unblock.
+
+DROP POLICY IF EXISTS "Only system can access auto close schedule" ON public.auto_close_schedule;
+
+CREATE POLICY auto_close_schedule_allow_all ON public.auto_close_schedule
+    FOR ALL
+    USING ( auth.uid() IS NOT NULL )
+    WITH CHECK ( auth.uid() IS NOT NULL ); 

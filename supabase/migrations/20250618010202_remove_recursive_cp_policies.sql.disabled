@@ -1,0 +1,16 @@
+-- 20250618010202_remove_recursive_cp_policies.sql
+-- Purpose: Final clean-up of chat_participants RLS policies that reference the
+-- table itself (causing infinite recursion). We keep the V4 set introduced in
+-- 20250618000002 and delete everything else.
+
+--------------------------------------------------------------------------------
+-- 1. Drop legacy, recursive policies (if present)
+--------------------------------------------------------------------------------
+DROP POLICY IF EXISTS "Users can view chat participants if they are participants themselves" ON chat_participants;
+DROP POLICY IF EXISTS "Agents and admins can manage chat participants" ON chat_participants;
+DROP POLICY IF EXISTS "cp_select_v2" ON chat_participants;
+DROP POLICY IF EXISTS "cp_insert_v2" ON chat_participants;
+
+-- No further actions – V4 policies created earlier remain active.
+
+-- End of migration

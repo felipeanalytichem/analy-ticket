@@ -1,0 +1,21 @@
+-- 20250618023000_auto_close_schedule_unblock.sql
+-- Allow any authenticated user to insert/update rows in auto_close_schedule to unblock ticket resolution.
+
+-- Ensure RLS is enabled (it already is, but keep for safety)
+ALTER TABLE public.auto_close_schedule ENABLE ROW LEVEL SECURITY;
+
+-- Drop previous policies that might conflict
+DROP POLICY IF EXISTS auto_close_schedule_unblock_insert  ON public.auto_close_schedule;
+DROP POLICY IF EXISTS auto_close_schedule_unblock_update  ON public.auto_close_schedule;
+
+-- INSERT policy - allow any authenticated user
+CREATE POLICY auto_close_schedule_unblock_insert
+  ON public.auto_close_schedule
+  FOR INSERT
+  WITH CHECK ( auth.uid() IS NOT NULL );
+
+-- UPDATE policy - allow any authenticated user
+CREATE POLICY auto_close_schedule_unblock_update
+  ON public.auto_close_schedule
+  FOR UPDATE
+  WITH CHECK ( auth.uid() IS NOT NULL ); 

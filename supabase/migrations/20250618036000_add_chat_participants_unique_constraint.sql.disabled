@@ -1,0 +1,33 @@
+-- Migration to add unique constraint to chat_participants table
+-- This ensures no duplicate participant records
+
+DO $$
+BEGIN
+    -- Add unique constraint if it doesn't exist
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.table_constraints
+        WHERE table_schema = 'public' 
+        AND table_name = 'chat_participants' 
+        AND constraint_type = 'UNIQUE'
+        AND constraint_name = 'unique_chat_user'
+    ) THEN
+        -- Remove any duplicate records first using ROW_NUMBER
+        DELETE FROM chat_participants 
+        WHERE id IN (
+            SELECT id FROM (
+                SELECT id, ROW_NUMBER() OVER (PARTITION BY chat_id, user_id ORDER BY joined_at DESC) as rn
+                FROM chat_participants
+            ) t WHERE rn > 1
+        );
+        
+        -- Add unique constraint
+        ALTER TABLE chat_participants 
+        ADD CONSTRAINT unique_chat_user UNIQUE(chat_id, user_id);
+        
+        RAISE NOTICE 'Added unique constraint to chat_participants';
+    ELSE
+        RAISE NOTICE 'Unique constraint already exists on chat_participants';
+    END IF;
+END $$;
+
+SELECT 'Chat participants unique constraint migration completed' as status; 

@@ -1,0 +1,52 @@
+-- 20250618021500_reset_auto_close_policies.sql
+-- Remove all existing policies on auto_close_schedule and add clean INSERT/UPDATE rule.
+
+--------------------------------------------------------------------------------
+-- 1. Drop every existing policy (generic)
+--------------------------------------------------------------------------------
+DO $$
+DECLARE
+   pol RECORD;
+BEGIN
+   FOR pol IN
+       SELECT policyname FROM pg_policies
+       WHERE schemaname = 'public' AND tablename = 'auto_close_schedule'
+   LOOP
+       EXECUTE format('DROP POLICY IF EXISTS %I ON public.auto_close_schedule', pol.policyname);
+   END LOOP;
+END$$;
+
+--------------------------------------------------------------------------------
+-- 2. Allow INSERT + UPDATE when:
+--    • user owns the ticket OR is assigned agent, OR
+--    • user role is agent/admin
+--------------------------------------------------------------------------------
+-- INSERT policy
+CREATE POLICY auto_close_schedule_insert ON public.auto_close_schedule
+    FOR INSERT WITH CHECK (
+        EXISTS (
+            SELECT 1 FROM public.tickets_new t
+            WHERE t.id = ticket_id
+              AND (t.user_id = auth.uid() OR t.assigned_to = auth.uid())
+        )
+        OR EXISTS (
+            SELECT 1 FROM public.users u
+            WHERE u.id = auth.uid() AND u.role IN ('agent','admin')
+        )
+    );
+
+-- UPDATE policy
+CREATE POLICY auto_close_schedule_update ON public.auto_close_schedule
+    FOR UPDATE WITH CHECK (
+        EXISTS (
+            SELECT 1 FROM public.tickets_new t
+            WHERE t.id = ticket_id
+              AND (t.user_id = auth.uid() OR t.assigned_to = auth.uid())
+        )
+        OR EXISTS (
+            SELECT 1 FROM public.users u
+            WHERE u.id = auth.uid() AND u.role IN ('agent','admin')
+        )
+    );
+
+-- Done 

@@ -1,0 +1,53 @@
+-- 20250618014000_reset_chat_messages_policies.sql
+-- Reset all RLS policies on chat_messages and add minimal INSERT and SELECT rules.
+
+--------------------------------------------------------------------------------
+-- 1. Drop existing policies
+--------------------------------------------------------------------------------
+DO $$
+DECLARE
+  p RECORD;
+BEGIN
+  FOR p IN SELECT policyname FROM pg_policies WHERE schemaname='public' AND tablename='chat_messages'
+  LOOP
+    EXECUTE format('DROP POLICY IF EXISTS %I ON public.chat_messages', p.policyname);
+  END LOOP;
+END$$;
+
+--------------------------------------------------------------------------------
+-- 2. SELECT policy – allow users who can participate or elevated roles
+--------------------------------------------------------------------------------
+CREATE POLICY chat_messages_read_safe ON chat_messages
+  FOR SELECT USING (
+    -- participant of chat
+    EXISTS (
+      SELECT 1 FROM chat_participants cp
+      WHERE cp.chat_id = chat_messages.chat_id AND cp.user_id = auth.uid()
+    )
+    OR EXISTS (
+      SELECT 1 FROM users u WHERE u.id = auth.uid() AND u.role IN ('agent','admin')
+    )
+  );
+
+--------------------------------------------------------------------------------
+-- 3. INSERT policy – sender must be auth.uid and have write permission
+--------------------------------------------------------------------------------
+CREATE POLICY chat_messages_insert_safe ON chat_messages
+  FOR INSERT WITH CHECK (
+    sender_id = auth.uid() AND (
+      -- explicit can_write participant
+      EXISTS (
+        SELECT 1 FROM chat_participants cp WHERE cp.chat_id = chat_messages.chat_id AND cp.user_id = auth.uid() AND cp.can_write = TRUE
+      )
+      OR EXISTS (
+        -- ticket owner or assigned agent
+        SELECT 1 FROM ticket_chats tc JOIN tickets_new t ON t.id = tc.ticket_id
+        WHERE tc.id = chat_messages.chat_id AND (t.user_id = auth.uid() OR t.assigned_to = auth.uid())
+      )
+      OR EXISTS (
+        SELECT 1 FROM users u WHERE u.id = auth.uid() AND u.role IN ('agent','admin')
+      )
+    )
+  );
+
+-- End migration 

@@ -1,0 +1,46 @@
+-- Fix chat_messages schema if legacy table missing chat_id
+ALTER TABLE public.chat_messages
+    ADD COLUMN IF NOT EXISTS chat_id UUID REFERENCES public.ticket_chats(id) ON DELETE CASCADE,
+    ADD COLUMN IF NOT EXISTS is_read BOOLEAN DEFAULT FALSE;
+
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_indexes WHERE indexname = 'idx_chat_messages_chat_id') THEN
+        CREATE INDEX idx_chat_messages_chat_id ON public.chat_messages(chat_id);
+    END IF;
+END$$;
+
+-- add column to chat_participants
+ALTER TABLE public.chat_participants
+    ADD COLUMN IF NOT EXISTS chat_id UUID;
+
+-- populate chat_participants.chat_id from room_id when missing
+UPDATE public.chat_participants SET chat_id = room_id WHERE chat_id IS NULL AND room_id IS NOT NULL;
+
+-- add FK and index
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.constraint_column_usage WHERE table_name='chat_participants' AND column_name='chat_id'
+    ) THEN
+        ALTER TABLE public.chat_participants
+            ADD CONSTRAINT chat_participants_chat_fk FOREIGN KEY (chat_id) REFERENCES public.ticket_chats(id) ON DELETE CASCADE;
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM pg_indexes WHERE indexname = 'idx_chat_participants_chat_id') THEN
+        CREATE INDEX idx_chat_participants_chat_id ON public.chat_participants(chat_id);
+    END IF;
+END$$;
+
+-- update unread function to use participants.chat_id
+CREATE OR REPLACE FUNCTION public.get_unread_chat_messages_count(user_uuid UUID)
+RETURNS INTEGER
+LANGUAGE sql STABLE
+AS $$
+  SELECT count(*)
+  FROM public.chat_messages cm
+  JOIN public.chat_participants cp ON cp.chat_id = cm.chat_id
+  WHERE cp.user_id = user_uuid
+    AND cm.is_read = false
+    AND (cp.last_read_at IS NULL OR cm.created_at > cp.last_read_at);
+$$;

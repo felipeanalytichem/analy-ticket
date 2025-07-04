@@ -1,0 +1,88 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+You are an expert in React 18, TypeScript 5, Vite, Tailwind CSS, shadcn/ui, Radix UI, Supabase, React Query, Zod, and building enterprise-grade applications.
+
+Key Principles
+- Use functional, declarative programming. Avoid class components.
+- Always write complete, DRY, production-ready TypeScript code.
+- Favor early returns and guard clauses to improve readability.
+- Organize code by feature: keep files modular and scoped.
+- Use named exports for all components and helpers.
+- Follow a mobile-first responsive design approach using Tailwind.
+- Use RORO (Receive an Object, Return an Object) for utility functions and hooks.
+
+Component & Directory Conventions
+- Use lowercase-with-dashes for directory names (e.g., components/admin-panel).
+- Structure files: component.tsx, helpers.ts, types.ts, content.ts, subcomponents.tsx.
+- Use `components/ui` for customized shadcn/ui base components (e.g., Button, Input).
+- Keep layout, auth, ticket, and analytics components in domain-specific folders.
+
+TypeScript
+- Use `interface` over `type` for object shapes.
+- Avoid `enum`; prefer literal unions or record maps.
+- Use `function` for pure functions, avoid `const` arrow style for component declarations.
+- Use exhaustive type checking, especially for Zod schema validation and form inputs.
+
+Styling and UI
+- Use Tailwind utility classes for all styling. Do not write CSS or scoped stylesheets.
+- Follow Radix accessibility patterns; add ARIA attributes and keyboard navigation.
+- Use class: conditional syntax over ternaries for dynamic className values.
+- Include a11y attributes (`aria-*`, `role`, `tabIndex`) on all interactive elements.
+- Wrap app with `ThemeProvider` (Next Themes) and implement light/dark support.
+
+State & Forms
+- Use React Query for all server state, avoid useEffect/setState for data fetching.
+- For client state, use useState or custom hooks (not global state unless needed).
+- Use React Hook Form for form management with Zod for schema validation.
+- Place form schema and types at the end of the file; use `useForm` inside the component.
+
+Supabase Integration
+- Use Supabase client for authentication, real-time, and database queries.
+- Handle auth state via hooks and listeners. Use RLS for secure access control.
+- Fetch data using `supabase.from(...).select(...).throwOnError()` pattern.
+- Use .rpc and trigger functions for server logic when complex.
+
+Routing & Pages
+- Use React Router for client-side routing. Define routes explicitly.
+- Split public vs. protected routes; implement a `PrivateRoute` wrapper.
+- Route all dashboard/admin pages under their respective segments.
+- Include page-level layout components when necessary (e.g., dashboard shell).
+
+Validation & Error Handling
+- Handle all edge cases early in functions (empty data, null state, etc).
+- Return user-friendly messages on form or API errors.
+- Prefer `try { await x } catch {}` only when truly needed. Avoid overusing try/catch.
+- Use loading, error, and empty states in all async components.
+
+Performance Optimization
+- Use lazy loading (`React.lazy`) for non-critical dashboard pages.
+- Apply `Suspense` and `fallback` where needed.
+- Code-split by route and feature module.
+- Optimize tables, charts, and ticket lists with memoization and pagination.
+- Use `useMemo`/`useCallback` only when there's a measurable gain.
+
+Testing
+- Write tests for tickets, forms, routing, and permission logic.
+- Use mocks for Supabase and external services.
+- Validate edge cases, invalid input, and real-time behavior.
+- Maintain >80% test coverage; prioritize business-critical paths.
+
+Documentation & Comments
+- Write JSDoc-style comments above complex functions and hooks.
+- Document Zod schemas with `.describe()` to show user-friendly error messages.
+- Include README files for shared components or feature modules.
+
+Security & Compliance
+- Never expose user data without auth validation.
+- Sanitize all user input (Zod, Supabase policies).
+- Follow Supabase RLS policies strictly.
+- Ensure dark/light mode complies with WCAG 2.1 AA contrast.
+
+Follow modern frontend best practices and deliver performant, secure, and accessible enterprise UI for a multi-role ticket management system. All implementations must align with the design system and directory conventions of the project.
+
+Never star a new server with npm run dev or similar. 
+
+

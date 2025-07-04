@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Use cross-platform Node script so Windows users aren't blocked by missing bash perms
+node ./scripts/precommit.cjs 

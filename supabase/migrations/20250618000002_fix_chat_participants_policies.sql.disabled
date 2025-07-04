@@ -1,0 +1,72 @@
+-- 20250618000002_fix_chat_participants_policies.sql
+-- Purpose: Resolve Postgres error 42P17 (infinite recursion detected in policy for relation "chat_participants")
+-- The issue is caused by chat_participants RLS policies that call the helper
+-- function has_chat_permission(). That function executes a SELECT against
+-- chat_participants which, when invoked from inside a policy on the same
+-- table, leads to an infinite evaluation loop.
+--
+-- This migration drops the recursive policies and replaces them with
+-- simplified, safe alternatives that provide equivalent access rules
+-- without introducing recursion.
+
+--------------------------------------------------------------------------------
+-- 1. Drop the problematic V3 policies (if they exist)
+--------------------------------------------------------------------------------
+DROP POLICY IF EXISTS "chat_participants_read_policy_v3"     ON chat_participants;
+DROP POLICY IF EXISTS "chat_participants_add_policy_v3"      ON chat_participants;
+DROP POLICY IF EXISTS "chat_participants_moderate_policy_v3" ON chat_participants;
+
+--------------------------------------------------------------------------------
+-- 2. Create replacement V4 policies that avoid calling has_chat_permission()
+--------------------------------------------------------------------------------
+
+-- 2.1 Read: a user can read their own participant rows. Agents and admins can
+--     read all participants for moderation/audit purposes.
+CREATE POLICY "chat_participants_read_policy_v4" ON chat_participants
+    FOR SELECT USING (
+        -- The current row belongs to the authenticated user
+        user_id = auth.uid()
+        -- …or the authenticated user has an elevated role
+        OR EXISTS (
+            SELECT 1
+            FROM users u
+            WHERE u.id = auth.uid()
+              AND u.role IN ('admin', 'agent')
+        )
+    );
+
+-- 2.2 Insert: only agents and admins may add participants to a chat.
+CREATE POLICY "chat_participants_insert_policy_v4" ON chat_participants
+    FOR INSERT WITH CHECK (
+        EXISTS (
+            SELECT 1
+            FROM users u
+            WHERE u.id = auth.uid()
+              AND u.role IN ('admin', 'agent')
+        )
+    );
+
+-- 2.3 Update / Moderate: only agents and admins may update participant rows
+--     (e.g., to silence a participant).
+CREATE POLICY "chat_participants_update_policy_v4" ON chat_participants
+    FOR UPDATE USING (
+        EXISTS (
+            SELECT 1
+            FROM users u
+            WHERE u.id = auth.uid()
+              AND u.role IN ('admin', 'agent')
+        )
+    );
+
+-- 2.4 Delete: (optional) allow agents/admins to remove participants.
+CREATE POLICY "chat_participants_delete_policy_v4" ON chat_participants
+    FOR DELETE USING (
+        EXISTS (
+            SELECT 1
+            FROM users u
+            WHERE u.id = auth.uid()
+              AND u.role IN ('admin', 'agent')
+        )
+    );
+
+-- End of migration

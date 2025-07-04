@@ -1,0 +1,55 @@
+-- Migration to fix message_reactions table name
+-- Rename message_reactions to chat_message_reactions for consistent naming
+
+-- Check if message_reactions table exists and rename it
+DO $$
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM information_schema.tables 
+        WHERE table_schema = 'public' AND table_name = 'message_reactions'
+    ) AND NOT EXISTS (
+        SELECT 1 FROM information_schema.tables 
+        WHERE table_schema = 'public' AND table_name = 'chat_message_reactions'
+    ) THEN
+        -- Rename the table
+        ALTER TABLE message_reactions RENAME TO chat_message_reactions;
+        
+        -- Update indexes
+        ALTER INDEX IF EXISTS idx_message_reactions_message_id RENAME TO idx_chat_message_reactions_message_id;
+        ALTER INDEX IF EXISTS idx_message_reactions_user_id RENAME TO idx_chat_message_reactions_user_id;
+        
+        RAISE NOTICE 'Renamed message_reactions table to chat_message_reactions';
+    ELSE
+        RAISE NOTICE 'Table rename not needed - either message_reactions does not exist or chat_message_reactions already exists';
+    END IF;
+END $$;
+
+-- Drop old function if exists
+DROP FUNCTION IF EXISTS get_message_reactions(UUID);
+
+-- Create updated function that references the new table name
+CREATE OR REPLACE FUNCTION get_message_reactions(message_uuid UUID)
+RETURNS TABLE(emoji VARCHAR(10), reaction_count BIGINT, user_names TEXT[])
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        cmr.emoji,
+        COUNT(cmr.id) as reaction_count,
+        ARRAY_AGG(u.full_name ORDER BY cmr.created_at) as user_names
+    FROM chat_message_reactions cmr
+    JOIN users u ON cmr.user_id = u.id
+    WHERE cmr.message_id = message_uuid
+    GROUP BY cmr.emoji
+    ORDER BY reaction_count DESC;
+END;
+$$;
+
+-- Grant permissions
+GRANT SELECT, INSERT, UPDATE, DELETE ON chat_message_reactions TO authenticated;
+GRANT EXECUTE ON FUNCTION get_message_reactions(UUID) TO authenticated;
+
+-- Log completion
+SELECT 'Message reactions table name fix completed successfully' as status; 

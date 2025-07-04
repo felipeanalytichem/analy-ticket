@@ -1,0 +1,72 @@
+-- Migration to recreate chat_message_reactions table with correct structure
+-- Drop and recreate the table to ensure it has all required columns
+
+-- Drop the table if it exists (this will also drop dependent objects)
+DROP TABLE IF EXISTS chat_message_reactions CASCADE;
+
+-- Create the table with correct structure
+CREATE TABLE chat_message_reactions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    message_id UUID NOT NULL REFERENCES chat_messages(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    emoji VARCHAR(10) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    UNIQUE(message_id, user_id, emoji)
+);
+
+-- Enable RLS
+ALTER TABLE chat_message_reactions ENABLE ROW LEVEL SECURITY;
+
+-- Create policies
+CREATE POLICY "Users can view reactions on accessible messages" ON chat_message_reactions
+FOR SELECT USING (
+    message_id IN (
+        SELECT cm.id FROM chat_messages cm
+        JOIN ticket_chats tc ON cm.chat_id = tc.id
+        JOIN tickets_new t ON tc.ticket_id = t.id
+        WHERE t.user_id = auth.uid() OR t.assigned_to = auth.uid()
+        OR EXISTS (
+            SELECT 1 FROM users 
+            WHERE id = auth.uid() 
+            AND role IN ('admin', 'agent')
+        )
+    )
+);
+
+CREATE POLICY "Users can manage their own reactions" ON chat_message_reactions
+FOR ALL USING (user_id = auth.uid());
+
+-- Create indexes
+CREATE INDEX idx_chat_message_reactions_message_id ON chat_message_reactions(message_id);
+CREATE INDEX idx_chat_message_reactions_user_id ON chat_message_reactions(user_id);
+
+-- Grant permissions
+GRANT SELECT, INSERT, UPDATE, DELETE ON chat_message_reactions TO authenticated;
+
+-- Enable real-time
+ALTER TABLE chat_message_reactions REPLICA IDENTITY FULL;
+
+-- Recreate the function that uses this table
+CREATE OR REPLACE FUNCTION get_message_reactions(message_uuid UUID)
+RETURNS TABLE(emoji VARCHAR(10), reaction_count BIGINT, user_names TEXT[])
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        cmr.emoji,
+        COUNT(cmr.id) as reaction_count,
+        ARRAY_AGG(u.full_name ORDER BY cmr.created_at) as user_names
+    FROM chat_message_reactions cmr
+    JOIN users u ON cmr.user_id = u.id
+    WHERE cmr.message_id = message_uuid
+    GROUP BY cmr.emoji
+    ORDER BY reaction_count DESC;
+END;
+$$;
+
+-- Grant execute permission on the function
+GRANT EXECUTE ON FUNCTION get_message_reactions(UUID) TO authenticated;
+
+SELECT 'Recreated chat_message_reactions table successfully' as status; 

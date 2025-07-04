@@ -1,0 +1,41 @@
+-- 20250618013000_chat_messages_write_policy_safe.sql
+-- Purpose: Provide a simplified, explicit write policy for chat_messages that
+-- no longer relies on has_chat_permission (which assumes can_write rules that
+-- are currently too restrictive), while still enforcing correct permissions.
+
+--------------------------------------------------------------------------------
+-- 1. Drop old write policy if it exists
+--------------------------------------------------------------------------------
+DROP POLICY IF EXISTS "chat_messages_write_policy_v3" ON chat_messages;
+
+--------------------------------------------------------------------------------
+-- 2. Create safe replacement policy
+--------------------------------------------------------------------------------
+CREATE POLICY chat_messages_write_safe ON chat_messages
+    FOR INSERT WITH CHECK (
+        sender_id = auth.uid()
+        AND (
+            -- Ticket owner or currently assigned agent can write
+            EXISTS (
+                SELECT 1
+                FROM ticket_chats tc
+                JOIN tickets_new t ON t.id = tc.ticket_id
+                WHERE tc.id = chat_messages.chat_id
+                  AND (t.user_id = auth.uid() OR t.assigned_to = auth.uid())
+            )
+            -- OR participant with explicit can_write flag
+            OR EXISTS (
+                SELECT 1
+                FROM chat_participants cp
+                WHERE cp.chat_id = chat_messages.chat_id
+                  AND cp.user_id = auth.uid()
+                  AND cp.can_write = TRUE
+            )
+            -- OR elevated role (agent/admin)
+            OR EXISTS (
+                SELECT 1 FROM users u WHERE u.id = auth.uid() AND u.role IN ('agent', 'admin')
+            )
+        )
+    );
+
+-- End of migration
