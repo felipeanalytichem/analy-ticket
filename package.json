@@ -21,7 +21,15 @@
     "test:performance": "playwright test --grep @performance",
     "test:all": "npm run test:coverage && npm run test:e2e && npm run test:accessibility && npm run test:performance",
     "test:tickets": "vitest run src/components/tickets/TicketCreation.test.tsx",
-    "test:e2e:tickets": "playwright test e2e/ticket-creation.spec.ts"
+    "test:e2e:tickets": "playwright test e2e/ticket-creation.spec.ts",
+    "backup:quick": "node scripts/quick-backup.mjs",
+    "backup:full": "node scripts/database-backup.mjs",
+    "backup:cli": "node scripts/supabase-cli-backup.mjs",
+    "backup:cli-data": "node scripts/supabase-cli-backup.mjs data",
+    "backup:cli-schema": "node scripts/supabase-cli-backup.mjs schema",
+    "backup:cli-ps": "powershell -ExecutionPolicy Bypass -File scripts/cli-backup.ps1",
+    "backup:cli-bash": "bash scripts/cli-backup.sh",
+    "backup:help": "echo 'Backup commands: npm run backup:quick (JSON), backup:full (complete), backup:cli (CLI-based), backup:cli-data (data only), backup:cli-schema (schema only)'"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

@@ -1,0 +1,47 @@
+{
+  "backup_created": "2025-07-04T16:11:04.000Z",
+  "backup_type": "comprehensive_cli",
+  "backup_method": "supabase_cli",
+  "database_url": "https://plbmgjqitlxedsmdqpld.supabase.co",
+  "project_ref": "plbmgjqitlxedsmdqpld",
+  "cli_version": "v2.24.3",
+  "platform": "Windows",
+  "success_count": 2,
+  "total_commands": 2,
+  "output_directory": "cli-backups/2025-07-04_16-11-04",
+  "files_created": [
+    {
+      "filename": "full-database-backup.sql",
+      "type": "complete_backup",
+      "size_bytes": 171985,
+      "description": "Complete database backup including schema and data"
+    },
+    {
+      "filename": "data-only-backup.sql", 
+      "type": "data_only",
+      "size_bytes": 182326,
+      "description": "Data-only backup without schema definitions"
+    }
+  ],
+  "backup_summary": {
+    "total_size_bytes": 354311,
+    "total_size_mb": 0.34,
+    "schema_included": true,
+    "data_included": true,
+    "constraints_included": true
+  },
+  "warnings": [
+    "pg_dump: warning: there are circular foreign-key constraints on knowledge_categories table"
+  ],
+  "restoration_notes": {
+    "full_restore": "Use full-database-backup.sql for complete restoration",
+    "data_only_restore": "Use data-only-backup.sql to restore data to existing schema",
+    "recommended": "Use full-database-backup.sql for safest restoration"
+  },
+  "next_steps": [
+    "Store backups in secure location",
+    "Test restoration process in development environment", 
+    "Schedule regular automated backups",
+    "Consider updating Supabase CLI to v2.30.4"
+  ]
+} 
