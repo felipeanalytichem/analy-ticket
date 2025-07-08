@@ -797,6 +797,9 @@
   "notifications": {
     "title": "Notifications",
     "markAllRead": "Mark all as read",
+    "loading": "Loading notifications...",
+    "empty": "No notifications",
+    "unread": "Unread",
     "noNotifications": "No notifications",
     "fallback": {
       "noTitle": "No title",
@@ -805,6 +808,14 @@
     },
     "actions": {
       "viewTicket": "View Ticket"
+    },
+    "errors": {
+      "ticketNotFound": "Ticket not found",
+      "loadingTicketDetails": "Error loading ticket details",
+      "cannotOpenTicket": "Cannot open ticket - ID not found",
+      "processingNotification": "Error processing notification",
+      "markingAllAsRead": "Error marking all notifications as read",
+      "deletingNotification": "Error deleting notification"
     },
     "types": {
       "ticket_created": {

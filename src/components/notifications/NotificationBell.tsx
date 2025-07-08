@@ -81,27 +81,27 @@ export const NotificationBell: React.FC = () => {
               console.log('🔔 NotificationBell: Opening ticket details dialog');
             } else {
               console.error('🔔 NotificationBell: Ticket not found:', ticketId);
-              toast.error('Ticket não encontrado');
+              toast.error(t('notifications.errors.ticketNotFound'));
             }
           } catch (error) {
             console.error('🔔 NotificationBell: Error fetching ticket details:', error);
-            toast.error('Erro ao carregar detalhes do ticket');
+            toast.error(t('notifications.errors.loadingTicketDetails'));
           }
         }
       } else {
         console.warn('🔔 NotificationBell: No ticket_id provided, cannot open ticket');
-        toast.error('Não foi possível abrir o ticket - ID não encontrado');
+        toast.error(t('notifications.errors.cannotOpenTicket'));
       }
     } catch (error) {
       console.error('🔔 NotificationBell: Error handling notification click:', error);
-      toast.error('Erro ao processar notificação');
+      toast.error(t('notifications.errors.processingNotification'));
     }
   };
 
   const handleMarkAllAsRead = async () => {
     const success = await markAllAsRead();
     if (!success) {
-      toast.error('Erro ao marcar todas as notificações como lidas');
+      toast.error(t('notifications.errors.markingAllAsRead'));
     }
   };
 
@@ -109,7 +109,7 @@ export const NotificationBell: React.FC = () => {
     e.stopPropagation();
     const success = await deleteNotification(notificationId);
     if (!success) {
-      toast.error('Erro ao excluir notificação');
+      toast.error(t('notifications.errors.deletingNotification'));
     }
   };
 
@@ -150,11 +150,11 @@ export const NotificationBell: React.FC = () => {
           
           {loading ? (
             <div className="p-4 text-center text-sm text-muted-foreground">
-              {t('notifications.loading', 'Carregando notificações...')}
+              {t('notifications.loading', 'Loading notifications...')}
             </div>
           ) : notifications.length === 0 ? (
             <div className="p-4 text-center text-sm text-muted-foreground">
-              {t('notifications.empty', 'Nenhuma notificação')}
+              {t('notifications.empty', 'No notifications')}
             </div>
           ) : (
             <ScrollArea className="h-96">
@@ -212,7 +212,7 @@ export const NotificationBell: React.FC = () => {
                         {!notification.read && (
                           <div className="flex items-center mt-2">
                             <div className="h-2 w-2 bg-blue-500 rounded-full mr-2" />
-                            <span className="text-xs text-blue-600 font-medium">{t('notifications.unread', 'Não lida')}</span>
+                            <span className="text-xs text-blue-600 font-medium">{t('notifications.unread', 'Unread')}</span>
                           </div>
                         )}
                       </div>

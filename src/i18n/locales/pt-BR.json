@@ -772,6 +772,9 @@
   "notifications": {
     "title": "Notificações",
     "markAllRead": "Marcar todas como lidas",
+    "loading": "Carregando notificações...",
+    "empty": "Nenhuma notificação",
+    "unread": "Não lida",
     "noNotifications": "Nenhuma notificação",
     "fallback": {
       "noTitle": "Sem título",
@@ -780,6 +783,14 @@
     },
     "actions": {
       "viewTicket": "Ver Ticket"
+    },
+    "errors": {
+      "ticketNotFound": "Ticket não encontrado",
+      "loadingTicketDetails": "Erro ao carregar detalhes do ticket",
+      "cannotOpenTicket": "Não foi possível abrir o ticket - ID não encontrado",
+      "processingNotification": "Erro ao processar notificação",
+      "markingAllAsRead": "Erro ao marcar todas as notificações como lidas",
+      "deletingNotification": "Erro ao excluir notificação"
     },
     "types": {
       "ticket_created": {
