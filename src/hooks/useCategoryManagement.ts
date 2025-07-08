@@ -332,6 +332,38 @@ export const useCategoryManagement = () => {
     }
   };
 
+  const toggleSubcategoryEnabled = async (subcategoryId: string, enabled: boolean): Promise<boolean> => {
+    try {
+      // Update database first
+      await DatabaseService.toggleSubcategoryStatus(subcategoryId, enabled);
+      
+      // Then update local state
+      setCategories(prev => prev.map(cat => ({
+        ...cat,
+        subcategories: cat.subcategories.map(sub =>
+          sub.id === subcategoryId ? { ...sub, is_enabled: enabled } : sub
+        )
+      })));
+      
+      // Invalidate cache to force reload
+      invalidateCache();
+      
+      toast({
+        title: "Success",
+        description: `Subcategory ${enabled ? 'enabled' : 'disabled'} successfully`,
+      });
+      return true;
+    } catch (error) {
+      console.error('Error toggling subcategory:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update subcategory status",
+        variant: "destructive",
+      });
+      return false;
+    }
+  };
+
   const saveDynamicFormSchema = async (categoryId: string, fields: DynamicFormField[]): Promise<boolean> => {
     try {
       // In a real implementation, this would save to the database
@@ -450,6 +482,7 @@ export const useCategoryManagement = () => {
 
     // Advanced Operations
     toggleCategoryEnabled,
+    toggleSubcategoryEnabled,
     updateCategoryOrder,
     updateSubcategoryOrder,
     saveDynamicFormSchema,

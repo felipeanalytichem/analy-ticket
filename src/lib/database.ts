@@ -47,6 +47,7 @@ export interface Subcategory {
   response_time_hours: number;
   resolution_time_hours: number;
   specialized_agents: string[];
+  is_enabled?: boolean;
   created_at: string;
   updated_at: string;
   category?: Category;
@@ -612,6 +613,28 @@ export class DatabaseService {
 
     if (error) {
       console.error('Error updating subcategory order:', error);
+      throw error;
+    }
+
+    return data;
+  }
+
+  static async toggleSubcategoryStatus(id: string, isEnabled: boolean): Promise<Subcategory> {
+    const { data, error } = await db
+      .from('subcategories')
+      .update({ 
+        is_enabled: isEnabled,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', id)
+      .select(`
+        *,
+        category:categories(*)
+      `)
+      .single();
+
+    if (error) {
+      console.error('Error toggling subcategory status:', error);
       throw error;
     }
 

@@ -107,7 +107,8 @@ export const CategoryManagement = () => {
     response_time_hours: 24,
     resolution_time_hours: 72,
     sort_order: 0,
-    specialized_agents: [] as string[]
+    specialized_agents: [] as string[],
+    is_enabled: true
   });
 
   const [dynamicFormFields, setDynamicFormFields] = useState<DynamicFormField[]>([]);
@@ -202,7 +203,8 @@ export const CategoryManagement = () => {
         response_time_hours: 24,
         resolution_time_hours: 72,
         sort_order: 0,
-        specialized_agents: []
+        specialized_agents: [] as string[],
+        is_enabled: true
       });
       setIsSubcategoryDialogOpen(false);
       await refetchCategories();
@@ -315,6 +317,33 @@ export const CategoryManagement = () => {
       toast({
         title: "Error",
         description: "Failed to update category status",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const toggleSubcategoryEnabled = async (subcategoryId: string, enabled: boolean) => {
+    try {
+      // Update database first
+      await DatabaseService.toggleSubcategoryStatus(subcategoryId, enabled);
+      
+      // Then update local state
+      setCategories(prev => prev.map(cat => ({
+        ...cat,
+        subcategories: cat.subcategories.map(sub =>
+          sub.id === subcategoryId ? { ...sub, is_enabled: enabled } : sub
+        )
+      })));
+      
+      toast({
+        title: "Success",
+        description: `Subcategory ${enabled ? 'enabled' : 'disabled'} successfully`,
+      });
+    } catch (error) {
+      console.error('Error toggling subcategory:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update subcategory status",
         variant: "destructive",
       });
     }
@@ -1398,9 +1427,24 @@ export const CategoryManagement = () => {
                     className="group relative bg-gradient-to-br from-gray-50 to-white dark:from-gray-700 dark:to-gray-600 border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-500 transition-all duration-200"
                   >
                     <div className="flex items-start justify-between mb-3">
-                      <h4 className="text-gray-900 dark:text-white font-semibold text-sm truncate pr-2">
-                        {sub.name}
-                      </h4>
+                      <div className="flex-1 pr-2">
+                        <h4 className="text-gray-900 dark:text-white font-semibold text-sm truncate">
+                          {sub.name}
+                        </h4>
+                        <div className="flex items-center gap-2 mt-1">
+                          <Switch
+                            checked={sub.is_enabled ?? true}
+                            onCheckedChange={(checked) => toggleSubcategoryEnabled(sub.id, checked)}
+                            className="scale-75"
+                          />
+                          <Badge 
+                            variant={sub.is_enabled ?? true ? "default" : "secondary"}
+                            className={`text-xs ${(sub.is_enabled ?? true) ? "bg-green-600" : "bg-gray-500 dark:bg-gray-600"}`}
+                          >
+                            {(sub.is_enabled ?? true) ? "Enabled" : "Disabled"}
+                          </Badge>
+                        </div>
+                      </div>
                       <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                         <Button
                           variant="ghost"
