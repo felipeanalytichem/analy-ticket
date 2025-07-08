@@ -17,6 +17,8 @@ import { toast } from "@/components/ui/sonner";
 import { useTranslation } from "react-i18next";
 import { AttachmentPreview } from "../AttachmentPreview";
 import { validateFile } from "@/lib/fileUtils";
+import { CategorySuggestions } from "../CategorySuggestions";
+import { useCategorySuggestion } from "@/hooks/useCategorySuggestion";
 
 interface TicketDialogProps {
   open: boolean;
@@ -137,12 +139,31 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [subcategories, setSubcategories] = useState<Subcategory[]>([]);
   const [loadingSubcategories, setLoadingSubcategories] = useState(false);
+  const [pendingSubcategoryId, setPendingSubcategoryId] = useState<string | null>(null);
   const [agents, setAgents] = useState<Agent[]>([]);
   const [selectedAgent, setSelectedAgent] = useState<string>("");
   const [loadingAgents, setLoadingAgents] = useState(false);
 
   // Use category management hook for real-time sync
   const { getEnabledCategories, loading: categoriesLoading } = useCategoryManagement();
+
+  // Category suggestions hook
+  const {
+    suggestions,
+    topCategory,
+    topSubcategory,
+    explanation,
+    isAnalyzing,
+    hasEnoughContent,
+    applySuggestion,
+    dismissSuggestions,
+    isDismissed
+  } = useCategorySuggestion({
+    title: formData.title,
+    description: formData.description,
+    enabled: !ticket, // Only show suggestions when creating new tickets
+    debounceMs: 600
+  });
 
   // Initialize categories on component mount
   useEffect(() => {
@@ -151,29 +172,70 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
 
   // Load subcategories when category changes
   useEffect(() => {
+    console.log('🔍 Subcategory loading effect triggered');
+    console.log('🔍 formData.category_id:', formData.category_id);
+    console.log('🔍 pendingSubcategoryId:', pendingSubcategoryId);
+    
     const loadSubcategories = async () => {
       if (!formData.category_id) {
         setSubcategories([]);
+        setPendingSubcategoryId(null);
         return;
       }
 
       setLoadingSubcategories(true);
       try {
         const data = await DatabaseService.getSubcategories(formData.category_id);
+        console.log('🔍 Loaded subcategories:', data.map(s => `${s.id}: ${s.name}`));
         setSubcategories(data);
+        
+        // Apply pending subcategory if it exists and is valid for this category
+        if (pendingSubcategoryId) {
+          console.log('🔍 Checking pending subcategory:', pendingSubcategoryId);
+          console.log('🔍 Available subcategories:', data.map(s => ({ id: s.id, name: s.name })));
+          
+          const validSubcategory = data.find(sub => sub.id === pendingSubcategoryId);
+          console.log('🔍 Found valid subcategory?', !!validSubcategory);
+          console.log('🔍 Valid subcategory:', validSubcategory?.name);
+          
+          if (validSubcategory) {
+            console.log('🎯 Applying pending subcategory to form:', validSubcategory.name);
+            setFormData(prev => {
+              const newData = {
+                ...prev,
+                subcategory_id: pendingSubcategoryId
+              };
+              console.log('🎯 Final form data with subcategory:', newData);
+              return newData;
+            });
+          } else {
+            console.log('❌ Pending subcategory not found in loaded subcategories');
+          }
+          setPendingSubcategoryId(null); // Clear pending regardless
+        }
       } catch (error) {
         console.error('Error loading subcategories:', error);
         toast.error("Erro ao carregar subcategorias", {
           description: "Não foi possível carregar as subcategorias."
         });
         setSubcategories([]);
+        setPendingSubcategoryId(null);
       } finally {
         setLoadingSubcategories(false);
       }
     };
 
     loadSubcategories();
-  }, [formData.category_id]);
+  }, [formData.category_id, pendingSubcategoryId]);
+
+  // Debug subcategory value changes
+  useEffect(() => {
+    console.log('🔍 Subcategory value changed:', formData.subcategory_id);
+    if (formData.subcategory_id && subcategories.length > 0) {
+      const selectedSub = subcategories.find(s => s.id === formData.subcategory_id);
+      console.log('🔍 Selected subcategory:', selectedSub?.name || 'NOT FOUND');
+    }
+  }, [formData.subcategory_id, subcategories]);
 
   // Load agents when dialog opens
   useEffect(() => {
@@ -238,6 +300,38 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
       selectedSubcategory.name.includes("New Employee Onboarding") ||
       selectedSubcategory.name.includes("Onboard new employees")
     );
+  };
+
+  // Handle applying a category suggestion
+  const handleApplySuggestion = (suggestion: any) => {
+    console.log('🎯 Raw suggestion object:', suggestion);
+    console.log('🎯 Suggestion has subcategory?', !!suggestion.subcategory);
+    console.log('🎯 Subcategory object:', suggestion.subcategory);
+    
+    const { categoryId, subcategoryId } = applySuggestion(suggestion);
+    
+    console.log('🎯 Extracted IDs:', { categoryId, subcategoryId });
+    
+    // Set pending subcategory first if it exists
+    if (subcategoryId) {
+      setPendingSubcategoryId(subcategoryId);
+    }
+    
+    // Apply category (this will trigger subcategory loading which will then apply the pending subcategory)
+    setFormData(prev => {
+      const newData = {
+        ...prev,
+        category_id: categoryId,
+        subcategory_id: "" // Clear temporarily
+      };
+      console.log('🎯 Form data after setting category:', newData);
+      return newData;
+    });
+
+    // Show toast notification
+    toast.success("Category applied", {
+      description: `Applied ${suggestion.category.name}${suggestion.subcategory ? ` → ${suggestion.subcategory.name}` : ''}`
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -571,7 +665,8 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
               <Select
                 value={formData.category_id}
                 onValueChange={(value) => {
-                  setFormData(prev => ({ ...prev, category_id: value, subcategory_id: "" }));
+                  console.log('🔥 CATEGORY CHANGED - clearing subcategory! New category:', value);
+                setFormData(prev => ({ ...prev, category_id: value, subcategory_id: "" }));
                 }}
                 disabled={categoriesLoading || !canEditField('category_id')}
               >
@@ -613,8 +708,12 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
             <div>
               <Label htmlFor="subcategory">Subcategory</Label>
               <Select
-                value={formData.subcategory_id}
-                onValueChange={(value) => setFormData(prev => ({ ...prev, subcategory_id: value }))}
+                key={`subcategory-${formData.category_id}-${formData.subcategory_id}-${subcategories.length}`}
+                value={formData.subcategory_id || ""}
+                onValueChange={(value) => {
+                  console.log('🎯 Manual subcategory selection:', value);
+                  setFormData(prev => ({ ...prev, subcategory_id: value }));
+                }}
                 disabled={!formData.category_id || loadingSubcategories || !canEditField('subcategory_id')}
               >
                 <SelectTrigger className="mt-1">
@@ -683,6 +782,23 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
               />
               {getFieldDisabledMessage('description') && (
                 <p className="text-xs text-gray-500 mt-1">{getFieldDisabledMessage('description')}</p>
+              )}
+              
+              {/* Category Suggestions */}
+              {!ticket && (
+                <div className="mt-3">
+                  <CategorySuggestions
+                    suggestions={suggestions}
+                    topCategory={topCategory}
+                    topSubcategory={topSubcategory}
+                    explanation={explanation}
+                    isAnalyzing={isAnalyzing}
+                    hasEnoughContent={hasEnoughContent}
+                    isDismissed={isDismissed}
+                    onApplySuggestion={handleApplySuggestion}
+                    onDismiss={dismissSuggestions}
+                  />
+                </div>
               )}
             </div>
 
