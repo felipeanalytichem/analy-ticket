@@ -3803,57 +3803,6 @@ export class DatabaseService {
     return this.getKnowledgeArticles(options);
   }
 
-  static async createKnowledgeArticle(article: Partial<KnowledgeArticle>): Promise<KnowledgeArticle> {
-    const { data, error } = await supabase
-      .from('knowledge_articles')
-      .insert(article)
-      .select(`
-        *,
-        author:users!knowledge_articles_author_id_fkey(id, full_name, email),
-        knowledge_category:knowledge_categories!knowledge_articles_knowledge_category_id_fkey(
-          id,
-          name,
-          slug,
-          description,
-          icon,
-          color,
-          sort_order,
-          is_active,
-          parent_id
-        )
-      `)
-      .single();
-
-    if (error) throw error;
-    return data;
-  }
-
-  static async updateKnowledgeArticle(id: string, article: Partial<KnowledgeArticle>): Promise<KnowledgeArticle> {
-    const { data, error } = await supabase
-      .from('knowledge_articles')
-      .update(article)
-      .eq('id', id)
-      .select(`
-        *,
-        author:users!knowledge_articles_author_id_fkey(id, full_name, email),
-        knowledge_category:knowledge_categories!knowledge_articles_knowledge_category_id_fkey(
-          id,
-          name,
-          slug,
-          description,
-          icon,
-          color,
-          sort_order,
-          is_active,
-          parent_id
-        )
-      `)
-      .single();
-
-    if (error) throw error;
-    return data;
-  }
-
   static async deleteKnowledgeArticle(id: string): Promise<void> {
     const { error } = await supabase
       .from('knowledge_articles')

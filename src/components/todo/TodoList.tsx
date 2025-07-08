@@ -81,6 +81,12 @@ interface TicketOption {
   title: string;
   status: string;
   priority: string;
+  assigned_to?: string;
+  assignee?: {
+    id: string;
+    name: string;
+    email: string;
+  };
 }
 
 export const TodoList = () => {
@@ -185,14 +191,16 @@ export const TodoList = () => {
 
   const loadAvailableTickets = async () => {
     try {
-      // Load open tickets that can be linked to tasks
+      // Load open tickets with assignee information
       const tickets = await DatabaseService.getTickets({ statusFilter: "open", limit: 50 });
       const ticketOptions: TicketOption[] = tickets.map(ticket => ({
         id: ticket.id,
         ticket_number: ticket.ticket_number || `#${ticket.id.slice(-6)}`,
         title: ticket.title,
         status: ticket.status,
-        priority: ticket.priority
+        priority: ticket.priority,
+        assigned_to: ticket.assigned_to,
+        assignee: ticket.assignee
       }));
       setAvailableTickets(ticketOptions);
     } catch (error) {
@@ -203,7 +211,11 @@ export const TodoList = () => {
   const loadAvailableUsers = async () => {
     try {
       const users = await DatabaseService.getUsers();
-      setAvailableUsers(users);
+      // Filter to only show agents and admins for task assignment
+      const agentsAndAdmins = users.filter(user => 
+        user.role === 'agent' || user.role === 'admin'
+      );
+      setAvailableUsers(agentsAndAdmins);
     } catch (error) {
       console.error('Error loading users:', error);
     }
@@ -572,6 +584,24 @@ export const TodoList = () => {
     }
   };
 
+  // Get available users for assignment based on the selected ticket
+  const getAvailableUsersForTicket = () => {
+    if (!newTask.ticketId || newTask.ticketId === 'none') {
+      // If no ticket is selected, show all agents/admins
+      return availableUsers;
+    }
+
+    const selectedTicket = availableTickets.find(ticket => ticket.id === newTask.ticketId);
+    
+    if (selectedTicket?.assignee) {
+      // If ticket has an assigned agent, only allow assignment to that agent
+      return availableUsers.filter(user => user.id === selectedTicket.assignee?.id);
+    } else {
+      // If ticket is unassigned, show all agents/admins
+      return availableUsers;
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header Section */}
@@ -775,7 +805,19 @@ export const TodoList = () => {
                       </Label>
                       <Select 
                         value={newTask.ticketId || 'none'} 
-                        onValueChange={(value) => setNewTask({ ...newTask, ticketId: value === 'none' ? undefined : value })}
+                        onValueChange={(value) => {
+                          const ticketId = value === 'none' ? undefined : value;
+                          
+                          // Find the selected ticket and auto-assign to its agent if available
+                          const selectedTicket = availableTickets.find(ticket => ticket.id === ticketId);
+                          
+                          setNewTask(prev => ({ 
+                            ...prev, 
+                            ticketId,
+                            // Auto-assign to the ticket's assigned agent if available
+                            assignedTo: selectedTicket?.assignee?.id || prev.assignedTo
+                          }));
+                        }}
                       >
                         <SelectTrigger className="mt-1 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100">
                           <SelectValue placeholder={t('todo.selectTicketPlaceholder')} />
@@ -784,13 +826,27 @@ export const TodoList = () => {
                           <SelectItem value="none">{t('todo.noTicket')}</SelectItem>
                           {availableTickets.map((ticket) => (
                             <SelectItem key={ticket.id} value={ticket.id}>
-                              #{ticket.ticket_number} - {ticket.title}
+                              <div className="flex flex-col">
+                                <span>#{ticket.ticket_number} - {ticket.title}</span>
+                                {ticket.assignee ? (
+                                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                                    Assigned to: {ticket.assignee.name}
+                                  </span>
+                                ) : (
+                                  <span className="text-xs text-orange-500 dark:text-orange-400">
+                                    Unassigned
+                                  </span>
+                                )}
+                              </div>
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {t('todo.relatedTicketDesc')}
+                        {t('todo.relatedTicketDesc')} 
+                        {newTask.ticketId && availableTickets.find(t => t.id === newTask.ticketId)?.assignee && 
+                          " Task will be assigned to the ticket's agent."
+                        }
                       </p>
                     </div>
                     
@@ -806,7 +862,7 @@ export const TodoList = () => {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent className="dark:bg-gray-800 dark:border-gray-600">
-                          {availableUsers.map((user) => (
+                          {getAvailableUsersForTicket().map((user) => (
                             <SelectItem key={user.id} value={user.id}>
                               <div className="flex items-center gap-2">
                                 <User className="h-3 w-3" />
@@ -817,7 +873,10 @@ export const TodoList = () => {
                         </SelectContent>
                       </Select>
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {t('todo.assignToDesc')}
+                        {newTask.ticketId && availableTickets.find(t => t.id === newTask.ticketId)?.assignee 
+                          ? "Restricted to the ticket's assigned agent only."
+                          : t('todo.assignToDesc')
+                        }
                       </p>
                     </div>
                   </div>

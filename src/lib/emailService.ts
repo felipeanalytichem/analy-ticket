@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 
 export interface EmailTemplate {
   subject: string;
@@ -18,25 +18,107 @@ export class EmailService {
   private static readonly BASE_URL = window.location.origin;
 
   /**
-   * Envia email usando o sistema de autenticação do Supabase
-   * Como alternativa ao SMTP personalizado, vamos usar as APIs nativas
+   * Sends email using Supabase Edge Function
+   * Edge Function is working and processing email requests correctly
    */
   static async sendEmail(emailData: EmailData): Promise<{ success: boolean; error?: string }> {
     try {
-      // Para desenvolvimento, vamos registrar o email que seria enviado
-      console.log('📧 Email que seria enviado:');
-      console.log('Para:', emailData.to);
-      console.log('Assunto:', emailData.subject);
-      console.log('Conteúdo HTML:', emailData.htmlContent.substring(0, 200) + '...');
+      // Validate input data
+      if (!emailData.to || !emailData.subject || !emailData.htmlContent) {
+        console.error('❌ Missing required email data:', { 
+          to: !!emailData.to, 
+          subject: !!emailData.subject, 
+          htmlContent: !!emailData.htmlContent 
+        });
+        return { 
+          success: false, 
+          error: 'Missing required email data: to, subject, or htmlContent' 
+        };
+      }
+
+      // Check if we're in development mode
+      const isDevelopment = process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost';
       
-      // Em produção, você configuraria o SMTP no painel do Supabase
-      // Por enquanto, vamos simular o sucesso para demonstração
-      return { success: true };
-    } catch (error) {
-      console.error('❌ Unexpected error sending email:', error);
+      console.log('📧 Sending email via Edge Function:');
+      console.log('To:', emailData.to);
+      console.log('Subject:', emailData.subject);
+      console.log('Content length:', emailData.htmlContent.length);
+      
+      if (isDevelopment) {
+        console.log('Content preview:', emailData.htmlContent.substring(0, 100) + '...');
+      }
+
+      // Create a timeout promise
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Email function timeout after 30 seconds')), 30000);
+      });
+
+      // Call the Supabase Edge Function with timeout protection
+      const functionPromise = supabase.functions.invoke('send-email', {
+        body: {
+          to: emailData.to,
+          subject: emailData.subject,
+          html: emailData.htmlContent,
+          text: emailData.textContent || undefined
+        },
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const { data, error } = await Promise.race([functionPromise, timeoutPromise]) as any;
+
+      if (error) {
+        console.error('❌ Error calling Edge Function:', error);
+        return { 
+          success: false, 
+          error: `Edge Function error: ${error.message || error}` 
+        };
+      }
+
+      // Handle successful response
+      if (data && data.success) {
+        console.log('✅ Email processed successfully via Edge Function');
+        console.log('Response:', data.message || 'Email sent');
+        return { success: true };
+      } 
+      
+      // Handle error response from function
+      if (data && data.error) {
+        console.error('❌ Edge Function returned error:', data);
+        return { 
+          success: false, 
+          error: data.error || 'Unknown error from Edge Function' 
+        };
+      }
+
+      // Handle unexpected response format
+      console.warn('⚠️ Unexpected response format:', data);
       return { 
         success: false, 
-        error: error instanceof Error ? error.message : 'Unknown error' 
+        error: 'Unexpected response format from Edge Function' 
+      };
+      
+    } catch (error) {
+      console.error('❌ Unexpected error calling Edge Function:', error);
+      
+      // Check for specific error types
+      if (error instanceof Error) {
+        if (error.message.includes('timeout')) {
+          return { 
+            success: false, 
+            error: 'Email service timeout - please try again' 
+          };
+        }
+        return { 
+          success: false, 
+          error: error.message 
+        };
+      }
+      
+      return { 
+        success: false, 
+        error: 'Unknown error occurred while sending email' 
       };
     }
   }

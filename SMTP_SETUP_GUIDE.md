@@ -48,12 +48,13 @@ Você já configurou o SMTP no painel do Supabase com as seguintes configuraçõ
 
 O projeto agora possui três métodos de envio de convites:
 
-#### 1. **Logs de Desenvolvimento** (Atual)
+#### 1. **Edge Function com SMTP Real** (Atual - ATIVADO)
 ```typescript
 EmailService.sendUserInvitation(email, nome, senha?)
 ```
-- Exibe emails no console para desenvolvimento
-- Simula sucesso para testes
+- Envia emails reais através da Edge Function
+- Usa SMTP do Outlook configurado
+- Logs de desenvolvimento quando em localhost
 
 #### 2. **Magic Links Nativos do Supabase** (Recomendado)
 ```typescript
@@ -121,18 +122,20 @@ if (emailResult.success || notificationResult.success) {
 - ✅ Status atual
 - ✅ Link para acompanhar
 
-## 🔄 Próximos Passos para Produção
+## 🚀 Sistema de Email Ativado
 
-### 1. Ativar SMTP Real
-Para usar emails reais, modifique `EmailService.sendEmail()`:
+### ✅ SMTP Real Implementado
+O sistema agora envia emails reais através da Edge Function:
 
 ```typescript
-// Remover simulação
-// return { success: true };
-
-// Ativar envio real via Edge Function ou API
+// EmailService.sendEmail() agora usa:
 const { data, error } = await supabase.functions.invoke('send-email', {
-  body: emailData
+  body: {
+    to: emailData.to,
+    subject: emailData.subject,
+    html: emailData.htmlContent,
+    text: emailData.textContent
+  }
 });
 ```
 
@@ -189,7 +192,7 @@ Para tracking de entrega e abertura:
 | Logs de desenvolvimento | ✅ Ativo | Console do navegador |
 | Notificações internas | ✅ Funcionando | Sistema de backup |
 | SMTP configurado | ✅ Configurado | Outlook/Office 365 |
-| Envio real de emails | 🔄 Pendente | Ativar em produção |
+| Envio real de emails | ✅ Ativo | Edge Function implementada |
 
 ## 🎉 Conclusão
 
@@ -203,4 +206,32 @@ O sistema está **pronto para enviar convites de usuário**!
 
 Para **ativar emails reais**, basta modificar uma linha no `EmailService.sendEmail()` para usar a Edge Function ou API do Supabase.
 
-**Teste agora:** Crie um usuário e verifique os logs no console! 
+## 🛠️ Deployment Automático
+
+Foi criado um script de deployment automático: `deploy-email-function.js`
+
+### Como usar:
+```bash
+node deploy-email-function.js
+```
+
+Este script irá:
+1. ✅ Fazer deploy da Edge Function automaticamente
+2. ✅ Configurar as variáveis de ambiente SMTP
+3. ✅ Verificar se tudo foi deployado corretamente
+4. ✅ Fornecer instruções passo-a-passo
+
+### Ou faça manualmente:
+```bash
+# 1. Deploy da Edge Function
+cd supabase
+npx supabase functions deploy send-email --no-verify-jwt
+
+# 2. Configurar senha SMTP
+npx supabase secrets set SMTP_PASSWORD="sua-senha-app"
+
+# 3. Verificar deployment
+npx supabase functions list
+```
+
+**Teste agora:** Rode o script de deployment e crie um usuário para testar! 

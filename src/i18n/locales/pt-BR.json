@@ -206,7 +206,9 @@
       "successDescription": "O ticket foi atribuído com sucesso",
       "error": "Falha ao atribuir ticket",
       "errorDefault": "Ocorreu um erro ao atribuir o ticket",
-      "assigning": "Atribuindo..."
+      "assigning": "Atribuindo...",
+      "assignButton": "Atribuir Agente",
+      "loading": "Carregando..."
     },
     "unassign": "Desatribuir",
     "transfer": {
@@ -472,6 +474,7 @@
     "newTask": "Nova Tarefa",
     "createNewTask": "Criar Nova Tarefa",
     "createNewTaskDesc": "Adicione uma nova tarefa à sua lista",
+    "createTask": "Criar Tarefa",
     "quickTemplates": "Modelos Rápidos",
     "taskInfoSection": "Informações da Tarefa",
     "priorityTimeSection": "Prioridade e Gerenciamento de Tempo",

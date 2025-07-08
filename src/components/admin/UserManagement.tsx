@@ -24,7 +24,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
+import { adminService } from "@/lib/adminService";
 import { 
   Users, 
   Plus, 
@@ -188,35 +189,27 @@ export const UserManagement = () => {
       setIsSubmitting(true);
 
       if (isCreating) {
-        // Create user with Supabase Auth Admin
-        const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+        // Create user via Edge Function
+        const response = await adminService.createUser({
           email: editingUser.email,
-          password: 'password-placeholder',
-          email_confirm: true,
-          user_metadata: { full_name: editingUser.name, role: editingUser.role }
+          name: editingUser.name,
+          role: editingUser.role,
+          generateTempPassword: generateTempPassword
         });
 
-        if (authError) throw authError;
-
-        const { data, error } = await supabase
-          .from('users')
-          .select()
-          .eq('id', authData.user.id)
-          .single();
-
-        if (error) throw error;
-
-        setUsers(prev => [data as User, ...prev]);
-        
-        if (generateTempPassword && tempPasswordColumnsExist) {
-            console.log(`[User Creation] Temporary password generated for ${editingUser.email}: ${tempPassword}`);
-            setGeneratedPassword(tempPassword);
-            setEditingUser(data as User);
+        if (response.user) {
+          setUsers(prev => [response.user as User, ...prev]);
+          
+          if (response.temporaryPassword) {
+            console.log(`[User Creation] Temporary password generated for ${editingUser.email}: ${response.temporaryPassword}`);
+            setGeneratedPassword(response.temporaryPassword);
+            setEditingUser(response.user as User);
             setShowPasswordDialog(true);
-        } else {
+          } else {
             setGeneratedPassword(null);
-            setEditingUser(data as User);
+            setEditingUser(response.user as User);
             setShowPasswordDialog(true); 
+          }
         }
 
         toast({
@@ -247,7 +240,7 @@ export const UserManagement = () => {
             authUpdates.email = editingUser.email;
         }
         if (editingUser.role !== originalUser?.role) {
-            authUpdates.user_metadata = { ...originalUser?.user_metadata, role: editingUser.role };
+            authUpdates.user_metadata = { role: editingUser.role };
         }
 
         if (Object.keys(authUpdates).length > 0) {
@@ -305,32 +298,13 @@ export const UserManagement = () => {
   };
 
   const generateTemporaryPassword = async (userId: string): Promise<string> => {
-    const password = Math.random().toString(36).slice(-8).toUpperCase();
-    
-    const { error: updateUserError } = await supabase.auth.admin.updateUserById(
-      userId,
-      { password: password }
-    );
-    
-    if (updateUserError) {
-      throw updateUserError;
+    try {
+      const tempPassword = await adminService.generateTemporaryPassword(userId);
+      return tempPassword;
+    } catch (error) {
+      console.error('Error generating temporary password:', error);
+      throw error;
     }
-
-    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
-    const { error: profileError } = await supabase
-      .from('users')
-      .update({ 
-        temporary_password: 'set', 
-        temporary_password_expires_at: expiresAt.toISOString(),
-        must_change_password: true,
-      })
-      .eq('id', userId);
-
-    if (profileError) {
-      console.warn('Could not update user profile with temp password metadata:', profileError.message);
-    }
-
-    return password;
   };
 
   const handleResetTempPassword = async (userId: string) => {

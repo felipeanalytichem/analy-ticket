@@ -277,7 +277,9 @@
       "successDescription": "The ticket has been assigned successfully",
       "error": "Failed to assign ticket",
       "errorDefault": "An error occurred while assigning the ticket",
-      "assigning": "Assigning..."
+      "assigning": "Assigning...",
+      "assignButton": "Assign Agent",
+      "loading": "Loading..."
     },
     "actions": {
       "assign": "Assign",
@@ -505,6 +507,7 @@
     "newTask": "New Task",
     "createNewTask": "Create New Task",
     "createNewTaskDesc": "Add a new task to your to-do list",
+    "createTask": "Create Task",
     "quickTemplates": "Quick Templates",
     "taskInfoSection": "Task Information",
     "priorityTimeSection": "Priority and Time Management",

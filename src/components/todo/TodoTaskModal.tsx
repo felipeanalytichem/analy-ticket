@@ -50,7 +50,8 @@ export const TodoTaskModal = ({
   const { toast } = useToast();
   const { t } = useTranslation();
   
-  // Verifica se o usuário pode adicionar tarefa (apenas se for o agente atribuído ou admin)
+  // Check if the user can add a task (only assigned agent or admin)
+  // Tasks are automatically assigned to the current user who must be the assigned agent
   const canAddTask = () => {
     if (userRole === "admin") return true;
     if (userRole === "agent" && ticket?.assignee?.id === userProfile?.id) return true;
