@@ -30,6 +30,20 @@ class AdminService {
       console.log(`🔗 Calling admin-users function with operation: ${operation}`);
       console.log('📦 Request data:', data);
 
+      // Get the current session to include Authorization header
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError) {
+        console.error('Session error:', sessionError);
+        throw new Error('Authentication required');
+      }
+
+      if (!session) {
+        throw new Error('No active session found. Please sign in again.');
+      }
+
+      console.log('🔑 Using session for user:', session.user.email);
+
       // Include the operation in the request body for proper routing
       const requestBody = {
         operation: operation,
@@ -40,6 +54,7 @@ class AdminService {
         body: requestBody,
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
         }
       });
 
