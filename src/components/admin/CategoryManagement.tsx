@@ -325,20 +325,38 @@ export const CategoryManagement = () => {
   const toggleSubcategoryEnabled = async (subcategoryId: string, enabled: boolean) => {
     console.log('🔧 toggleSubcategoryEnabled called:', { subcategoryId, enabled });
     
-    try {
-      console.log('🔧 Calling DatabaseService.toggleSubcategoryStatus...');
-      // Update database first
-      await DatabaseService.toggleSubcategoryStatus(subcategoryId, enabled);
-      console.log('🔧 Database update successful');
-      
-      // Then update local state
+    // Optimistic UI update - update the UI immediately
+    const updateStates = () => {
       setCategories(prev => prev.map(cat => ({
         ...cat,
         subcategories: cat.subcategories.map(sub =>
           sub.id === subcategoryId ? { ...sub, is_enabled: enabled } : sub
         )
       })));
-      console.log('🔧 Local state updated');
+      
+      // Also update the modal state if it's open and showing this category
+      if (subcategoryViewModal.isOpen && subcategoryViewModal.category) {
+        setSubcategoryViewModal(prev => ({
+          ...prev,
+          category: prev.category ? {
+            ...prev.category,
+            subcategories: prev.category.subcategories.map(sub =>
+              sub.id === subcategoryId ? { ...sub, is_enabled: enabled } : sub
+            )
+          } : null
+        }));
+      }
+    };
+    
+    // Update UI immediately for better UX
+    updateStates();
+    console.log('🔧 Optimistic UI update applied');
+    
+    try {
+      console.log('🔧 Calling DatabaseService.toggleSubcategoryStatus...');
+      // Update database
+      await DatabaseService.toggleSubcategoryStatus(subcategoryId, enabled);
+      console.log('🔧 Database update successful');
       
       toast({
         title: "Success",
@@ -346,6 +364,32 @@ export const CategoryManagement = () => {
       });
     } catch (error) {
       console.error('🔧 Error toggling subcategory:', error);
+      
+      // Revert the optimistic update on error
+      const revertStates = () => {
+        setCategories(prev => prev.map(cat => ({
+          ...cat,
+          subcategories: cat.subcategories.map(sub =>
+            sub.id === subcategoryId ? { ...sub, is_enabled: !enabled } : sub
+          )
+        })));
+        
+        if (subcategoryViewModal.isOpen && subcategoryViewModal.category) {
+          setSubcategoryViewModal(prev => ({
+            ...prev,
+            category: prev.category ? {
+              ...prev.category,
+              subcategories: prev.category.subcategories.map(sub =>
+                sub.id === subcategoryId ? { ...sub, is_enabled: !enabled } : sub
+              )
+            } : null
+          }));
+        }
+      };
+      
+      revertStates();
+      console.log('🔧 Optimistic update reverted due to error');
+      
       toast({
         title: "Error",
         description: "Failed to update subcategory status",
