@@ -323,9 +323,13 @@ export const CategoryManagement = () => {
   };
 
   const toggleSubcategoryEnabled = async (subcategoryId: string, enabled: boolean) => {
+    console.log('🔧 toggleSubcategoryEnabled called:', { subcategoryId, enabled });
+    
     try {
+      console.log('🔧 Calling DatabaseService.toggleSubcategoryStatus...');
       // Update database first
       await DatabaseService.toggleSubcategoryStatus(subcategoryId, enabled);
+      console.log('🔧 Database update successful');
       
       // Then update local state
       setCategories(prev => prev.map(cat => ({
@@ -334,13 +338,14 @@ export const CategoryManagement = () => {
           sub.id === subcategoryId ? { ...sub, is_enabled: enabled } : sub
         )
       })));
+      console.log('🔧 Local state updated');
       
       toast({
         title: "Success",
         description: `Subcategory ${enabled ? 'enabled' : 'disabled'} successfully`,
       });
     } catch (error) {
-      console.error('Error toggling subcategory:', error);
+      console.error('🔧 Error toggling subcategory:', error);
       toast({
         title: "Error",
         description: "Failed to update subcategory status",

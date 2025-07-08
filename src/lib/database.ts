@@ -620,6 +620,8 @@ export class DatabaseService {
   }
 
   static async toggleSubcategoryStatus(id: string, isEnabled: boolean): Promise<Subcategory> {
+    console.log('🔧 DatabaseService.toggleSubcategoryStatus called:', { id, isEnabled });
+    
     const { data, error } = await db
       .from('subcategories')
       .update({ 
@@ -634,10 +636,11 @@ export class DatabaseService {
       .single();
 
     if (error) {
-      console.error('Error toggling subcategory status:', error);
+      console.error('🔧 Error toggling subcategory status:', error);
       throw error;
     }
 
+    console.log('🔧 Database update successful, returning:', data);
     return data;
   }
 
