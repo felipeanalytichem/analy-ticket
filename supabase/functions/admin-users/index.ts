@@ -35,11 +35,16 @@ serve(async (req) => {
   try {
     console.log(`📋 Admin-users function called with method: ${req.method}`)
     
-    // Create admin client with service role key
+    // Get auth header
+    const authHeader = req.headers.get('Authorization')
+    console.log('🔐 Auth header present:', !!authHeader)
+    
+    // Create client for auth verification (using anon key first)
     const supabaseUrl = Deno.env.get('SUPABASE_URL')
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
     
-    if (!supabaseUrl || !supabaseServiceKey) {
+    if (!supabaseUrl || !supabaseAnonKey || !supabaseServiceKey) {
       console.error('❌ Missing Supabase environment variables')
       return new Response(
         JSON.stringify({ 
@@ -53,6 +58,76 @@ serve(async (req) => {
       )
     }
 
+    // Create client for user verification
+    const supabaseAuth = createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
+      },
+      global: {
+        headers: {
+          Authorization: authHeader || ''
+        }
+      }
+    })
+
+    // Verify user authentication and role
+    const { data: { user }, error: authError } = await supabaseAuth.auth.getUser()
+    
+    if (authError || !user) {
+      console.error('❌ Authentication failed:', authError?.message || 'No user')
+      return new Response(
+        JSON.stringify({ 
+          error: 'Authentication required',
+          details: 'Valid authentication token required'
+        }),
+        { 
+          status: 401, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      )
+    }
+
+    console.log(`✅ Authenticated user: ${user.email}`)
+
+    // Check if user is admin
+    const { data: userProfile, error: profileError } = await supabaseAuth
+      .from('users')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    if (profileError) {
+      console.error('❌ Failed to get user profile:', profileError)
+      return new Response(
+        JSON.stringify({ 
+          error: 'Authorization failed',
+          details: 'Could not verify user permissions'
+        }),
+        { 
+          status: 403, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      )
+    }
+
+    if (userProfile?.role !== 'admin') {
+      console.error(`❌ Access denied for role: ${userProfile?.role}`)
+      return new Response(
+        JSON.stringify({ 
+          error: 'Insufficient permissions',
+          details: 'Admin role required for this operation'
+        }),
+        { 
+          status: 403, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      )
+    }
+
+    console.log(`✅ Admin access verified for: ${user.email}`)
+
+    // Create admin client with service role key for operations
     const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
       auth: {
         autoRefreshToken: false,

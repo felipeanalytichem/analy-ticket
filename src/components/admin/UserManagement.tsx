@@ -26,6 +26,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { adminService } from "@/lib/adminService";
+import { useAuth } from "@/contexts/AuthContext";
 import { 
   Users, 
   Plus, 
@@ -62,6 +63,7 @@ interface User {
 }
 
 export const UserManagement = () => {
+  const { user, userProfile, loading: authLoading } = useAuth();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingUser, setEditingUser] = useState<User | null>(null);
@@ -92,6 +94,45 @@ export const UserManagement = () => {
       default: return "secondary";
     }
   };
+
+  // Check authentication and admin role
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <Loader2 className="h-8 w-8 animate-spin" />
+        <span className="ml-2">Loading...</span>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <Card>
+        <CardContent className="p-6">
+          <div className="text-center">
+            <AlertTriangle className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Authentication Required</h3>
+            <p className="text-gray-600">Please log in to access user management.</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (userProfile?.role !== 'admin') {
+    return (
+      <Card>
+        <CardContent className="p-6">
+          <div className="text-center">
+            <Shield className="h-12 w-12 text-red-500 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Access Denied</h3>
+            <p className="text-gray-600">Administrator privileges required to access user management.</p>
+            <p className="text-sm text-gray-500 mt-2">Current role: {userProfile?.role || 'None'}</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   const loadUsers = async () => {
     try {

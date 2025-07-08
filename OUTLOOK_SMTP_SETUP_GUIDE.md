@@ -55,7 +55,7 @@ npx supabase secrets set SMTP_USERNAME=your-actual-email@analytichem.com --proje
 **Examples:**
 - If using `felipe@analytichem.com`: 
   ```bash
-  npx supabase secrets set SMTP_USERNAME=felipe@analytichem.com --project-ref plbmgjqitlxedsmdqpld
+  npx supabase secrets set SMTP_USERNAME=felipe.henriuqe@analytichem.com --project-ref plbmgjqitlxedsmdqpld
   ```
 - If using `suporte@analytichem.com`:
   ```bash
@@ -69,7 +69,7 @@ npx supabase secrets set SMTP_USERNAME=your-actual-email@analytichem.com --proje
 **If your current SMTP_PASSWORD is a placeholder or old:**
 
 ```bash
-npx supabase secrets set SMTP_PASSWORD=your-16-char-app-password --project-ref plbmgjqitlxedsmdqpld
+npx supabase secrets set SMTP_PASSWORD=qtxzkzmmcfcjybkm --project-ref plbmgjqitlxedsmdqpld
 ```
 
 **Example:**
@@ -101,8 +101,8 @@ After setup, your configuration will be:
 |---------|-------|--------|
 | **SMTP_HOST** | `smtp-mail.outlook.com` | ✅ Configured |
 | **SMTP_PORT** | `587` | ✅ Configured |
-| **SMTP_USERNAME** | `your-email@analytichem.com` | ⚠️ **Need to set** |
-| **SMTP_PASSWORD** | `your-16-char-app-password` | ⚠️ **Verify this** |
+| **SMTP_USERNAME** | `felipe.henrique@analytichem.com` | ⚠️ **Need to set** |
+| **SMTP_PASSWORD** | `qtxzkzmmcfcjybkm` | ⚠️ **Verify this** |
 | **FROM_EMAIL** | `suporte@analytichem.com` | ✅ Configured |
 
 ---
