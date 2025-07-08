@@ -50,6 +50,7 @@ import { ModernTicketChat } from "../../chat/ModernTicketChat";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { QuickAssignDialog } from "./QuickAssignDialog";
+import { AttachmentViewer } from "../AttachmentViewer";
 
 interface TicketDetailsDialogProps {
   open: boolean;
@@ -198,12 +199,6 @@ export const TicketDetailsDialog = ({
     }
   };
 
-  const getFileIcon = (mimeType: string) => {
-    if (mimeType.startsWith('image/')) return <Image className="h-4 w-4" />;
-    if (mimeType.includes('pdf')) return <FileText className="h-4 w-4" />;
-    return <File className="h-4 w-4" />;
-  };
-
   const handleAssignToMe = async () => {
     if (!currentTicket || !userProfile) return;
     
@@ -215,8 +210,8 @@ export const TicketDetailsDialog = ({
         updated_at: new Date().toISOString()
       });
 
-      // Create notification
-      await DatabaseService.createTicketNotification(currentTicket.id, 'ticket_assigned');
+      // Create notification for self-assignment
+      await DatabaseService.createTicketNotification(currentTicket.id, 'assignment_changed', userProfile.id);
 
       toast.success("Ticket atribuído", {
         description: "O ticket foi atribuído a você com sucesso."
@@ -234,38 +229,7 @@ export const TicketDetailsDialog = ({
     }
   };
 
-  const handleDownload = async (attachment: { file_path: string; file_name: string }) => {
-    try {
-      const { data, error } = await supabase.storage
-        .from('ticket-attachments')
-        .download(attachment.file_path);
 
-      if (error) {
-        throw error;
-      }
-
-      // Create a URL for the downloaded file
-      const url = window.URL.createObjectURL(data);
-      
-      // Create a temporary link element
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', attachment.file_name);
-      document.body.appendChild(link);
-      
-      // Trigger the download
-      link.click();
-      
-      // Clean up
-      link.parentNode?.removeChild(link);
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Error downloading file:', error);
-      toast.error("Erro ao baixar arquivo", {
-        description: "Ocorreu um erro ao baixar o arquivo. Por favor, tente novamente."
-      });
-    }
-  };
 
   const handleAssignTicket = () => {
     setIsQuickAssignDialogOpen(true);
@@ -641,37 +605,9 @@ export const TicketDetailsDialog = ({
               </div>
 
               {/* Attachments */}
-              {currentTicket.attachments && currentTicket.attachments.length > 0 && (
-                <div>
-                  <h4 className="font-semibold mb-2 flex items-center gap-2 dark:text-gray-100">
-                    <Paperclip className="h-4 w-4" />
-                    {t('tickets.attachments')} ({currentTicket.attachments.length})
-                  </h4>
-                  <div className="space-y-2">
-                    {currentTicket.attachments.map((attachment) => (
-                      <div key={attachment.id} className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800/50 rounded border border-gray-200 dark:border-gray-700">
-                        <div className="flex items-center gap-2">
-                          {getFileIcon(attachment.mime_type || '')}
-                          <span className="text-sm font-medium dark:text-gray-200">{attachment.file_name}</span>
-                          {attachment.file_size && (
-                            <span className="text-xs text-gray-500 dark:text-gray-400">
-                              ({Math.round(attachment.file_size / 1024)} KB)
-                            </span>
-                          )}
-                        </div>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => handleDownload(attachment)}
-                          className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-                        >
-                          <Download className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+              <AttachmentViewer 
+                attachments={currentTicket.attachments || []}
+              />
 
               {/* Resolution */}
               {(currentTicket.status === 'resolved' || currentTicket.status === 'closed') && currentTicket.resolution && (

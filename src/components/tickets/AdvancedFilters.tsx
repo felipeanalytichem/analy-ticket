@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from 'react-i18next';
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +12,7 @@ interface AdvancedFiltersProps {
 }
 
 export const AdvancedFilters = ({ onFiltersChange }: AdvancedFiltersProps) => {
+  const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
   const [filters, setFilters] = useState({
     search: "",
@@ -116,7 +118,7 @@ export const AdvancedFilters = ({ onFiltersChange }: AdvancedFiltersProps) => {
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
           <Input
-            placeholder="Search by title, description or ID..."
+                          placeholder={t('placeholders.searchTickets')}
             value={filters.search}
             onChange={(e) => updateFilter("search", e.target.value)}
             className="pl-10"

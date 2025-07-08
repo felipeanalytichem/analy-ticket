@@ -2,9 +2,11 @@
 import { Moon, Sun, Monitor } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/theme-provider";
+import { useTranslation } from 'react-i18next';
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
+  const { t } = useTranslation();
 
   const cycleTheme = () => {
     if (theme === "light") setTheme("dark");
@@ -36,13 +38,13 @@ export function ThemeToggle() {
   const getThemeLabel = () => {
     switch (theme) {
       case "light":
-        return "Switch to dark theme";
+        return t('theme.switchToDark');
       case "dark":
-        return "Switch to system theme";
+        return t('theme.switchToSystem');
       case "system":
-        return "Switch to light theme";
+        return t('theme.switchToLight');
       default:
-        return "Toggle theme";
+        return t('theme.toggle');
     }
   };
 

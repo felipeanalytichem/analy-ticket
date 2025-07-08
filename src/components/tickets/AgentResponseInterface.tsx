@@ -40,6 +40,7 @@ import { TicketTransferDialog } from "./dialogs/TicketTransferDialog";
 import { TicketClosureDialog } from "./dialogs/TicketClosureDialog";
 import { supabase } from "@/lib/supabase";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { useTranslation } from 'react-i18next';
 
 interface AgentResponseInterfaceProps {
   ticket: TicketWithDetails;
@@ -59,6 +60,7 @@ export const AgentResponseInterface = ({
   onTicketUpdate,
   onClose 
 }: AgentResponseInterfaceProps) => {
+  const { t } = useTranslation();
   const [currentTicket, setCurrentTicket] = useState<TicketWithDetails>(ticket);
   const [refreshKey, setRefreshKey] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -404,13 +406,13 @@ export const AgentResponseInterface = ({
               <div className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
                 <div className="flex items-center gap-1 justify-end">
                   <Clock className="h-4 w-4" />
-                  <span title={`Criado em ${formatDate(currentTicket.created_at)}`}>
+                  <span title={t('tickets.createdOn', { date: formatDate(currentTicket.created_at) })}>
                     Criado em {formatDate(currentTicket.created_at)}
                   </span>
                 </div>
                 <div className="flex items-center gap-1 justify-end">
                   <History className="h-4 w-4" />
-                  <span title={`Atualizado em ${formatDate(currentTicket.updated_at || '')}`}>
+                  <span title={t('tickets.updatedOn', { date: formatDate(currentTicket.updated_at || '') })}>
                     Atualizado em {formatDate(currentTicket.updated_at || '')}
                   </span>
                 </div>
@@ -603,7 +605,7 @@ export const AgentResponseInterface = ({
                       {/* Editor de mensagem */}
                       <div className="space-y-2">
                         <Textarea
-                          placeholder={response.isInternal ? "Adicione uma nota interna para outros agentes..." : "Digite sua resposta para o usuário..."}
+                          placeholder={response.isInternal ? t('agent.internalNotePlaceholder') : t('agent.responsePlaceholder')}
                           value={response.message}
                           onChange={(e) => setResponse(prev => ({ ...prev, message: e.target.value }))}
                           rows={4}

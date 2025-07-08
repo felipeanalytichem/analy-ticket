@@ -311,39 +311,57 @@ async function handleCreateUser(userData: CreateUserRequest, supabaseAdmin: any)
 
     console.log(`✅ User created successfully: ${email}`)
 
-    // Send welcome email
+    // Send welcome email using Resend API directly
     try {
-      console.log('📧 Sending welcome email...')
+      console.log('📧 Sending welcome email via Resend API...')
       
-      const emailPayload = {
-        to: email,
-        subject: 'Welcome to ACS Ticket System',
-        html: `
-          <h2>Welcome to ACS Ticket System!</h2>
-          <p>Hello <strong>${name}</strong>,</p>
-          <p>Your account has been created successfully.</p>
-          <p><strong>Login Details:</strong></p>
-          <ul>
-            <li>Email: ${email}</li>
-            <li>Temporary Password: <code>${tempPassword}</code></li>
-            <li>Role: ${role}</li>
-          </ul>
-          <p>Please log in and change your password on first access.</p>
-          <p><a href="https://acsticket-nolllpxx3-felipeanalytichems-projects.vercel.app">Access the system</a></p>
-          <br/>
-          <p>Best regards,<br/>ACS Ticket System</p>
-        `,
-        text: `Welcome to ACS Ticket System!\n\nHello ${name},\n\nYour account has been created successfully.\n\nLogin Details:\n- Email: ${email}\n- Temporary Password: ${tempPassword}\n- Role: ${role}\n\nPlease log in and change your password on first access.\n\nBest regards,\nACS Ticket System`
-      }
+      // Get Resend API key
+      const resendApiKey = Deno.env.get('RESEND_API_KEY')
+      console.log(`📧 Resend API key configured: ${resendApiKey ? 'Yes' : 'No'}`)
+      
+      if (resendApiKey && resendApiKey.startsWith('re_') && resendApiKey.length > 20) {
+        const emailPayload = {
+          from: 'ACS Ticket System <onboarding@resend.dev>',
+          to: [email],
+          subject: 'Welcome to ACS Ticket System',
+          html: `
+            <h2>Welcome to ACS Ticket System!</h2>
+            <p>Hello <strong>${name}</strong>,</p>
+            <p>Your account has been created successfully.</p>
+            <p><strong>Login Details:</strong></p>
+            <ul>
+              <li>Email: ${email}</li>
+              <li>Temporary Password: <code>${tempPassword}</code></li>
+              <li>Role: ${role}</li>
+            </ul>
+            <p>Please log in and change your password on first access.</p>
+            <p><a href="https://acsticket-nolllpxx3-felipeanalytichems-projects.vercel.app">Access the system</a></p>
+            <br/>
+            <p>Best regards,<br/>ACS Ticket System</p>
+          `,
+          text: `Welcome to ACS Ticket System!\n\nHello ${name},\n\nYour account has been created successfully.\n\nLogin Details:\n- Email: ${email}\n- Temporary Password: ${tempPassword}\n- Role: ${role}\n\nPlease log in and change your password on first access.\n\nBest regards,\nACS Ticket System`
+        }
 
-      const { data: emailResult, error: emailError } = await supabaseAdmin.functions.invoke('send-email', {
-        body: emailPayload
-      })
+        const resendResponse = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${resendApiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(emailPayload),
+        })
 
-      if (emailError) {
-        console.error('❌ Email sending error:', emailError)
+        console.log(`📧 Resend API response: ${resendResponse.status} ${resendResponse.statusText}`)
+
+        if (resendResponse.ok) {
+          const result = await resendResponse.json()
+          console.log(`✅ Welcome email sent successfully! Message ID: ${result.id}`)
+        } else {
+          const errorText = await resendResponse.text()
+          console.error('❌ Resend API error:', errorText)
+        }
       } else {
-        console.log('✅ Welcome email sent successfully')
+        console.error('❌ Resend API key not configured or invalid format')
       }
     } catch (emailSendError) {
       console.error('❌ Error sending welcome email:', emailSendError)

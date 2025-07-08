@@ -10,7 +10,6 @@ interface EmailRequest {
   subject: string;
   html: string;
   text?: string;
-  templateData?: Record<string, any>;
 }
 
 serve(async (req) => {
@@ -20,108 +19,31 @@ serve(async (req) => {
   }
 
   try {
-    console.log(`📧 Email function called with method: ${req.method}`)
+    console.log('📧 Email function called')
     
-    // Parse request body safely
-    let requestBody: EmailRequest;
-    try {
-      requestBody = await req.json();
-    } catch (parseError) {
-      console.error('❌ Failed to parse request body:', parseError);
-      return new Response(
-        JSON.stringify({ error: 'Invalid JSON in request body' }),
-        { 
-          status: 400, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-        }
-      );
-    }
-
-    const { to, subject, html, text } = requestBody;
+    // Parse request body
+    const { to, subject, html, text }: EmailRequest = await req.json()
 
     // Validate required fields
     if (!to || !subject || !html) {
-      console.error('❌ Missing required fields:', { to: !!to, subject: !!subject, html: !!html });
       return new Response(
         JSON.stringify({ error: 'Missing required fields: to, subject, html' }),
-        { 
-          status: 400, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-        }
-      );
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
     }
 
-    // Get email service configuration
-    const resendApiKey = Deno.env.get('RESEND_API_KEY');
-    const smtpPassword = Deno.env.get('SMTP_PASSWORD');
-    const smtpUsername = Deno.env.get('SMTP_USERNAME');
-    const smtpHost = Deno.env.get('SMTP_HOST') || 'smtp-mail.outlook.com';
-    const smtpPort = parseInt(Deno.env.get('SMTP_PORT') || '587');
-    const fromEmail = Deno.env.get('FROM_EMAIL') || smtpUsername || 'noreply@analytichem.com';
+    // Get Resend API key
+    const resendApiKey = Deno.env.get('RESEND_API_KEY')
+    console.log(`📧 Resend API key found: ${resendApiKey ? 'Yes' : 'No'}`)
     
-    console.log(`📧 Processing email to: ${to}`);
-    console.log(`📧 Subject: ${subject}`);
-    console.log(`📧 HTML length: ${html.length} characters`);
-    console.log(`📧 From email: ${fromEmail}`);
-    console.log(`📧 SMTP Host: ${smtpHost}:${smtpPort}`);
-    console.log(`📧 SMTP Username: ${smtpUsername}`);
-    console.log(`📧 SMTP Password configured: ${smtpPassword ? 'Yes' : 'No'}`);
-    console.log(`📧 Resend API configured: ${resendApiKey ? 'Yes' : 'No'}`);
-
-    // Priority 1: Try Outlook/Office 365 SMTP (if configured)
-    if (smtpPassword && smtpPassword !== 'your-app-password-here' && smtpUsername) {
-      try {
-        console.log('📤 Attempting to send email via Outlook SMTP...');
-        
-        const smtpResult = await sendOutlookEmail({
-          host: smtpHost,
-          port: smtpPort,
-          username: smtpUsername,
-          password: smtpPassword,
-          fromEmail: fromEmail
-        }, {
-          to,
-          subject,
-          html,
-          text: text || generateTextFromHtml(html)
-        });
-
-        if (smtpResult.success) {
-          console.log(`✅ Email sent successfully via Outlook SMTP to ${to}`);
-          
-          return new Response(
-            JSON.stringify({ 
-              success: true, 
-              message: 'Email sent successfully via Outlook SMTP',
-              to: to,
-              subject: subject,
-              messageId: smtpResult.messageId,
-              service: 'Outlook SMTP',
-              details: smtpResult.details
-            }),
-            {
-              status: 200,
-              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            }
-          );
-        } else {
-          console.error('❌ Outlook SMTP failed:', smtpResult.error);
-          console.log('🔄 Falling back to alternative email service...');
-        }
-      } catch (smtpError) {
-        console.error('❌ Outlook SMTP error:', smtpError);
-        console.log('🔄 Falling back to alternative email service...');
-      }
-    } else {
-      console.log('⚠️ Outlook SMTP not fully configured');
-      if (!smtpUsername) console.log('  - Missing SMTP_USERNAME');
-      if (!smtpPassword || smtpPassword === 'your-app-password-here') console.log('  - Missing or placeholder SMTP_PASSWORD');
+    if (resendApiKey) {
+      console.log(`📧 API key format: ${resendApiKey.substring(0, 5)}...${resendApiKey.substring(resendApiKey.length - 4)}`)
     }
 
-    // Priority 2: Try Resend (if SMTP fails or not configured)
-    if (resendApiKey && resendApiKey !== 'your-resend-api-key-here') {
+    // Try Resend API
+    if (resendApiKey && resendApiKey.startsWith('re_') && resendApiKey.length > 20) {
       try {
-        console.log('📤 Attempting to send email via Resend...');
+        console.log('📤 Calling Resend API...')
         
         const resendResponse = await fetch('https://api.resend.com/emails', {
           method: 'POST',
@@ -130,87 +52,83 @@ serve(async (req) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            from: `ACS Ticket System <${fromEmail}>`,
+            from: 'ACS Ticket System <onboarding@resend.dev>',
             to: [to],
             subject: subject,
             html: html,
-            text: text || generateTextFromHtml(html)
+            text: text || html.replace(/<[^>]*>/g, '').trim()
           }),
-        });
+        })
+
+        console.log(`📧 Resend response: ${resendResponse.status} ${resendResponse.statusText}`)
+        
+        const responseText = await resendResponse.text()
+        console.log(`📧 Resend body: ${responseText}`)
 
         if (resendResponse.ok) {
-          const result = await resendResponse.json();
-          console.log(`✅ Email sent successfully via Resend to ${to}`);
+          const result = JSON.parse(responseText)
+          console.log(`✅ Email sent successfully! ID: ${result.id}`)
           
           return new Response(
             JSON.stringify({ 
               success: true, 
-              message: 'Email sent successfully via Resend',
+              message: 'Email sent successfully via Resend API',
               to: to,
               subject: subject,
               messageId: result.id,
-              service: 'Resend'
+              service: 'Resend API'
             }),
-            {
-              status: 200,
-              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            }
-          );
+            { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          )
         } else {
-          const errorData = await resendResponse.json();
-          console.error('❌ Resend API error:', errorData);
-          throw new Error(`Resend error: ${errorData.message}`);
+          console.error('❌ Resend API error:', responseText)
+          
+          return new Response(
+            JSON.stringify({ 
+              success: false, 
+              error: 'Resend API failed',
+              details: responseText
+            }),
+            { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          )
         }
-      } catch (resendError) {
-        console.error('❌ Resend sending failed:', resendError);
-        console.log('🔄 Falling back to simulation mode...');
+      } catch (error) {
+        console.error('❌ Resend API call failed:', error)
+        
+        return new Response(
+          JSON.stringify({ 
+            success: false, 
+            error: 'Failed to call Resend API',
+            details: error.message
+          }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
       }
+    } else {
+      console.error('❌ Invalid or missing Resend API key')
+      
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          error: 'Invalid or missing Resend API key',
+          configured: !!resendApiKey,
+          keyFormat: resendApiKey ? 'Check key format' : 'Not configured'
+        }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
     }
 
-    // Simulation mode (when no email service is configured)
-    console.warn('⚠️ No email service configured properly - running in simulation mode');
-    console.log(`📝 Email content preview for ${to}:`);
-    console.log(`📌 Subject: ${subject}`);
-    console.log(`📄 Text preview: ${generateTextFromHtml(html).substring(0, 200)}...`);
-    
-    return new Response(
-      JSON.stringify({ 
-        success: true, 
-        message: 'Email processed successfully (simulation mode)',
-        to: to,
-        subject: subject,
-        note: 'Configure SMTP credentials (username & app password) for Outlook or RESEND_API_KEY for Resend',
-        service: 'Simulation',
-        configuration: {
-          smtpConfigured: !!(smtpPassword && smtpUsername),
-          resendConfigured: !!resendApiKey,
-          smtpHost: smtpHost,
-          smtpPort: smtpPort,
-          smtpUsername: smtpUsername || 'not configured',
-          smtpPasswordStatus: smtpPassword ? (smtpPassword === 'your-app-password-here' ? 'placeholder' : 'configured') : 'missing'
-        }
-      }),
-      {
-        status: 200,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
-
   } catch (error) {
-    console.error('❌ Unexpected error in email function:', error);
-    console.error('❌ Error stack:', error.stack);
+    console.error('❌ Function error:', error)
     
     return new Response(
       JSON.stringify({ 
-        error: 'Failed to process email', 
-        details: error?.message || 'Unknown error occurred',
-        timestamp: new Date().toISOString()
+        success: false, 
+        error: 'Function execution failed',
+        details: error.message
       }),
-      {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    )
   }
 })
 
@@ -288,13 +206,14 @@ async function sendOutlookEmail(
       console.log(`   Via: ${config.host}:${config.port}`);
       
       // Since Deno Edge Functions don't support native SMTP libraries,
-      // we'll mark this as successful but note that real SMTP integration
-      // requires a proper email service or SMTP relay
+      // return honest failure instead of fake success
+      console.log('❌ SMTP not available in Edge Functions environment');
+      console.log('💡 Use email service APIs (like Resend) for reliable delivery');
       
       return { 
-        success: true, 
-        messageId: 'outlook-ready-' + Date.now(),
-        details: 'Outlook SMTP configured and ready (requires SMTP relay service for actual delivery)'
+        success: false, 
+        error: 'SMTP not available in Edge Functions environment. Use Resend API for reliable email delivery.',
+        details: 'Edge Functions require email service APIs, not native SMTP libraries'
       };
       
     } catch (alternativeError) {

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useTranslation } from 'react-i18next';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -42,6 +43,7 @@ interface TaskManagementProps {
 }
 
 export function TaskManagement({ ticketId, canManageTasks }: TaskManagementProps) {
+  const { t } = useTranslation();
   const { userProfile } = useAuth();
   const [tasks, setTasks] = useState<TicketTask[]>([]);
   const [agents, setAgents] = useState<any[]>([]);
@@ -306,7 +308,7 @@ export function TaskManagement({ ticketId, canManageTasks }: TaskManagementProps
                     <Input
                       value={formData.title}
                       onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                      placeholder="Enter task title..."
+                      placeholder={t('placeholders.enterTaskTitle')}
                     />
                   </div>
                   
@@ -596,7 +598,7 @@ export function TaskManagement({ ticketId, canManageTasks }: TaskManagementProps
                         {/* Add Comment */}
                         <div className="flex gap-2">
                           <Input
-                            placeholder="Add a comment..."
+                            placeholder={t('placeholders.addComment')}
                             value={newComment[task.id] || ''}
                             onChange={(e) => setNewComment(prev => ({ 
                               ...prev, 

@@ -124,8 +124,24 @@ export const useNotifications = () => {
       setUnreadCount(prev => prev + 1);
     }
 
-    // Show toast notification
-    NotificationService.showToastNotification(notification);
+    // Show toast notification only if user has enabled it
+    try {
+      const userPreferences = localStorage.getItem('userPreferences');
+      let toastNotificationsEnabled = true; // Default to enabled
+      
+      if (userPreferences) {
+        const preferences = JSON.parse(userPreferences);
+        toastNotificationsEnabled = preferences.toastNotifications ?? true;
+      }
+      
+      if (toastNotificationsEnabled) {
+        NotificationService.showToastNotification(notification);
+      }
+    } catch (error) {
+      // If there's an error reading preferences, default to showing toast
+      console.warn('Error reading toast notification preferences:', error);
+      NotificationService.showToastNotification(notification);
+    }
   }, []);
 
   // Setup real-time subscription

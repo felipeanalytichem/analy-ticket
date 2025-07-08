@@ -898,15 +898,43 @@ export class DatabaseService {
 
   static async createTicket(ticketData: Partial<TicketRow>, userFullName?: string) {
     try {
-      // Remove ticket_number para deixar o banco gerar automaticamente no padrão ACS-TK-YYYYMM-NNNNN
-      const { ticket_number, ...ticketDataWithoutNumber } = ticketData;
-
+      // Create ticket object without ticket_number - let the database trigger generate it automatically
       const newTicket = {
-        ...ticketDataWithoutNumber,
-        // ticket_number será gerado automaticamente pelo trigger do banco
+        title: ticketData.title,
+        description: ticketData.description,
+        priority: ticketData.priority,
+        category_id: ticketData.category_id,
+        subcategory_id: ticketData.subcategory_id,
+        country: ticketData.country,
+        user_id: ticketData.user_id,
+        first_name: ticketData.first_name,
+        last_name: ticketData.last_name,
+        username: ticketData.username,
+        display_name: ticketData.display_name,
+        job_title: ticketData.job_title,
+        manager: ticketData.manager,
+        company_name: ticketData.company_name,
+        department: ticketData.department,
+        office_location: ticketData.office_location,
+        business_phone: ticketData.business_phone,
+        mobile_phone: ticketData.mobile_phone,
+        start_date: ticketData.start_date,
+        signature_group: ticketData.signature_group,
+        usage_location: ticketData.usage_location,
+        country_distribution_list: ticketData.country_distribution_list,
+        license_type: ticketData.license_type,
+        mfa_setup: ticketData.mfa_setup,
+        attached_form: ticketData.attached_form,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
+      
+      // Remove undefined/null values
+      Object.keys(newTicket).forEach(key => {
+        if (newTicket[key] === undefined || newTicket[key] === null) {
+          delete newTicket[key];
+        }
+      });
 
       console.log('🎫 Creating ticket with auto-generated ticket number (ACS-TK pattern)');
       console.log('📋 Dados completos do ticket:', JSON.stringify(newTicket, null, 2));
@@ -989,7 +1017,9 @@ export class DatabaseService {
 
           // Assignment change notification
           if (updates.assigned_to !== undefined && updates.assigned_to !== currentTicket.assigned_to) {
-            await this.createTicketNotification(ticketId, 'assignment_changed', updates.assigned_to);
+            // Pass the previous assignee as target if removing assignment, new assignee if adding
+            const targetUserId = updates.assigned_to || currentTicket.assigned_to;
+            await this.createTicketNotification(ticketId, 'assignment_changed', targetUserId);
             console.log(`🔔 Assignment change notification sent: ${currentTicket.assigned_to} → ${updates.assigned_to}`);
           }
 
@@ -2350,8 +2380,17 @@ export class DatabaseService {
             recipients = agents.map(agent => agent.id);
           }
 
-          title = `Novo Ticket: ${context.ticketNumber}`;
-          message = `Ticket "${context.ticketTitle}" foi criado por ${context.creatorName}`;
+          title = JSON.stringify({
+            key: 'notifications.types.ticket_created.title',
+            params: { ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8) }
+          });
+          message = JSON.stringify({
+            key: 'notifications.types.ticket_created.message',
+            params: { 
+              ticketTitle: context.ticketTitle || 'notifications.fallback.noTitle',
+              creatorName: context.creatorName || 'Unknown User'
+            }
+          });
           break;
 
         case 'status_changed':
@@ -2361,21 +2400,72 @@ export class DatabaseService {
             recipients.push(ticket.assigned_to);
           }
 
-          title = `Status Atualizado: ${context.ticketNumber}`;
-          message = `Status do ticket "${context.ticketTitle}" foi alterado para ${context.status}`;
+          title = JSON.stringify({
+            key: 'notifications.types.status_changed.title',
+            params: { ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8) }
+          });
+          message = JSON.stringify({
+            key: 'notifications.types.status_changed.message',
+            params: { 
+              ticketTitle: context.ticketTitle || 'notifications.fallback.noTitle',
+              status: context.status || 'unknown'
+            }
+          });
           break;
 
         case 'ticket_assigned':
         case 'assignment_changed':
-          // Notify the assigned agent and the ticket creator
-          recipients = [ticket.user_id];
+          // Handle different assignment scenarios
           if (ticket.assigned_to && ticket.assigned_to !== ticket.user_id) {
-            recipients.push(ticket.assigned_to);
-            title = `Ticket Atribuído: ${context.ticketNumber}`;
-            message = `Ticket "${context.ticketTitle}" foi atribuído para ${context.assigneeName}`;
+            // Ticket assigned to an agent - notify both creator and assigned agent
+            recipients = [ticket.user_id, ticket.assigned_to];
+            title = JSON.stringify({
+              key: 'notifications.types.assignment_changed.assigned.title',
+              params: { ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8) }
+            });
+            message = JSON.stringify({
+              key: 'notifications.types.assignment_changed.assigned.message',
+              params: { 
+                ticketTitle: context.ticketTitle || 'notifications.fallback.noTitle',
+                assigneeName: context.assigneeName || 'notifications.fallback.defaultAgent'
+              }
+            });
+          } else if (ticket.assigned_to && ticket.assigned_to === ticket.user_id) {
+            // Self-assigned ticket
+            recipients = [ticket.user_id];
+            title = JSON.stringify({
+              key: 'notifications.types.assignment_changed.selfAssigned.title',
+              params: { ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8) }
+            });
+            message = JSON.stringify({
+              key: 'notifications.types.assignment_changed.selfAssigned.message',
+              params: { ticketTitle: context.ticketTitle || 'notifications.fallback.noTitle' }
+            });
           } else if (!ticket.assigned_to) {
-            title = `Atribuição Removida: ${context.ticketNumber}`;
-            message = `Atribuição do ticket "${context.ticketTitle}" foi removida`;
+            // Assignment removed
+            recipients = [ticket.user_id];
+            if (targetUserId) {
+              recipients.push(targetUserId); // Notify the agent who lost the assignment
+            }
+            title = JSON.stringify({
+              key: 'notifications.types.assignment_changed.removed.title',
+              params: { ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8) }
+            });
+            message = JSON.stringify({
+              key: 'notifications.types.assignment_changed.removed.message',
+              params: { ticketTitle: context.ticketTitle || 'notifications.fallback.noTitle' }
+            });
+          } else {
+            // Fallback case - ensure we always have content
+            recipients = [ticket.user_id];
+            title = JSON.stringify({
+              key: 'notifications.types.assignment_changed.fallback.title',
+              params: { ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8) }
+            });
+            message = JSON.stringify({
+              key: 'notifications.types.assignment_changed.fallback.message',
+              params: { ticketTitle: context.ticketTitle || 'notifications.fallback.noTitle' }
+            });
           }
           break;
 
@@ -2386,8 +2476,17 @@ export class DatabaseService {
             recipients.push(ticket.assigned_to);
           }
 
-          title = `Prioridade Alterada: ${context.ticketNumber}`;
-          message = `Prioridade do ticket "${context.ticketTitle}" foi alterada para ${context.priority}`;
+          title = JSON.stringify({
+            key: 'notifications.types.priority_changed.title',
+            params: { ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8) }
+          });
+          message = JSON.stringify({
+            key: 'notifications.types.priority_changed.message',
+            params: { 
+              ticketTitle: context.ticketTitle || 'notifications.fallback.noTitle',
+              priority: context.priority || 'unknown'
+            }
+          });
           break;
 
         case 'resolved':
@@ -2410,8 +2509,14 @@ export class DatabaseService {
           if (ticket.assigned_to && ticket.assigned_to !== ticket.user_id) {
             recipients.push(ticket.assigned_to);
           }
-          title = `Novo Comentário: ${context.ticketNumber}`;
-          message = `Um novo comentário foi adicionado ao ticket "${context.ticketTitle}"`;
+          title = JSON.stringify({
+            key: 'notifications.types.comment_added.title',
+            params: { ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8) }
+          });
+          message = JSON.stringify({
+            key: 'notifications.types.comment_added.message',
+            params: { ticketTitle: context.ticketTitle || 'notifications.fallback.noTitle' }
+          });
           break;
 
         default:

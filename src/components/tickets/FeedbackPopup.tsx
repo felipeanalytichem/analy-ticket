@@ -19,6 +19,7 @@ import {
 import { DatabaseService, TicketWithDetails } from "@/lib/database";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslation } from 'react-i18next';
 
 interface FeedbackPopupProps {
   ticketId: string | null;
@@ -54,6 +55,7 @@ export const FeedbackPopup = ({
   
   const { userProfile } = useAuth();
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const satisfactionOptions = [
     { value: "satisfied", label: "Satisfeito", icon: ThumbsUp, color: "text-green-600" },
@@ -355,7 +357,7 @@ export const FeedbackPopup = ({
                   <Textarea
                     value={feedback.comment}
                     onChange={(e) => setFeedback(prev => ({ ...prev, comment: e.target.value }))}
-                    placeholder="Conte-nos mais sobre sua experiência..."
+                    placeholder={t('feedback.experiencePlaceholder')}
                     className="min-h-20 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
                     disabled={submitting}
                   />

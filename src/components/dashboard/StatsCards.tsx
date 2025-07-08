@@ -135,7 +135,7 @@ export const StatsCards = () => {
       change: stats.resolved - previousStats.resolved
     },
     {
-      title: t('common.totalTickets') || t('dashboard.totalTickets') || 'Total',
+      title: t('dashboard.totalTickets'),
       value: stats.total.toString(),
       color: "text-purple-600 dark:text-purple-400",
       bgColor: "bg-purple-50 dark:bg-purple-950/20",

@@ -334,7 +334,7 @@ export function TicketChat({ ticketId, className }: TicketChatProps) {
         {showSearch && (
           <div className="mt-2">
             <Input
-              placeholder="Search messages..."
+                              placeholder={t('chat.searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="h-8"

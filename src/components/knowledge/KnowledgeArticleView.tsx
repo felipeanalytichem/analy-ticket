@@ -46,6 +46,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useAuth } from '@/contexts/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 interface StepData {
   title: string;
@@ -58,6 +59,7 @@ export const KnowledgeArticleView = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { userProfile } = useAuth();
+  const { t } = useTranslation();
   const contentRef = useRef<HTMLDivElement>(null);
   const [article, setArticle] = useState<any>(null);
   const [relatedArticles, setRelatedArticles] = useState<any[]>([]);
@@ -801,7 +803,7 @@ export const KnowledgeArticleView = () => {
                     {showFeedbackForm && (
                       <div className="max-w-md mx-auto space-y-4">
                         <Textarea
-                          placeholder="Help us improve! What information were you looking for that you couldn't find?"
+                          placeholder={t('placeholders.helpImprove')}
                           value={feedbackComment}
                           onChange={(e) => setFeedbackComment(e.target.value)}
                           className="min-h-[100px]"

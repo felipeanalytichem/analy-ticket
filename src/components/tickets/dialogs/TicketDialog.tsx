@@ -15,6 +15,8 @@ import { X, Paperclip, AlertCircle, Loader2, UserPlus, Globe } from "lucide-reac
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/components/ui/sonner";
 import { useTranslation } from "react-i18next";
+import { AttachmentPreview } from "../AttachmentPreview";
+import { validateFile } from "@/lib/fileUtils";
 
 interface TicketDialogProps {
   open: boolean;
@@ -213,8 +215,8 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
         updated_at: new Date().toISOString()
       });
 
-      // Create notification
-      await DatabaseService.createTicketNotification(ticket.id, 'ticket_assigned');
+      // Create notification for the assigned agent
+      await DatabaseService.createTicketNotification(ticket.id, 'assignment_changed', selectedAgent);
 
       toast.success(t('tickets.assign.successTitle'), {
         description: t('tickets.assign.successDescription')
@@ -453,7 +455,34 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    setAttachments(prev => [...prev, ...files]);
+    
+    // Validate each file
+    const validFiles: File[] = [];
+    const errors: string[] = [];
+    
+    files.forEach(file => {
+      const validation = validateFile(file);
+      if (validation.valid) {
+        validFiles.push(file);
+      } else {
+        errors.push(`${file.name}: ${validation.error}`);
+      }
+    });
+    
+    // Show errors if any
+    if (errors.length > 0) {
+      toast.error("File validation errors", {
+        description: errors.join('\n')
+      });
+    }
+    
+    // Add valid files
+    if (validFiles.length > 0) {
+      setAttachments(prev => [...prev, ...validFiles]);
+    }
+    
+    // Reset input
+    e.target.value = '';
   };
 
   const removeAttachment = (index: number) => {
@@ -889,42 +918,32 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
             
             <div className="md:col-span-2">
               <Label>Attachments</Label>
-              <div className="mt-1">
+              <div className="mt-1 space-y-4">
                 <Input
                   type="file"
                   multiple
                   onChange={handleFileChange}
                   className="hidden"
                   id="file-upload"
+                  accept="image/*,.pdf,.doc,.docx,.txt,.xls,.xlsx,.mp4,.mp3,.wav"
                 />
                 <Label 
                   htmlFor="file-upload" 
-                  className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                  className="flex items-center gap-2 px-4 py-3 border border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                 >
-                  <Paperclip className="h-4 w-4" />
-                  Click to attach files or drag and drop
+                  <Paperclip className="h-5 w-5" />
+                  <div className="text-center">
+                    <div className="font-medium">Click to attach files or drag and drop</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      Supports images, PDFs, documents, videos, and audio files (max 10MB each)
+                    </div>
+                  </div>
                 </Label>
                 
-                {attachments.length > 0 && (
-                  <div className="mt-3 space-y-2">
-                    {attachments.map((file, index) => (
-                      <div key={index} className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-2 rounded">
-                        <span className="text-sm text-gray-700 dark:text-gray-300 truncate">
-                          {file.name} ({(file.size / 1024).toFixed(1)} KB)
-                        </span>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => removeAttachment(index)}
-                          className="h-6 w-6 p-0"
-                        >
-                          <X className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                <AttachmentPreview
+                  files={attachments}
+                  onRemove={removeAttachment}
+                />
               </div>
             </div>
           </div>

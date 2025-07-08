@@ -148,8 +148,8 @@ export const QuickAssignDialog = ({
         updated_at: new Date().toISOString()
       });
 
-      // Create notification
-      await DatabaseService.createTicketNotification(ticket.id, 'ticket_assigned');
+      // Create notification for the assigned agent
+      await DatabaseService.createTicketNotification(ticket.id, 'assignment_changed', selectedAgent);
 
       toast.success(t('tickets.assign.successTitle'), {
         description: t('tickets.assign.successDescription')

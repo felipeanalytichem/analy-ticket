@@ -71,6 +71,12 @@
     "knowledgeAdmin": "Admin Conhecimento",
     "mainMenu": "Menu Principal"
   },
+  "theme": {
+    "toggle": "Alternar tema",
+    "switchToDark": "Mudar para tema escuro",
+    "switchToLight": "Mudar para tema claro", 
+    "switchToSystem": "Mudar para tema do sistema"
+  },
   "sidebar": {
     "dashboard": "Painel",
     "createTicket": "Criar Ticket",
@@ -721,7 +727,124 @@
     "loading": "Carregando mensagens...",
     "noMessages": "Nenhuma mensagem ainda",
     "typeMessage": "Digite uma mensagem...",
+    "typePlaceholder": "Digite sua mensagem...",
+    "searchPlaceholder": "Buscar mensagens...",
     "send": "Enviar"
+  },
+  "comments": {
+    "addPlaceholder": "Adicionar comentário..."
+  },
+  "feedback": {
+    "experiencePlaceholder": "Conte-nos mais sobre sua experiência..."
+  },
+  "agent": {
+    "internalNotePlaceholder": "Adicione uma nota interna para outros agentes...",
+    "responsePlaceholder": "Digite sua resposta para o usuário..."
+  },
+  "tickets": {
+    "createdOn": "Criado em {{date}}",
+    "updatedOn": "Atualizado em {{date}}"
+  },
+  "placeholders": {
+    "searchTickets": "Buscar tickets...",
+    "enterTaskTitle": "Digite o título da tarefa...",
+    "addComment": "Adicionar um comentário...",
+    "selectAgent": "Selecionar agente...",
+    "selectTicket": "Selecionar ticket...",
+    "enterTag": "Digite uma tag...",
+    "helpImprove": "Nos ajude a melhorar! Que informação você estava procurando que não conseguiu encontrar?",
+    "testMessage": "Mensagem de teste..."
+  },
+  "aria": {
+    "deleteNotification": "Excluir notificação",
+    "openTicket": "Abrir ticket",
+    "removeTag": "Remover tag",
+    "attachFile": "Anexar arquivo",
+    "attachImage": "Anexar imagem"
+  },
+  "titles": {
+    "preview": "Visualizar",
+    "download": "Baixar",
+    "generating": "Gerando visualização...",
+    "removeFile": "Remover arquivo",
+    "formBuilder": "Construtor de formulário"
+  },
+  "notifications": {
+    "title": "Notificações",
+    "markAllRead": "Marcar todas como lidas",
+    "noNotifications": "Nenhuma notificação",
+    "fallback": {
+      "noTitle": "Sem título",
+      "unknownUser": "Usuário desconhecido",
+      "defaultAgent": "Agente"
+    },
+    "actions": {
+      "viewTicket": "Ver Ticket"
+    },
+    "types": {
+      "ticket_created": {
+        "title": "🎫 Novo Ticket: {{ticketNumber}}",
+        "message": "Novo ticket criado: \"{{ticketTitle}}\" por {{userName}}"
+      },
+      "ticket_assigned": {
+        "title": "👤 Ticket Atribuído: {{ticketNumber}}",
+        "message": "Você foi designado para o ticket \"{{ticketTitle}}\""
+      },
+      "assignment_changed": {
+        "assigned": {
+          "title": "🔄 Ticket Atribuído: {{ticketNumber}}",
+          "message": "Ticket \"{{ticketTitle}}\" foi atribuído para {{assigneeName}}"
+        },
+        "selfAssigned": {
+          "title": "👤 Você assumiu o ticket: {{ticketNumber}}",
+          "message": "Você assumiu o ticket \"{{ticketTitle}}\""
+        },
+        "removed": {
+          "title": "🔄 Atribuição removida: {{ticketNumber}}",
+          "message": "A atribuição do ticket \"{{ticketTitle}}\" foi removida"
+        },
+        "fallback": {
+          "title": "🔄 Atribuição alterada: {{ticketNumber}}",
+          "message": "A atribuição do ticket \"{{ticketTitle}}\" foi alterada"
+        }
+      },
+      "status_changed": {
+        "title": "🔄 Status Alterado: {{ticketNumber}}",
+        "message": "O status do ticket \"{{ticketTitle}}\" foi alterado para {{status}}"
+      },
+      "comment_added": {
+        "title": "💬 Novo Comentário: {{ticketNumber}}",
+        "message": "Novo comentário adicionado ao ticket \"{{ticketTitle}}\""
+      },
+      "priority_changed": {
+        "title": "⚡ Prioridade Alterada: {{ticketNumber}}",
+        "message": "Prioridade do ticket \"{{ticketTitle}}\" alterada para {{priority}}"
+      },
+      "feedback_request": {
+        "title": "⭐ Avalie seu atendimento",
+        "message": "Seu chamado foi resolvido! Que tal avaliar o atendimento recebido? Sua opinião é muito importante para nós."
+      },
+      "feedback_received": {
+        "title": "⭐ Feedback Recebido",
+        "message": "Você recebeu uma avaliação para o chamado {{ticketNumber}}. Clique para ver os detalhes."
+      },
+      "first_response": {
+        "title": "💬 Primeira Resposta Registrada",
+        "message": "A primeira resposta ao chamado {{ticketNumber}} foi registrada."
+      },
+      "sla_warning": {
+        "title": "⚠️ Aviso de SLA",
+        "message": "O ticket {{ticketNumber}} está se aproximando do prazo limite do SLA. Ação necessária para cumprir o compromisso de serviço."
+      },
+      "sla_breach": {
+        "title": "🚨 Violação de SLA",
+        "message": "URGENTE: O ticket {{ticketNumber}} excedeu o prazo limite do SLA. Ação imediata necessária."
+      },
+      "task_assigned": {
+        "title": "📋 Nova Tarefa Atribuída",
+        "message": "Você foi designado para uma nova tarefa: \"{{taskTitle}}\" no ticket {{ticketNumber}}"
+      }
+    }
   },
   "settings": {
     "title": "Configurações",

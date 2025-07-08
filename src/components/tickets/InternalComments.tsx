@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useTranslation } from 'react-i18next';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
@@ -22,6 +23,7 @@ interface ExtendedComment extends CommentWithUser {
 }
 
 export const InternalComments = ({ ticketId, userRole, assignedUserId, onCommentAdded }: InternalCommentsProps) => {
+  const { t } = useTranslation();
   const [comments, setComments] = useState<ExtendedComment[]>([]);
   const [newComment, setNewComment] = useState("");
   const [isInternal, setIsInternal] = useState(false); // Default to public for better UX
@@ -171,7 +173,7 @@ export const InternalComments = ({ ticketId, userRole, assignedUserId, onComment
       {canAddComments && (
         <div className="space-y-4 p-4 bg-gray-50/50 dark:bg-gray-800/30 rounded-lg border border-gray-200/50 dark:border-gray-700/50">
           <Textarea
-            placeholder="Adicionar comentário..."
+                            placeholder={t('comments.addPlaceholder')}
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             className="min-h-20 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 resize-none"

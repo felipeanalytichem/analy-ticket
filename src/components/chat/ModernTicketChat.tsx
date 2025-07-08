@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Input } from '@/components/ui/input';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 // import { ScrollArea } from '@/components/ui/scroll-area'; // Temporarily disabled
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -82,6 +83,7 @@ const EMOJI_LIST = ['👍', '👎', '❤️', '😊', '😂', '😮', '😢', '�
 
 export function ModernTicketChat({ ticketId, className, onMessageSent }: ModernTicketChatProps) {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const { toast } = useToast();
   const { theme } = useTheme();
   const { 
@@ -687,7 +689,7 @@ export function ModernTicketChat({ ticketId, className, onMessageSent }: ModernT
             <Input
               ref={inputRef}
               value={messageText}
-              placeholder="Type your message..."
+              placeholder={t('chat.typePlaceholder')}
               onKeyPress={handleKeyPress}
               onChange={(e) => {
                 setMessageText(e.target.value);

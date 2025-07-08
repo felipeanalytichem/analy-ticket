@@ -19,6 +19,7 @@ import { NotificationBell } from "@/components/notifications/NotificationBell";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from 'react-i18next';
 
 interface HeaderProps {
   title?: string;
@@ -27,6 +28,7 @@ interface HeaderProps {
 }
 
 export function Header({ title = "Dashboard", showSearch = true, onSearch }: HeaderProps) {
+  const { t } = useTranslation();
   const { userProfile, signOut } = useAuth();
   const isMobile = useIsMobile();
   const navigate = useNavigate();
@@ -101,7 +103,7 @@ export function Header({ title = "Dashboard", showSearch = true, onSearch }: Hea
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
                 type="search"
-                placeholder={isMobile ? "Search..." : "Search tickets, users..."}
+                placeholder={isMobile ? t('common.search') : t('header.searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => setIsSearchFocused(true)}

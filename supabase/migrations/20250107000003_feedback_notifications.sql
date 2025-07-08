@@ -30,8 +30,8 @@ BEGIN
         ) VALUES (
             NEW.user_id,
             'feedback_request',
-            'Avalie seu atendimento',
-            'Seu chamado foi resolvido! Que tal avaliar o atendimento recebido? Sua opinião é muito importante para nós.',
+            JSON.STRINGIFY('{"key": "notifications.types.feedback_request.title"}'),
+            JSON.STRINGIFY('{"key": "notifications.types.feedback_request.message"}'),
             'medium',
             NEW.id,
             FALSE,
@@ -84,8 +84,8 @@ BEGIN
         ) VALUES (
             ticket_record.assigned_to,
             'feedback_received',
-            'Feedback recebido',
-            'Você recebeu uma avaliação para o chamado ' || COALESCE(ticket_record.ticket_number, ticket_record.id) || '. Clique para ver os detalhes.',
+            JSON.STRINGIFY('{"key": "notifications.types.feedback_received.title"}'),
+            JSON.STRINGIFY('{"key": "notifications.types.feedback_received.message", "params": {"ticketNumber": "' || COALESCE(ticket_record.ticket_number, ticket_record.id) || '"}}'),
             'medium',
             NEW.ticket_id,
             FALSE,
@@ -111,8 +111,8 @@ BEGIN
             ) VALUES (
                 admin_user.id,
                 'feedback_received',
-                'Feedback recebido',
-                'Foi recebida uma avaliação para o chamado ' || COALESCE(ticket_record.ticket_number, ticket_record.id) || '. Clique para ver os detalhes.',
+                JSON.STRINGIFY('{"key": "notifications.types.feedback_received.title"}'),
+                JSON.STRINGIFY('{"key": "notifications.types.feedback_received.message", "params": {"ticketNumber": "' || COALESCE(ticket_record.ticket_number, ticket_record.id) || '"}}'),
                 'low',
                 NEW.ticket_id,
                 FALSE,

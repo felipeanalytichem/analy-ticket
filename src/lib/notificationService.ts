@@ -274,15 +274,24 @@ export class NotificationService {
         return false;
       }
 
-             const notifications = recipients.map(user => ({
-         user_id: user.id,
-         type: 'ticket_created' as const,
-         title: `Novo Ticket: ${context.ticketNumber}`,
-         message: `Novo ticket criado: "${context.ticketTitle}" por ${context.userName}`,
-         priority: 'medium' as const,
-         ticket_id: ticketId,
-         read: false
-       }));
+      const notifications = recipients.map(user => ({
+        user_id: user.id,
+        type: 'ticket_created' as const,
+        title: JSON.stringify({
+          key: 'notifications.types.ticket_created.title',
+          params: { ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8) }
+        }),
+        message: JSON.stringify({
+          key: 'notifications.types.ticket_created.message',
+          params: { 
+            ticketTitle: context.ticketTitle || 'notifications.fallback.noTitle',
+            userName: context.userName || 'notifications.fallback.unknownUser'
+          }
+        }),
+        priority: 'medium' as const,
+        ticket_id: ticketId,
+        read: false
+      }));
 
       const { error } = await supabase
         .from('notifications')
@@ -306,14 +315,22 @@ export class NotificationService {
    */
   static async createTicketAssignedNotification(ticketId: string, assignedUserId: string, context: NotificationContext): Promise<boolean> {
     try {
-             const notification = {
-         user_id: assignedUserId,
-         type: 'ticket_assigned' as const,
-         title: `Ticket Atribuído: ${context.ticketNumber}`,
-         message: `Ticket "${context.ticketTitle}" foi atribuído para você`,
-         priority: 'high' as const,
+      const notification = {
+        user_id: assignedUserId,
+        type: 'ticket_assigned' as const,
+        title: JSON.stringify({
+          key: 'notifications.types.ticket_assigned.title',
+          params: { ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8) }
+        }),
+        message: JSON.stringify({
+          key: 'notifications.types.ticket_assigned.message',
+          params: { 
+            ticketTitle: context.ticketTitle || 'notifications.fallback.noTitle'
+          }
+        }),
+        priority: 'high' as const,
         ticket_id: ticketId,
-         read: false
+        read: false
       };
 
       const { error } = await supabase
@@ -341,8 +358,17 @@ export class NotificationService {
       const notificationData = {
         user_id: ticketUserId,
         type: 'status_changed' as const,
-        title: 'Status do Ticket Atualizado',
-        message: `O status do ticket #${context.ticketNumber} foi alterado para ${context.newStatus}.`,
+        title: JSON.stringify({
+          key: 'notifications.types.status_changed.title',
+          params: { ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8) }
+        }),
+        message: JSON.stringify({
+          key: 'notifications.types.status_changed.message',
+          params: { 
+            ticketTitle: context.ticketTitle || 'notifications.fallback.noTitle',
+            status: context.newStatus || 'unknown'
+          }
+        }),
         priority: 'medium' as const,
         ticket_id: ticketId,
         read: false,
@@ -384,31 +410,43 @@ export class NotificationService {
 
       const notifications = [];
       
-             // Notify ticket creator (if not the commenter)
-       if (context.userName !== 'ticket_creator') {
-         notifications.push({
-           user_id: ticket.user_id,
-           type: 'comment_added' as const,
-           title: `Novo Comentário: ${ticket.ticket_number}`,
-           message: `Novo comentário adicionado ao seu ticket "${ticket.title}"`,
-           priority: 'medium' as const,
-           ticket_id: ticketId,
-           read: false
-         });
-       }
+      // Notify ticket creator (if not the commenter)
+      if (context.userName !== 'ticket_creator') {
+        notifications.push({
+          user_id: ticket.user_id,
+          type: 'comment_added' as const,
+          title: JSON.stringify({
+            key: 'notifications.types.comment_added.title',
+            params: { ticketNumber: ticket.ticket_number || '#' + ticketId.slice(-8) }
+          }),
+          message: JSON.stringify({
+            key: 'notifications.types.comment_added.message',
+            params: { ticketTitle: ticket.title || 'notifications.fallback.noTitle' }
+          }),
+          priority: 'medium' as const,
+          ticket_id: ticketId,
+          read: false
+        });
+      }
 
-       // Notify assigned agent (if exists and different from commenter)
-       if (ticket.assigned_to && ticket.assigned_to !== ticket.user_id) {
-         notifications.push({
-           user_id: ticket.assigned_to,
-           type: 'comment_added' as const,
-           title: `Novo Comentário: ${ticket.ticket_number}`,
-           message: `Novo comentário adicionado ao ticket "${ticket.title}"`,
-           priority: 'medium' as const,
-           ticket_id: ticketId,
-           read: false
-         });
-       }
+      // Notify assigned agent (if exists and different from commenter)
+      if (ticket.assigned_to && ticket.assigned_to !== ticket.user_id) {
+        notifications.push({
+          user_id: ticket.assigned_to,
+          type: 'comment_added' as const,
+          title: JSON.stringify({
+            key: 'notifications.types.comment_added.title',
+            params: { ticketNumber: ticket.ticket_number || '#' + ticketId.slice(-8) }
+          }),
+          message: JSON.stringify({
+            key: 'notifications.types.comment_added.message',
+            params: { ticketTitle: ticket.title || 'notifications.fallback.noTitle' }
+          }),
+          priority: 'medium' as const,
+          ticket_id: ticketId,
+          read: false
+        });
+      }
 
       if (notifications.length > 0) {
         const { error } = await supabase
@@ -471,10 +509,36 @@ export class NotificationService {
   static showToastNotification(notification: Notification): void {
     const icon = this.getNotificationIcon(notification.type || 'default');
     
-    toast(`${icon} ${notification.message}`, {
+    // Try to translate the message and title if they're JSON i18n keys
+    let message = notification.message;
+    let title = notification.title;
+    
+    try {
+      const parsedMessage = JSON.parse(notification.message);
+      if (parsedMessage.key) {
+        // For toast notifications, we'll use a simplified message since we don't have access to t() here
+        message = 'New notification';
+      }
+    } catch {
+      // If it's not JSON, use as-is
+    }
+    
+    try {
+      const parsedTitle = JSON.parse(notification.title);
+      if (parsedTitle.key) {
+        // Use a simplified title for toast
+        title = '🔔 New Notification';
+      }
+    } catch {
+      // If it's not JSON, use as-is
+    }
+    
+    const displayMessage = `${title}: ${message}`;
+    
+    toast(`${icon} ${displayMessage}`, {
       duration: 5000,
       action: notification.ticket_id ? {
-        label: 'Ver Ticket',
+        label: 'View Ticket',
         onClick: () => {
           window.location.href = `/ticket/${notification.ticket_id}`;
         }
@@ -489,13 +553,18 @@ export class NotificationService {
     try {
       const notificationData = {
         user_id: userId,
-        type: 'sla_warning',
-        title: '⚠️ SLA Warning',
-        message: context.ticketNumber ? 
-          `Ticket ${context.ticketNumber} is approaching SLA deadline. Action required to meet service commitment.` :
-          'A ticket is approaching SLA deadline. Action required.',
+        type: 'status_changed' as const,
+        title: JSON.stringify({
+          key: 'notifications.types.sla_warning.title'
+        }),
+        message: JSON.stringify({
+          key: 'notifications.types.sla_warning.message',
+          params: { 
+            ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8)
+          }
+        }),
         ticket_id: ticketId,
-        priority: 'high',
+        priority: 'high' as const,
         read: false,
         created_at: new Date().toISOString()
       };
@@ -524,13 +593,18 @@ export class NotificationService {
     try {
       const notificationData = {
         user_id: userId,
-        type: 'sla_breach',
-        title: '🚨 SLA Breach Alert',
-        message: context.ticketNumber ? 
-          `URGENT: Ticket ${context.ticketNumber} has exceeded SLA deadline. Immediate action required.` :
-          'URGENT: A ticket has exceeded SLA deadline. Immediate action required.',
+        type: 'status_changed' as const,
+        title: JSON.stringify({
+          key: 'notifications.types.sla_breach.title'
+        }),
+        message: JSON.stringify({
+          key: 'notifications.types.sla_breach.message',
+          params: { 
+            ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8)
+          }
+        }),
         ticket_id: ticketId,
-        priority: 'urgent',
+        priority: 'high' as const,
         read: false,
         created_at: new Date().toISOString()
       };
@@ -560,8 +634,15 @@ export class NotificationService {
       const notificationData = {
         user_id: userId,
         type: 'status_changed' as const,
-        title: 'Primeira resposta registrada',
-        message: `A primeira resposta ao chamado #${context.ticketNumber} foi registrada.`,
+        title: JSON.stringify({
+          key: 'notifications.types.first_response.title'
+        }),
+        message: JSON.stringify({
+          key: 'notifications.types.first_response.message',
+          params: { 
+            ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8)
+          }
+        }),
         priority: 'medium' as const,
         ticket_id: ticketId,
         read: false,

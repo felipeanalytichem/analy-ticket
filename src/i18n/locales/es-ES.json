@@ -17,6 +17,28 @@
     "next": "Siguiente",
     "previous": "Anterior",
     "search": "Buscar",
+    "searchPlaceholder": "Buscar...",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "save": "Guardar", 
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "remove": "Quitar",
+    "close": "Cerrar",
+    "send": "Enviar",
+    "submit": "Enviar",
+    "create": "Crear",
+    "update": "Actualizar",
+    "preview": "Vista previa",
+    "download": "Descargar",
+    "upload": "Subir",
+    "titlePlaceholder": "Ingrese título...",
+    "descriptionPlaceholder": "Ingrese descripción..."
+  },
+  "header": {
+    "searchPlaceholder": "Buscar tickets, usuarios...",
     "filter": "Filtrar",
     "clear": "Limpiar",
     "refresh": "Actualizar",
@@ -29,7 +51,8 @@
     "unknownUser": "Usuario Desconocido",
     "pageNotFound": "¡Ups! Página no encontrada",
     "returnToHome": "Volver al Inicio",
-    "admin": "Administrador"
+    "admin": "Administrador",
+    "welcomeBack": "Bienvenido de vuelta"
   },
   "search": {
     "placeholder": "Buscar tickets..."
@@ -67,6 +90,12 @@
     "knowledgeAdmin": "Admin Conocimiento",
     "mainMenu": "Menú Principal"
   },
+  "theme": {
+    "toggle": "Alternar tema",
+    "switchToDark": "Cambiar a tema oscuro",
+    "switchToLight": "Cambiar a tema claro",
+    "switchToSystem": "Cambiar a tema del sistema"
+  },
   "sidebar": {
     "dashboard": "Panel",
     "createTicket": "Crear Ticket",
@@ -90,9 +119,6 @@
     "helpDeskSystem": "Sistema de Help Desk",
     "mainMenu": "Menú Principal",
     "administration": "Administración"
-  },
-  "header": {
-    "welcomeBack": "Bienvenido de vuelta"
   },
   "dashboard": {
     "welcome": "Bienvenido",
@@ -595,6 +621,121 @@
     "noMessages": "Aún no hay mensajes",
     "typeMessage": "Escribe un mensaje...",
     "send": "Enviar"
+  },
+  "comments": {
+    "addPlaceholder": "Agregar un comentario..."
+  },
+  "feedback": {
+    "experiencePlaceholder": "Cuéntanos más sobre tu experiencia..."
+  },
+  "agent": {
+    "internalNotePlaceholder": "Agregar una nota interna para otros agentes...",
+    "responsePlaceholder": "Escriba su respuesta al usuario..."
+  },
+  "tickets": {
+    "createdOn": "Creado el {{date}}",
+    "updatedOn": "Actualizado el {{date}}"
+  },
+  "placeholders": {
+    "searchTickets": "Buscar tickets...",
+    "enterTaskTitle": "Ingrese el título de la tarea...",
+    "addComment": "Agregar un comentario...",
+    "selectAgent": "Seleccionar agente...",
+    "selectTicket": "Seleccionar ticket...",
+    "enterTag": "Ingrese una etiqueta...",
+    "helpImprove": "¡Ayúdanos a mejorar! ¿Qué información buscabas que no pudiste encontrar?",
+    "testMessage": "Mensaje de prueba..."
+  },
+  "aria": {
+    "deleteNotification": "Eliminar notificación",
+    "openTicket": "Abrir ticket",
+    "removeTag": "Quitar etiqueta", 
+    "attachFile": "Adjuntar archivo",
+    "attachImage": "Adjuntar imagen"
+  },
+  "titles": {
+    "preview": "Vista previa",
+    "download": "Descargar",
+    "generating": "Generando vista previa...",
+    "removeFile": "Quitar archivo",
+    "formBuilder": "Constructor de formularios"
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "markAllRead": "Marcar todas como leídas",
+    "noNotifications": "Sin notificaciones",
+    "fallback": {
+      "noTitle": "Sin título",
+      "unknownUser": "Usuario desconocido",
+      "defaultAgent": "Agente"
+    },
+    "actions": {
+      "viewTicket": "Ver Ticket"
+    },
+    "types": {
+      "ticket_created": {
+        "title": "🎫 Nuevo Ticket: {{ticketNumber}}",
+        "message": "Nuevo ticket creado: \"{{ticketTitle}}\" por {{userName}}"
+      },
+      "ticket_assigned": {
+        "title": "👤 Ticket Asignado: {{ticketNumber}}",
+        "message": "Se le ha asignado el ticket \"{{ticketTitle}}\""
+      },
+      "assignment_changed": {
+        "assigned": {
+          "title": "🔄 Ticket Asignado: {{ticketNumber}}",
+          "message": "El ticket \"{{ticketTitle}}\" ha sido asignado a {{assigneeName}}"
+        },
+        "selfAssigned": {
+          "title": "👤 Usted tomó el ticket: {{ticketNumber}}",
+          "message": "Usted ha tomado el ticket \"{{ticketTitle}}\""
+        },
+        "removed": {
+          "title": "🔄 Asignación eliminada: {{ticketNumber}}",
+          "message": "La asignación del ticket \"{{ticketTitle}}\" ha sido eliminada"
+        },
+        "fallback": {
+          "title": "🔄 Asignación cambiada: {{ticketNumber}}",
+          "message": "La asignación del ticket \"{{ticketTitle}}\" ha cambiado"
+        }
+      },
+      "status_changed": {
+        "title": "🔄 Estado Cambiado: {{ticketNumber}}",
+        "message": "El estado del ticket \"{{ticketTitle}}\" ha cambiado a {{status}}"
+      },
+      "comment_added": {
+        "title": "💬 Nuevo Comentario: {{ticketNumber}}",
+        "message": "Nuevo comentario agregado al ticket \"{{ticketTitle}}\""
+      },
+      "priority_changed": {
+        "title": "⚡ Prioridad Cambiada: {{ticketNumber}}",
+        "message": "Prioridad del ticket \"{{ticketTitle}}\" cambiada a {{priority}}"
+      },
+      "feedback_request": {
+        "title": "⭐ Evalúe su servicio",
+        "message": "¡Su ticket ha sido resuelto! ¿Qué tal si evalúa el servicio que recibió? Su opinión es muy importante para nosotros."
+      },
+      "feedback_received": {
+        "title": "⭐ Comentario Recibido",
+        "message": "Ha recibido comentarios para el ticket {{ticketNumber}}. Haga clic para ver detalles."
+      },
+      "first_response": {
+        "title": "💬 Primera Respuesta Registrada",
+        "message": "La primera respuesta al ticket {{ticketNumber}} ha sido registrada."
+      },
+      "sla_warning": {
+        "title": "⚠️ Advertencia de SLA",
+        "message": "El ticket {{ticketNumber}} se está acercando al plazo límite del SLA. Se requiere acción para cumplir el compromiso de servicio."
+      },
+      "sla_breach": {
+        "title": "🚨 Alerta de Violación de SLA",
+        "message": "URGENTE: El ticket {{ticketNumber}} ha excedido el plazo límite del SLA. Se requiere acción inmediata."
+      },
+      "task_assigned": {
+        "title": "📋 Nueva Tarea Asignada",
+        "message": "Se le ha asignado una nueva tarea: \"{{taskTitle}}\" en el ticket {{ticketNumber}}"
+      }
+    }
   },
   "settings": {
     "title": "Configuración",

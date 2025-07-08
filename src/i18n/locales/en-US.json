@@ -17,6 +17,28 @@
     "next": "Next",
     "previous": "Previous",
     "search": "Search",
+    "searchPlaceholder": "Search...",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success", 
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit", 
+    "remove": "Remove",
+    "close": "Close",
+    "send": "Send",
+    "submit": "Submit",
+    "create": "Create",
+    "update": "Update",
+    "preview": "Preview",
+    "download": "Download",
+    "upload": "Upload",
+    "titlePlaceholder": "Enter title...",
+    "descriptionPlaceholder": "Enter description..."
+  },
+  "header": {
+    "searchPlaceholder": "Search tickets, users...",
     "filter": "Filter",
     "clear": "Clear",
     "refresh": "Refresh",
@@ -34,7 +56,8 @@
     "copyright": "© 2024 AnalytiChem GmbH. All rights reserved.",
     "pageNotFound": "Oops! Page not found",
     "returnToHome": "Return to Home",
-    "admin": "Administrator"
+    "admin": "Administrator",
+    "welcomeBack": "Welcome back"
   },
   "search": {
     "placeholder": "Search tickets..."
@@ -72,6 +95,12 @@
     "knowledgeAdmin": "Knowledge Admin",
     "mainMenu": "Main Menu"
   },
+  "theme": {
+    "toggle": "Toggle theme",
+    "switchToDark": "Switch to dark theme",
+    "switchToLight": "Switch to light theme",
+    "switchToSystem": "Switch to system theme"
+  },
   "sidebar": {
     "dashboard": "Dashboard",
     "createTicket": "Create Ticket",
@@ -95,9 +124,6 @@
     "helpDeskSystem": "Help Desk System",
     "mainMenu": "Main Menu",
     "administration": "Administration"
-  },
-  "header": {
-    "welcomeBack": "Welcome back"
   },
   "dashboard": {
     "welcome": "Welcome",
@@ -767,6 +793,83 @@
     "isTyping": "is typing...",
     "areTyping": "people are typing...",
     "internal": "Internal"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "noNotifications": "No notifications",
+    "fallback": {
+      "noTitle": "No title",
+      "unknownUser": "Unknown user",
+      "defaultAgent": "Agent"
+    },
+    "actions": {
+      "viewTicket": "View Ticket"
+    },
+    "types": {
+      "ticket_created": {
+        "title": "🎫 New Ticket: {{ticketNumber}}",
+        "message": "New ticket created: \"{{ticketTitle}}\" by {{userName}}"
+      },
+      "ticket_assigned": {
+        "title": "👤 Ticket Assigned: {{ticketNumber}}",
+        "message": "You have been assigned to ticket \"{{ticketTitle}}\""
+      },
+      "assignment_changed": {
+        "assigned": {
+          "title": "🔄 Ticket Assigned: {{ticketNumber}}",
+          "message": "Ticket \"{{ticketTitle}}\" has been assigned to {{assigneeName}}"
+        },
+        "selfAssigned": {
+          "title": "👤 You took the ticket: {{ticketNumber}}",
+          "message": "You have taken ticket \"{{ticketTitle}}\""
+        },
+        "removed": {
+          "title": "🔄 Assignment removed: {{ticketNumber}}",
+          "message": "Assignment for ticket \"{{ticketTitle}}\" has been removed"
+        },
+        "fallback": {
+          "title": "🔄 Assignment changed: {{ticketNumber}}",
+          "message": "Assignment for ticket \"{{ticketTitle}}\" has been changed"
+        }
+      },
+      "status_changed": {
+        "title": "🔄 Status Changed: {{ticketNumber}}",
+        "message": "Status of ticket \"{{ticketTitle}}\" has been changed to {{status}}"
+      },
+      "comment_added": {
+        "title": "💬 New Comment: {{ticketNumber}}",
+        "message": "New comment added to ticket \"{{ticketTitle}}\""
+      },
+      "priority_changed": {
+        "title": "⚡ Priority Changed: {{ticketNumber}}",
+        "message": "Priority of ticket \"{{ticketTitle}}\" changed to {{priority}}"
+      },
+      "feedback_request": {
+        "title": "⭐ Rate your service",
+        "message": "Your ticket has been resolved! How about rating the service you received? Your feedback is very important to us."
+      },
+      "feedback_received": {
+        "title": "⭐ Feedback Received",
+        "message": "You have received feedback for ticket {{ticketNumber}}. Click to see details."
+      },
+      "first_response": {
+        "title": "💬 First Response Recorded",
+        "message": "First response to ticket {{ticketNumber}} has been recorded."
+      },
+      "sla_warning": {
+        "title": "⚠️ SLA Warning",
+        "message": "Ticket {{ticketNumber}} is approaching SLA deadline. Action required to meet service commitment."
+      },
+      "sla_breach": {
+        "title": "🚨 SLA Breach Alert",
+        "message": "URGENT: Ticket {{ticketNumber}} has exceeded SLA deadline. Immediate action required."
+      },
+      "task_assigned": {
+        "title": "📋 New Task Assigned",
+        "message": "You have been assigned a new task: \"{{taskTitle}}\" on ticket {{ticketNumber}}"
+      }
+    }
   },
   "settings": {
     "title": "Settings",

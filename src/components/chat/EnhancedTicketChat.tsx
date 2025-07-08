@@ -488,7 +488,7 @@ export function EnhancedTicketChat({ ticketId, className }: EnhancedTicketChatPr
           {showSearch && (
             <div className="mt-3">
               <Input
-                placeholder="Search messages..."
+                placeholder={t('chat.searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="h-8"
@@ -761,7 +761,7 @@ export function EnhancedTicketChat({ ticketId, className }: EnhancedTicketChatPr
             <div className="flex-1 relative">
               <Input
                 ref={inputRef}
-                placeholder="Type your message..."
+                placeholder={t('chat.typePlaceholder')}
                 onKeyPress={handleKeyPress}
                 onChange={handleInputChange}
                 className="pr-12 resize-none min-h-[40px] max-h-[120px]"
