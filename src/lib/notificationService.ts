@@ -5,7 +5,7 @@ export interface Notification {
   id?: string;
   user_id: string;
   message: string;
-  type: 'ticket_created' | 'ticket_updated' | 'ticket_assigned' | 'comment_added' | 'status_changed' | 'priority_changed';
+  type: 'ticket_created' | 'ticket_updated' | 'ticket_assigned' | 'comment_added' | 'status_changed' | 'priority_changed' | 'assignment_changed' | 'sla_warning' | 'sla_breach';
   ticket_id?: string;
   read?: boolean;
   priority?: 'low' | 'medium' | 'high';
@@ -94,7 +94,7 @@ export class NotificationService {
           id: notification.id,
           user_id: notification.user_id,
           message: notification.message || notification.title || 'Notificação',
-          type: notification.type as 'ticket_created' | 'ticket_updated' | 'ticket_assigned' | 'comment_added' | 'status_changed' | 'priority_changed',
+          type: notification.type as 'ticket_created' | 'ticket_updated' | 'ticket_assigned' | 'comment_added' | 'status_changed' | 'priority_changed' | 'assignment_changed' | 'sla_warning' | 'sla_breach',
           ticket_id: notification.ticket_id,
           read: notification.read !== undefined ? notification.read : false,
           priority: notification.priority || 'medium',
@@ -553,7 +553,7 @@ export class NotificationService {
     try {
       const notificationData = {
         user_id: userId,
-        type: 'status_changed' as const,
+        type: 'sla_warning' as const,
         title: JSON.stringify({
           key: 'notifications.types.sla_warning.title'
         }),
@@ -593,7 +593,7 @@ export class NotificationService {
     try {
       const notificationData = {
         user_id: userId,
-        type: 'status_changed' as const,
+        type: 'sla_breach' as const,
         title: JSON.stringify({
           key: 'notifications.types.sla_breach.title'
         }),

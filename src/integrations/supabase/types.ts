@@ -336,6 +336,9 @@ export type Database = {
         | "comment_added"
         | "status_changed"
         | "priority_changed"
+        | "assignment_changed"
+        | "sla_warning"
+        | "sla_breach"
       ticket_priority: "low" | "medium" | "high" | "urgent"
       ticket_status: "open" | "pending" | "in_progress" | "resolved" | "closed"
       user_role: "user" | "agent" | "admin"
@@ -462,6 +465,7 @@ export const Constants = {
         "comment_added",
         "status_changed",
         "priority_changed",
+        "assignment_changed",
       ],
       ticket_priority: ["low", "medium", "high", "urgent"],
       ticket_status: ["open", "pending", "in_progress", "resolved", "closed"],

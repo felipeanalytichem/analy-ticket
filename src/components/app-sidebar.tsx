@@ -13,6 +13,7 @@ import {
   Download,
   Plug,
   Clock,
+  Timer,
   RotateCcw,
   CheckCircle,
   XCircle,
@@ -324,6 +325,12 @@ export function AppSidebar({ userRole, activeTab, onTabChange, onCreateTicket }:
             count: null,
           },
           {
+            title: "Session Timeout",
+            tab: "session-timeout-config",
+            icon: Timer,
+            count: null,
+          },
+          {
             title: t('sidebar.knowledgeAdmin'),
             tab: "knowledge-admin",
             icon: BookOpen,
@@ -453,12 +460,9 @@ export function AppSidebar({ userRole, activeTab, onTabChange, onCreateTicket }:
                     <SidebarMenuSubItem key={subItem.tab}>
                       <SidebarMenuSubButton 
                         onClick={() => {
-                          console.log('🔍 Sidebar button clicked:', subItem.tab, subItem.title);
                           if (subItem.tab === "create-ticket" && onCreateTicket) {
-                            console.log('🎫 Opening create ticket dialog');
                             onCreateTicket(); // Open dialog instead of navigating
                           } else {
-                            console.log('🔄 Calling onTabChange with:', subItem.tab);
                             onTabChange(subItem.tab); // Normal navigation
                           }
                         }}

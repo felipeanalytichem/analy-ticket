@@ -319,14 +319,67 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Sign out implementation
   const signOut = async () => {
     try {
+      console.log('🚪 Starting sign out process...');
       setLoading(true);
-      await supabase.auth.signOut();
+      
+      // Clear Supabase auth session
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('Supabase signOut error:', error);
+        throw error;
+      }
+      
+      // Clear local state
       setUser(null);
       setUserProfile(null);
       setSession(null);
+      setAuthError(null);
+      
+      // Force clear any remaining auth tokens from localStorage
+      try {
+        // Clear all possible Supabase auth keys
+        const authStorageKey = 'sb-plbmgjqitlxedsmdqpld-auth-token';
+        localStorage.removeItem(authStorageKey);
+        localStorage.removeItem('supabase.auth.token');
+        
+        // Clear any other auth-related keys
+        Object.keys(localStorage).forEach(key => {
+          if (key.includes('supabase') || key.includes('auth') || key.includes('session')) {
+            localStorage.removeItem(key);
+          }
+        });
+        
+        sessionStorage.clear();
+        console.log('🧹 Cleared all local storage auth data');
+      } catch (storageError) {
+        console.warn('Error clearing storage:', storageError);
+      }
+      
+      console.log('✅ Sign out completed successfully');
+      
+      // Force navigation to login page after a short delay
+      setTimeout(() => {
+        if (window.location.pathname !== '/login') {
+          console.log('🔄 Redirecting to login page...');
+          window.location.href = '/login';
+        }
+      }, 100);
+      
     } catch (error) {
-      console.error('Sign out error:', error);
+      console.error('❌ Sign out error:', error);
       setAuthError(error as Error);
+      
+      // Even if there's an error, try to clear local state and redirect
+      setUser(null);
+      setUserProfile(null);
+      setSession(null);
+      
+      setTimeout(() => {
+        if (window.location.pathname !== '/login') {
+          console.log('🔄 Force redirecting to login page after error...');
+          window.location.href = '/login';
+        }
+      }, 100);
     } finally {
       setLoading(false);
     }

@@ -12,7 +12,7 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { DatabaseService, Category, Subcategory } from "@/lib/database";
+import { DatabaseService, Category, Subcategory, DynamicFormField } from "@/lib/database";
 import { supabase } from "@/lib/supabase";
 import { useCategoryManagement } from "@/hooks/useCategoryManagement";
 import { useCategories } from '@/hooks/useCategories';
@@ -49,14 +49,6 @@ interface CategoryWithSubcategories extends Category {
   dynamic_form_schema?: any;
 }
 
-interface DynamicFormField {
-  id: string;
-  type: 'text' | 'textarea' | 'select' | 'checkbox' | 'date' | 'number';
-  label: string;
-  required: boolean;
-  options?: string[];
-}
-
 export const CategoryManagement = () => {
   const { toast } = useToast();
   const [categories, setCategories] = useState<CategoryWithSubcategories[]>([]);
@@ -88,7 +80,7 @@ export const CategoryManagement = () => {
   // Editing states
   const [editingCategory, setEditingCategory] = useState<CategoryWithSubcategories | null>(null);
   const [editingSubcategory, setEditingSubcategory] = useState<Subcategory | null>(null);
-  const [selectedCategoryForForm, setSelectedCategoryForForm] = useState<string>("");
+  const [selectedSubcategoryForForm, setSelectedSubcategoryForForm] = useState<string>("");
   const [deleteItem, setDeleteItem] = useState<{ type: 'category' | 'subcategory', id: string } | null>(null);
 
   const [newCategory, setNewCategory] = useState({
@@ -112,6 +104,19 @@ export const CategoryManagement = () => {
   });
 
   const [dynamicFormFields, setDynamicFormFields] = useState<DynamicFormField[]>([]);
+
+  // Debug monitor for dynamicFormFields changes
+  useEffect(() => {
+    console.log('🔍 dynamicFormFields state changed:', dynamicFormFields.length, 'fields');
+    if (dynamicFormFields.length > 0) {
+      const labels = dynamicFormFields.map(f => f.label);
+      const uniqueLabels = [...new Set(labels)];
+      if (labels.length !== uniqueLabels.length) {
+        console.warn('🚨 DUPLICATE LABELS DETECTED IN STATE:', labels.length, 'total,', uniqueLabels.length, 'unique');
+        console.warn('🚨 Duplicate labels:', labels.filter((label, index) => labels.indexOf(label) !== index));
+      }
+    }
+  }, [dynamicFormFields]);
 
   const iconOptions = [
     { value: "monitor", label: "💻 Monitor", emoji: "💻" },
@@ -419,48 +424,159 @@ export const CategoryManagement = () => {
     });
   };
 
-  const openFormBuilder = (categoryId: string) => {
-    setSelectedCategoryForForm(categoryId);
-    const category = categories.find(c => c.id === categoryId);
-    setDynamicFormFields(category?.dynamic_form_schema?.fields || []);
-    setIsFormBuilderOpen(true);
+  // Enhanced deduplication utility
+  const deduplicateFields = (fields: DynamicFormField[]): DynamicFormField[] => {
+    if (!fields || fields.length === 0) return [];
+    
+    console.log('🧹 Deduplicating fields - input:', fields.length, 'fields');
+    
+    // Step 1: Remove by ID duplicates (keep first occurrence)
+    const uniqueById = fields.filter((field, index, array) => 
+      array.findIndex(f => f.id === field.id) === index
+    );
+    console.log('🧹 After ID dedup:', uniqueById.length, 'fields');
+    
+    // Step 2: Remove by label duplicates (keep first occurrence)  
+    const uniqueByLabel = uniqueById.filter((field, index, array) => 
+      array.findIndex(f => f.label === field.label) === index
+    );
+    console.log('🧹 After label dedup:', uniqueByLabel.length, 'fields');
+    
+    // Step 3: Remove empty or invalid fields
+    const cleanFields = uniqueByLabel.filter(field => 
+      field && field.id && field.label && field.label.trim() !== ''
+    );
+    console.log('🧹 After cleaning:', cleanFields.length, 'fields');
+    
+    if (cleanFields.length !== fields.length) {
+      console.warn('🧹 Deduplication removed', fields.length - cleanFields.length, 'duplicates/invalid fields');
+    }
+    
+    return cleanFields;
   };
 
-  const addFormField = () => {
+  const openFormBuilder = async (subcategoryId: string) => {
+    console.log('🔧 ===== OPENING FORM BUILDER =====');
+    console.log('🔧 Subcategory ID:', subcategoryId);
+    
+    // Clear any existing state first to prevent accumulation
+    setDynamicFormFields([]);
+    setSelectedSubcategoryForForm(subcategoryId);
+    
+    try {
+      // Get fresh data directly from database (skip local state to avoid conflicts)
+      console.log('🔧 Fetching fresh data from database...');
+      const freshFormFields = await DatabaseService.getSubcategoryFormFields(subcategoryId);
+      
+      console.log('🔧 Raw database response:', freshFormFields?.length || 0, 'fields');
+      console.log('🔧 Raw fields:', freshFormFields);
+      
+      // Apply aggressive deduplication
+      const cleanFields = deduplicateFields(freshFormFields || []);
+      
+      console.log('🔧 Final clean fields to display:', cleanFields.length, 'fields');
+      console.log('🔧 Final field labels:', cleanFields.map(f => f.label));
+      
+      // Set the cleaned fields
+      setDynamicFormFields(cleanFields);
+      
+    } catch (error) {
+      console.error('🔧 Error loading form fields:', error);
+      setDynamicFormFields([]);
+    }
+    
+    setIsFormBuilderOpen(true);
+    console.log('🔧 ===== FORM BUILDER OPENED =====');
+  };
+
+  const addFormField = useCallback(() => {
     const newField: DynamicFormField = {
-      id: Date.now().toString(),
+      id: `field_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       type: 'text',
       label: '',
-      required: false
+      required: false,
+      enabled: true
     };
-    setDynamicFormFields(prev => [...prev, newField]);
-  };
-
-  const updateFormField = (fieldId: string, updates: Partial<DynamicFormField>) => {
-    setDynamicFormFields(prev => prev.map(field => 
-      field.id === fieldId ? { ...field, ...updates } : field
-    ));
-  };
-
-  const removeFormField = (fieldId: string) => {
-    setDynamicFormFields(prev => prev.filter(field => field.id !== fieldId));
-  };
-
-  const saveFormSchema = () => {
-    // In a real implementation, this would save to the database
-    console.log('Saving form schema for category:', selectedCategoryForForm, dynamicFormFields);
-    
-    setCategories(prev => prev.map(cat => 
-      cat.id === selectedCategoryForForm 
-        ? { ...cat, dynamic_form_schema: { fields: dynamicFormFields } }
-        : cat
-    ));
-    
-    setIsFormBuilderOpen(false);
-    toast({
-      title: "Success",
-      description: "Dynamic form schema saved successfully",
+    console.log('🔧 Adding new field:', newField.id);
+    setDynamicFormFields(prev => {
+      const updated = [...prev, newField];
+      console.log('🔧 After adding field:', updated.length, 'total fields');
+      return updated;
     });
+  }, []);
+
+  const updateFormField = useCallback((fieldId: string, updates: Partial<DynamicFormField>) => {
+    console.log('🔧 Updating field:', fieldId, updates);
+    setDynamicFormFields(prev => {
+      const updated = prev.map(field => 
+        field.id === fieldId ? { ...field, ...updates } : field
+      );
+      console.log('🔧 After updating field:', updated.length, 'total fields');
+      return updated;
+    });
+  }, []);
+
+  const removeFormField = useCallback((fieldId: string) => {
+    console.log('🔧 Removing field:', fieldId);
+    setDynamicFormFields(prev => {
+      const updated = prev.filter(field => field.id !== fieldId);
+      console.log('🔧 After removing field:', updated.length, 'total fields');
+      return updated;
+    });
+  }, []);
+
+  const saveFormSchema = async () => {
+    try {
+      console.log('🔧 Saving form fields for subcategory:', selectedSubcategoryForForm);
+      console.log('🔧 Form fields to save (raw):', dynamicFormFields);
+      
+      // Clean and deduplicate fields before saving
+      const cleanedFields = dynamicFormFields
+        .filter(field => field.label && field.label.trim() !== '') // Remove empty fields
+        .filter((field, index, array) => 
+          array.findIndex(f => f.id === field.id) === index // Remove ID duplicates
+        )
+        .filter((field, index, array) => 
+          array.findIndex(f => f.label === field.label) === index // Remove label duplicates
+        );
+      
+      console.log('🔧 Cleaned form fields to save:', cleanedFields);
+      console.log('🔧 Original length:', dynamicFormFields.length, 'Cleaned length:', cleanedFields.length);
+      
+      if (cleanedFields.length !== dynamicFormFields.length) {
+        console.warn('🔧 Removed duplicate or empty fields during save');
+        setDynamicFormFields(cleanedFields); // Update state with cleaned data
+      }
+      
+      // Save to database
+      await DatabaseService.saveSubcategoryFormFields(selectedSubcategoryForForm, cleanedFields);
+      
+      // Update local state
+      setCategories(prev => prev.map(cat => ({
+        ...cat,
+        subcategories: cat.subcategories.map(sub => 
+          sub.id === selectedSubcategoryForForm 
+            ? { ...sub, dynamic_form_fields: cleanedFields }
+            : sub
+        )
+      })));
+      
+      // Also refresh the subcategories to ensure consistency
+      await refetchSubcategories();
+      
+      setIsFormBuilderOpen(false);
+      toast({
+        title: "Success",
+        description: "Subcategory form fields saved successfully",
+      });
+    } catch (error) {
+      console.error('Error saving form fields:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save form fields",
+        variant: "destructive",
+      });
+    }
   };
 
   const getIconEmoji = (iconName: string) => {
@@ -733,14 +849,7 @@ export const CategoryManagement = () => {
                                      {/* Action Buttons */}
                    <div className="flex items-center justify-between pt-2 border-t border-gray-200 dark:border-gray-700">
                      <div className="flex items-center space-x-1">
-                       <Button
-                         variant="ghost"
-                         size="sm"
-                         onClick={() => openFormBuilder(category.id)}
-                         className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-                       >
-                         <FormInput className="h-4 w-4" />
-                       </Button>
+
                        <Button
                          variant="ghost"
                          size="sm"
@@ -885,7 +994,7 @@ export const CategoryManagement = () => {
                          <Button
                            variant="ghost"
                            size="sm"
-                           onClick={() => openFormBuilder(category.id)}
+                           onClick={() => console.log('Form builder moved to subcategory level')}
                            className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white p-2"
                            title="Form Builder"
                          >
@@ -1291,25 +1400,63 @@ export const CategoryManagement = () => {
                         </div>
                       </div>
                       <div className="flex justify-end gap-2">
-                        <Button variant="outline" onClick={() => setEditingSubcategory(null)}>
-                          Cancel
-                        </Button>
-                <Button onClick={handleUpdateSubcategory}>Save</Button>
+                                    <Button 
+              variant="outline" 
+              onClick={async () => {
+                if (editingSubcategory) {
+                  await openFormBuilder(editingSubcategory.id);
+                  setEditingSubcategory(null);
+                }
+              }}
+              className="text-purple-600 border-purple-600 hover:bg-purple-600 hover:text-white"
+            >
+              <FormInput className="h-4 w-4 mr-2" />
+              Manage Fields
+            </Button>
+            <Button variant="outline" onClick={() => setEditingSubcategory(null)}>
+              Cancel
+            </Button>
+            <Button onClick={handleUpdateSubcategory}>Save</Button>
                       </div>
                     </div>
           </DialogContent>
         </Dialog>
       )}
 
-      {/* Dynamic Form Builder Dialog */}
-      <Dialog open={isFormBuilderOpen} onOpenChange={setIsFormBuilderOpen}>
+      {/* Subcategory Form Builder Dialog */}
+      <Dialog open={isFormBuilderOpen} onOpenChange={(open) => {
+        if (!open) {
+          console.log('🔧 Form builder closing - clearing state');
+          setDynamicFormFields([]);
+          setSelectedSubcategoryForForm("");
+        }
+        setIsFormBuilderOpen(open);
+      }}>
         <DialogContent className="bg-gray-800 border-gray-700 max-w-4xl">
           <DialogHeader>
-            <DialogTitle className="text-white">Dynamic Form Builder</DialogTitle>
+            <DialogTitle className="text-white">Subcategory Form Builder</DialogTitle>
+            <p className="text-gray-400 text-sm">Add custom form fields for this subcategory</p>
           </DialogHeader>
           <div className="space-y-4 max-h-96 overflow-y-auto">
-            {dynamicFormFields.map((field, index) => (
-              <div key={field.id} className="p-4 bg-gray-700 rounded border">
+            {(() => {
+              // Triple-layer deduplication for rendering
+              const step1 = dynamicFormFields.filter((field, index, array) => 
+                array.findIndex(f => f.id === field.id) === index
+              );
+              const step2 = step1.filter((field, index, array) => 
+                array.findIndex(f => f.label === field.label) === index
+              );
+              const final = step2.filter(field => 
+                field && field.id && field.label && field.label.trim() !== ''
+              );
+              
+              if (final.length !== dynamicFormFields.length) {
+                console.warn('🔧 Render deduplication:', dynamicFormFields.length, '→', final.length, 'fields');
+              }
+              
+              return final;
+            })().map((field, index) => (
+              <div key={`${field.id}-${field.label}-${index}`} className="p-4 bg-gray-700 rounded border">
                 <div className="grid grid-cols-4 gap-4 items-center">
                   <div>
                     <Label className="text-gray-300">Type</Label>
@@ -1339,13 +1486,22 @@ export const CategoryManagement = () => {
                       className="bg-gray-600 border-gray-500 text-white"
                     />
                         </div>
-                  <div className="flex items-center space-x-2">
-                    <Switch
-                      checked={field.required}
-                      onCheckedChange={(checked) => updateFormField(field.id, { required: checked })}
-                    />
-                    <Label className="text-gray-300">Required</Label>
-                      </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        checked={field.required}
+                        onCheckedChange={(checked) => updateFormField(field.id, { required: checked })}
+                      />
+                      <Label className="text-gray-300">Required</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        checked={field.enabled}
+                        onCheckedChange={(checked) => updateFormField(field.id, { enabled: checked })}
+                      />
+                      <Label className="text-gray-300">Enabled</Label>
+                    </div>
+                  </div>
                         <Button
                     variant="outline"
                           size="sm"
@@ -1473,28 +1629,65 @@ export const CategoryManagement = () => {
                 {subcategoryViewModal.category?.subcategories.map((sub) => (
                   <div 
                     key={sub.id} 
-                    className="group relative bg-gradient-to-br from-gray-50 to-white dark:from-gray-700 dark:to-gray-600 border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-500 transition-all duration-200"
+                    className="bg-gradient-to-br from-gray-50 to-white dark:from-gray-700 dark:to-gray-600 border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-500 transition-all duration-200"
                   >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex-1 pr-2">
-                        <h4 className="text-gray-900 dark:text-white font-semibold text-sm truncate">
+                    {/* Header with title and status */}
+                    <div className="mb-3">
+                      <div className="flex items-start justify-between mb-2">
+                        <h4 className="text-gray-900 dark:text-white font-semibold text-sm break-words flex-1 mr-2">
                           {sub.name}
                         </h4>
-                        <div className="flex items-center gap-2 mt-1">
+                        <div className="flex items-center gap-1 flex-shrink-0">
                           <Switch
                             checked={sub.is_enabled ?? true}
                             onCheckedChange={(checked) => toggleSubcategoryEnabled(sub.id, checked)}
                             className="scale-75"
                           />
-                          <Badge 
-                            variant={sub.is_enabled ?? true ? "default" : "secondary"}
-                            className={`text-xs ${(sub.is_enabled ?? true) ? "bg-green-600" : "bg-gray-500 dark:bg-gray-600"}`}
-                          >
-                            {(sub.is_enabled ?? true) ? "Enabled" : "Disabled"}
-                          </Badge>
                         </div>
                       </div>
-                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Badge 
+                        variant={sub.is_enabled ?? true ? "default" : "secondary"}
+                        className={`text-xs ${(sub.is_enabled ?? true) ? "bg-green-600" : "bg-gray-500 dark:bg-gray-600"}`}
+                      >
+                        {(sub.is_enabled ?? true) ? "Enabled" : "Disabled"}
+                      </Badge>
+                    </div>
+                    
+                    {sub.description && (
+                      <p className="text-gray-600 dark:text-gray-400 text-xs mb-3 line-clamp-3">
+                        {sub.description}
+                      </p>
+                    )}
+                    
+                    {/* Timing Information */}
+                    <div className="flex items-center gap-3 text-xs mb-4">
+                      <div className="flex items-center gap-1.5 px-2 py-1 bg-blue-50 dark:bg-blue-900/30 rounded-full">
+                        <Clock className="h-3 w-3 text-blue-600 dark:text-blue-400" />
+                        <span className="text-blue-700 dark:text-blue-300 font-medium">
+                          {sub.response_time_hours}h
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1.5 px-2 py-1 bg-green-50 dark:bg-green-900/30 rounded-full">
+                        <TrendingUp className="h-3 w-3 text-green-600 dark:text-green-400" />
+                        <span className="text-green-700 dark:text-green-300 font-medium">
+                          {sub.resolution_time_hours}h
+                        </span>
+                      </div>
+                    </div>
+                    
+                    {/* Action Buttons */}
+                    <div className="flex items-center justify-between pt-3 border-t border-gray-200 dark:border-gray-600">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => openFormBuilder(sub.id)}
+                        className="text-purple-600 dark:text-purple-400 border-purple-600 dark:border-purple-400 hover:bg-purple-600 dark:hover:bg-purple-400 hover:text-white text-xs px-3 py-1.5 h-auto"
+                        title="Manage Form Fields"
+                      >
+                        <FormInput className="h-3 w-3 mr-1.5" />
+                        Manage Fields
+                      </Button>
+                      <div className="flex items-center gap-1">
                         <Button
                           variant="ghost"
                           size="sm"
@@ -1516,27 +1709,6 @@ export const CategoryManagement = () => {
                         >
                           <Trash2 className="h-3 w-3" />
                         </Button>
-                      </div>
-                    </div>
-                    
-                    {sub.description && (
-                      <p className="text-gray-600 dark:text-gray-400 text-xs mb-3 line-clamp-3">
-                        {sub.description}
-                      </p>
-                    )}
-                    
-                    <div className="flex items-center gap-3 text-xs">
-                      <div className="flex items-center gap-1.5 px-2 py-1 bg-blue-50 dark:bg-blue-900/30 rounded-full">
-                        <Clock className="h-3 w-3 text-blue-600 dark:text-blue-400" />
-                        <span className="text-blue-700 dark:text-blue-300 font-medium">
-                          {sub.response_time_hours}h
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1.5 px-2 py-1 bg-green-50 dark:bg-green-900/30 rounded-full">
-                        <TrendingUp className="h-3 w-3 text-green-600 dark:text-green-400" />
-                        <span className="text-green-700 dark:text-green-300 font-medium">
-                          {sub.resolution_time_hours}h
-                        </span>
                       </div>
                     </div>
                   </div>

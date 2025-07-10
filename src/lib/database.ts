@@ -48,9 +48,21 @@ export interface Subcategory {
   resolution_time_hours: number;
   specialized_agents: string[];
   is_enabled?: boolean;
+  dynamic_form_fields?: DynamicFormField[];
   created_at: string;
   updated_at: string;
   category?: Category;
+}
+
+export interface DynamicFormField {
+  id: string;
+  type: 'text' | 'textarea' | 'select' | 'checkbox' | 'date' | 'number';
+  label: string;
+  required: boolean;
+  enabled: boolean;
+  options?: string[];
+  placeholder?: string;
+  help_text?: string;
 }
 
 export interface Ticket {
@@ -446,6 +458,7 @@ export class DatabaseService {
       .from('subcategories')
       .select(`
         *,
+        dynamic_form_fields,
         category:categories(*)
       `)
       .order('sort_order', { ascending: true });
@@ -461,7 +474,19 @@ export class DatabaseService {
       throw error;
     }
 
-    return data || [];
+    // Parse dynamic_form_fields for each subcategory
+    const subcategories = (data || []).map(sub => ({
+      ...sub,
+      dynamic_form_fields: Array.isArray(sub.dynamic_form_fields) ? sub.dynamic_form_fields : (sub.dynamic_form_fields || [])
+    }));
+
+    console.log('🔧 DatabaseService.getSubcategories result:', subcategories.map(s => ({ 
+      id: s.id, 
+      name: s.name, 
+      dynamic_form_fields: s.dynamic_form_fields?.length || 0 
+    })));
+
+    return subcategories;
   }
 
   static async createCategory(categoryData: Omit<Category, 'id' | 'created_at' | 'updated_at'>): Promise<Category> {
@@ -656,6 +681,33 @@ export class DatabaseService {
       console.error('Error saving form schema:', error);
       throw error;
     }
+  }
+
+  static async saveSubcategoryFormFields(subcategoryId: string, formFields: DynamicFormField[]): Promise<void> {
+    const { error } = await db
+      .from('subcategories')
+      .update({ dynamic_form_fields: formFields })
+      .eq('id', subcategoryId);
+
+    if (error) {
+      console.error('Error saving subcategory form fields:', error);
+      throw error;
+    }
+  }
+
+  static async getSubcategoryFormFields(subcategoryId: string): Promise<DynamicFormField[]> {
+    const { data, error } = await db
+      .from('subcategories')
+      .select('dynamic_form_fields')
+      .eq('id', subcategoryId)
+      .single();
+
+    if (error) {
+      console.error('Error getting subcategory form fields:', error);
+      throw error;
+    }
+
+    return data?.dynamic_form_fields || [];
   }
 
   static async getCategoriesForTicketForm(): Promise<Array<{ id: string; name: string; subcategories: Array<{ id: string; name: string }> }>> {

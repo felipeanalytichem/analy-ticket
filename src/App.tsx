@@ -8,6 +8,7 @@ import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { useCategoryInitializer } from '@/hooks/useCategoryInitializer';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { PageLoading } from '@/components/ui/page-loading';
+import { SessionTimeoutManager } from '@/components/auth/SessionTimeoutManager';
 
 // Auth pages
 import Login from '@/pages/Login';
@@ -28,6 +29,7 @@ import ChangeLog from '@/pages/ChangeLog';
 import UserManagementPage from '@/pages/UserManagementPage';
 import CategoryManagementPage from '@/pages/CategoryManagementPage';
 import SLAConfigPage from '@/pages/SLAConfigPage';
+import SessionTimeoutConfigPage from '@/pages/SessionTimeoutConfigPage';
 
 // Legacy pages
 import { Notifications } from '@/pages/Notifications';
@@ -59,9 +61,10 @@ function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <AuthProvider>
-        <TicketCountProvider>
-          <Router>
-            <Routes>
+        <SessionTimeoutManager>
+          <TicketCountProvider>
+            <Router>
+              <Routes>
               {/* Auth routes */}
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
@@ -109,6 +112,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+
               <Route
                 path="/update-categories"
                 element={
@@ -290,6 +294,16 @@ function App() {
                 }
               />
               <Route
+                path="/admin/session-timeout"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout>
+                      <SessionTimeoutConfigPage />
+                    </AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/admin/knowledge"
                 element={
                   <ProtectedRoute>
@@ -305,6 +319,7 @@ function App() {
             <Toaster />
           </Router>
         </TicketCountProvider>
+        </SessionTimeoutManager>
       </AuthProvider>
     </ThemeProvider>
   );

@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import DatabaseService, { TicketWithDetails } from '@/lib/database';
 import { supabase } from "@/lib/supabase";
 import { useTicketCount } from "@/contexts/TicketCountContext";
-import { Category, Subcategory } from "@/lib/database";
+import { Category, Subcategory, DynamicFormField } from "@/lib/database";
 import { useCategoryManagement } from "@/hooks/useCategoryManagement";
 import { X, Paperclip, AlertCircle, Loader2, UserPlus, Globe } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -58,12 +58,7 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
     if (!ticket || !userProfile) return true; // Allow editing when creating new tickets
     
     const userInputFields = [
-      'title', 'description', 'priority', 'category_id', 'subcategory_id',
-      'firstName', 'lastName', 'username', 'displayName', 'jobTitle',
-      'manager', 'companyName', 'department', 'officeLocation',
-      'businessPhone', 'mobilePhone', 'startDate', 'signatureGroup',
-      'usageLocation', 'countryDistributionList', 'licenseType',
-      'mfaSetup', 'attachedForm'
+      'title', 'description', 'priority', 'category_id', 'subcategory_id'
     ];
     
     // Users can only edit their own tickets' user input fields when status is 'open'
@@ -115,25 +110,6 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
     category_id: ticket?.category_id || "",
     subcategory_id: ticket?.subcategory_id || "",
     country: ticket?.country || "",
-    // Employee onboarding specific fields
-    firstName: ticket?.first_name || "",
-    lastName: ticket?.last_name || "",
-    username: ticket?.username || "",
-    displayName: ticket?.display_name || "",
-    jobTitle: ticket?.job_title || "",
-    manager: ticket?.manager || "",
-    companyName: ticket?.company_name || "",
-    department: ticket?.department || "",
-    officeLocation: ticket?.office_location || "",
-    businessPhone: ticket?.business_phone || "",
-    mobilePhone: ticket?.mobile_phone || "",
-    startDate: ticket?.start_date || "",
-    signatureGroup: ticket?.signature_group || "",
-    usageLocation: ticket?.usage_location || "",
-    countryDistributionList: ticket?.country_distribution_list || "",
-    licenseType: ticket?.license_type || "",
-    mfaSetup: ticket?.mfa_setup || "",
-    attachedForm: ticket?.attached_form || "",
   });
   const [attachments, setAttachments] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -143,6 +119,10 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
   const [agents, setAgents] = useState<Agent[]>([]);
   const [selectedAgent, setSelectedAgent] = useState<string>("");
   const [loadingAgents, setLoadingAgents] = useState(false);
+
+  // Dynamic form fields state
+  const [dynamicFormFields, setDynamicFormFields] = useState<DynamicFormField[]>([]);
+  const [dynamicFormValues, setDynamicFormValues] = useState<Record<string, any>>({});
 
   // Use category management hook for real-time sync
   const { getEnabledCategories, loading: categoriesLoading } = useCategoryManagement();
@@ -237,6 +217,43 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
     }
   }, [formData.subcategory_id, subcategories]);
 
+  // Load dynamic form fields when subcategory changes
+  useEffect(() => {
+    const loadDynamicFormFields = async () => {
+      if (!formData.subcategory_id) {
+        setDynamicFormFields([]);
+        setDynamicFormValues({});
+        return;
+      }
+
+      try {
+        const selectedSubcategory = subcategories.find(s => s.id === formData.subcategory_id);
+        if (selectedSubcategory?.dynamic_form_fields) {
+          const enabledFields = selectedSubcategory.dynamic_form_fields.filter(field => field.enabled);
+          setDynamicFormFields(enabledFields);
+          
+          // Initialize form values for new fields
+          const initialValues: Record<string, any> = {};
+          enabledFields.forEach(field => {
+            if (field.type === 'checkbox') {
+              initialValues[field.id] = false;
+            } else {
+              initialValues[field.id] = '';
+            }
+          });
+          setDynamicFormValues(initialValues);
+        } else {
+          setDynamicFormFields([]);
+          setDynamicFormValues({});
+        }
+      } catch (error) {
+        console.error('Error loading dynamic form fields:', error);
+      }
+    };
+
+    loadDynamicFormFields();
+  }, [formData.subcategory_id, subcategories]);
+
   // Load agents when dialog opens
   useEffect(() => {
     if (open && userProfile?.role === 'admin') {
@@ -293,14 +310,7 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
     }
   };
 
-  // Check if current subcategory is employee onboarding
-  const isEmployeeOnboarding = () => {
-    const selectedSubcategory = subcategories.find(sub => sub.id === formData.subcategory_id);
-    return selectedSubcategory && (
-      selectedSubcategory.name.includes("New Employee Onboarding") ||
-      selectedSubcategory.name.includes("Onboard new employees")
-    );
-  };
+
 
   // Handle applying a category suggestion
   const handleApplySuggestion = (suggestion: any) => {
@@ -357,42 +367,25 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
       return;
     }
 
-    // Additional validation for employee onboarding
-    if (isEmployeeOnboarding()) {
-      const requiredFields = [
-        'firstName', 'lastName', 'username', 'displayName', 'jobTitle',
-        'manager', 'companyName', 'department', 'officeLocation',
-        'businessPhone', 'startDate', 'signatureGroup', 'usageLocation',
-        'countryDistributionList', 'licenseType', 'mfaSetup'
-      ];
-      
-      const missingFields = requiredFields.filter(field => !formData[field as keyof typeof formData]);
-      
-      if (missingFields.length > 0) {
-        toast.error("Campos obrigatórios faltando", {
-          description: `Por favor, preencha os campos obrigatórios: ${missingFields.join(", ")}`
-        });
-        return;
-      }
-
-      // Email validation for username
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (formData.username && !emailRegex.test(formData.username)) {
-        toast.error("Erro ao validar email", {
-          description: "Por favor, insira um email válido."
-        });
-        return;
-      }
-
-      // Phone validation
-      const phoneRegex = /^\+\d{1,3}\s\d{9}$/;
-      if (formData.businessPhone && !phoneRegex.test(formData.businessPhone)) {
-        toast.error("Erro ao validar telefone", {
-          description: "Por favor, insira um telefone válido, começando com + e código do país (e.g., +351 935410950)"
-        });
-        return;
+    // Validate dynamic form fields
+    const missingDynamicFields = [];
+    for (const field of dynamicFormFields) {
+      if (field.required) {
+        const value = dynamicFormValues[field.id];
+        if (!value || (typeof value === 'string' && value.trim() === '')) {
+          missingDynamicFields.push(field.label);
+        }
       }
     }
+    
+    if (missingDynamicFields.length > 0) {
+      toast.error("Required fields missing", {
+        description: `Please fill in the required fields: ${missingDynamicFields.join(", ")}`
+      });
+      return;
+    }
+
+
 
     setIsSubmitting(true);
 
@@ -427,45 +420,23 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
 
       // Prepare ticket data
       const ticketData = {
-        ...formData,
-        // Remove attachments from ticket data as it's not a column in the database
-        // attachments: uploadedUrls,
+        title: formData.title,
+        description: formData.description,
+        priority: formData.priority,
+        category_id: formData.category_id,
+        subcategory_id: formData.subcategory_id,
+        country: formData.country,
         user_id: user.data.user?.id,
-        // Convert camelCase to snake_case for database fields
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        username: formData.username,
-        display_name: formData.displayName,
-        job_title: formData.jobTitle,
-        manager: formData.manager,
-        company_name: formData.companyName,
-        department: formData.department,
-        office_location: formData.officeLocation,
-        business_phone: formData.businessPhone,
-        mobile_phone: formData.mobilePhone,
-        start_date: formData.startDate,
-        signature_group: formData.signatureGroup,
-        usage_location: formData.usageLocation,
-        country_distribution_list: formData.countryDistributionList,
-        license_type: formData.licenseType,
-        mfa_setup: formData.mfaSetup,
-        attached_form: formData.attachedForm,
+        // Include dynamic form field values
+        dynamic_form_data: dynamicFormValues,
       };
-
-      // Remove camelCase fields to avoid duplicates
-      const { 
-        firstName, lastName, username, displayName, jobTitle, manager,
-        companyName, department, officeLocation, businessPhone, mobilePhone, 
-        startDate, signatureGroup, usageLocation, countryDistributionList, 
-        licenseType, mfaSetup, attachedForm, ...cleanedTicketData 
-      } = ticketData;
 
       let createdTicket;
       
       if (ticket) {
         // Update existing ticket
         createdTicket = await DatabaseService.updateTicket(ticket.id, {
-          ...cleanedTicketData,
+          ...ticketData,
           updated_at: new Date().toISOString()
         } as any);
         
@@ -474,7 +445,7 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
         });
       } else {
         // Create new ticket
-        createdTicket = await DatabaseService.createTicket(cleanedTicketData as any, userProfile?.full_name);
+        createdTicket = await DatabaseService.createTicket(ticketData as any, userProfile?.full_name);
         
         toast.success("Ticket criado!", {
           description: "O ticket foi criado com sucesso."
@@ -513,26 +484,10 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
         category_id: "",
         subcategory_id: "",
         country: "",
-        firstName: "",
-        lastName: "",
-        username: "",
-        displayName: "",
-        jobTitle: "",
-        manager: "",
-        companyName: "",
-        department: "",
-        officeLocation: "",
-        businessPhone: "",
-        mobilePhone: "",
-        startDate: "",
-        signatureGroup: "",
-        usageLocation: "",
-        countryDistributionList: "",
-        licenseType: "",
-        mfaSetup: "",
-        attachedForm: "",
       });
       setAttachments([]);
+      setDynamicFormFields([]);
+      setDynamicFormValues({});
       onOpenChange(false);
 
       // Trigger sidebar count refresh
@@ -581,6 +536,148 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
 
   const removeAttachment = (index: number) => {
     setAttachments(prev => prev.filter((_, i) => i !== index));
+  };
+
+  // Render dynamic form fields
+  const renderDynamicFormField = (field: DynamicFormField) => {
+    const value = dynamicFormValues[field.id] || '';
+    
+    const updateValue = (newValue: any) => {
+      setDynamicFormValues(prev => ({
+        ...prev,
+        [field.id]: newValue
+      }));
+    };
+
+    switch (field.type) {
+      case 'text':
+        return (
+          <div key={field.id}>
+            <Label htmlFor={field.id}>
+              {field.label} {field.required && '*'}
+            </Label>
+            <Input
+              id={field.id}
+              value={value}
+              onChange={(e) => updateValue(e.target.value)}
+              placeholder={field.placeholder || `Enter ${field.label.toLowerCase()}`}
+              className="mt-1"
+              required={field.required}
+            />
+            {field.help_text && (
+              <p className="text-xs text-gray-500 mt-1">{field.help_text}</p>
+            )}
+          </div>
+        );
+      
+      case 'textarea':
+        return (
+          <div key={field.id} className="md:col-span-2">
+            <Label htmlFor={field.id}>
+              {field.label} {field.required && '*'}
+            </Label>
+            <Textarea
+              id={field.id}
+              value={value}
+              onChange={(e) => updateValue(e.target.value)}
+              placeholder={field.placeholder || `Enter ${field.label.toLowerCase()}`}
+              className="mt-1 min-h-[100px]"
+              required={field.required}
+            />
+            {field.help_text && (
+              <p className="text-xs text-gray-500 mt-1">{field.help_text}</p>
+            )}
+          </div>
+        );
+      
+      case 'select':
+        return (
+          <div key={field.id}>
+            <Label htmlFor={field.id}>
+              {field.label} {field.required && '*'}
+            </Label>
+            <Select value={value} onValueChange={updateValue} required={field.required}>
+              <SelectTrigger className="mt-1">
+                <SelectValue placeholder={`Select ${field.label.toLowerCase()}`} />
+              </SelectTrigger>
+              <SelectContent>
+                {field.options?.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {field.help_text && (
+              <p className="text-xs text-gray-500 mt-1">{field.help_text}</p>
+            )}
+          </div>
+        );
+      
+      case 'checkbox':
+        return (
+          <div key={field.id} className="md:col-span-2 flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id={field.id}
+              checked={value || false}
+              onChange={(e) => updateValue(e.target.checked)}
+              className="rounded border-gray-300"
+              required={field.required}
+            />
+            <Label htmlFor={field.id} className="text-sm">
+              {field.label} {field.required && '*'}
+            </Label>
+            {field.help_text && (
+              <p className="text-xs text-gray-500 ml-2">{field.help_text}</p>
+            )}
+          </div>
+        );
+      
+      case 'date':
+        return (
+          <div key={field.id}>
+            <Label htmlFor={field.id}>
+              {field.label} {field.required && '*'}
+            </Label>
+            <Input
+              id={field.id}
+              type="date"
+              value={value}
+              onChange={(e) => updateValue(e.target.value)}
+              className="mt-1"
+              required={field.required}
+            />
+            {field.help_text && (
+              <p className="text-xs text-gray-500 mt-1">{field.help_text}</p>
+            )}
+          </div>
+        );
+      
+      case 'number':
+        return (
+          <div key={field.id}>
+            <Label htmlFor={field.id}>
+              {field.label} {field.required && '*'}
+            </Label>
+            <Input
+              id={field.id}
+              type="number"
+              value={value}
+              onChange={(e) => updateValue(e.target.value)}
+              placeholder={field.placeholder || `Enter ${field.label.toLowerCase()}`}
+              className="mt-1"
+              required={field.required}
+            />
+            {field.help_text && (
+              <p className="text-xs text-gray-500 mt-1">{field.help_text}</p>
+            )}
+          </div>
+        );
+      
+      default:
+        return null;
+    }
   };
 
   const getCategoryIcon = (iconName: string) => {
@@ -770,7 +867,7 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
             </div>
             
             <div className="md:col-span-2">
-              <Label htmlFor="description">Description {isEmployeeOnboarding() ? "" : "*"}</Label>
+                              <Label htmlFor="description">Description *</Label>
               <Textarea
                 id="description"
                 value={formData.description}
@@ -802,235 +899,19 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
               )}
             </div>
 
-            {/* Employee Onboarding Specific Fields */}
-            {isEmployeeOnboarding() && (
+            {/* Dynamic Form Fields for Selected Subcategory */}
+            {dynamicFormFields.length > 0 && (
               <>
                 <div className="md:col-span-2">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 border-b pb-2">
-                    📋 Employee Information
+                    📝 Additional Information
                   </h3>
                 </div>
-
-                <div>
-                  <Label htmlFor="firstName">First Name *</Label>
-                  <Input
-                    id="firstName"
-                    value={formData.firstName}
-                    onChange={(e) => setFormData(prev => ({ ...prev, firstName: e.target.value }))}
-                    placeholder="Enter first name"
-                    className="mt-1"
-                    disabled={!canEditField('firstName')}
-                    title={getFieldDisabledMessage('firstName') || undefined}
-                  />
-                  {getFieldDisabledMessage('firstName') && (
-                    <p className="text-xs text-gray-500 mt-1">{getFieldDisabledMessage('firstName')}</p>
-                  )}
-                </div>
-
-                <div>
-                  <Label htmlFor="lastName">Last Name *</Label>
-                  <Input
-                    id="lastName"
-                    value={formData.lastName}
-                    onChange={(e) => setFormData(prev => ({ ...prev, lastName: e.target.value }))}
-                    placeholder="Enter last name"
-                    className="mt-1"
-                    disabled={!canEditField('lastName')}
-                    title={getFieldDisabledMessage('lastName') || undefined}
-                  />
-                  {getFieldDisabledMessage('lastName') && (
-                    <p className="text-xs text-gray-500 mt-1">{getFieldDisabledMessage('lastName')}</p>
-                  )}
-                </div>
-
-                <div>
-                  <Label htmlFor="username">Username *</Label>
-                  <Input
-                    id="username"
-                    value={formData.username}
-                    onChange={(e) => setFormData(prev => ({ ...prev, username: e.target.value }))}
-                    placeholder="Enter username"
-                    className="mt-1"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="displayName">Display Name *</Label>
-                  <Input
-                    id="displayName"
-                    value={formData.displayName}
-                    onChange={(e) => setFormData(prev => ({ ...prev, displayName: e.target.value }))}
-                    placeholder="Enter display name"
-                    className="mt-1"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="jobTitle">Job Title *</Label>
-                  <Input
-                    id="jobTitle"
-                    value={formData.jobTitle}
-                    onChange={(e) => setFormData(prev => ({ ...prev, jobTitle: e.target.value }))}
-                    placeholder="Enter job title"
-                    className="mt-1"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="manager">Manager *</Label>
-                  <Input
-                    id="manager"
-                    value={formData.manager}
-                    onChange={(e) => setFormData(prev => ({ ...prev, manager: e.target.value }))}
-                    placeholder="Enter manager name"
-                    className="mt-1"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="companyName">Company Name *</Label>
-                  <Input
-                    id="companyName"
-                    value={formData.companyName}
-                    onChange={(e) => setFormData(prev => ({ ...prev, companyName: e.target.value }))}
-                    placeholder="Enter company name"
-                    className="mt-1"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="department">Department *</Label>
-                  <Input
-                    id="department"
-                    value={formData.department}
-                    onChange={(e) => setFormData(prev => ({ ...prev, department: e.target.value }))}
-                    placeholder="Enter department"
-                    className="mt-1"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="officeLocation">Office Location *</Label>
-                  <Input
-                    id="officeLocation"
-                    value={formData.officeLocation}
-                    onChange={(e) => setFormData(prev => ({ ...prev, officeLocation: e.target.value }))}
-                    placeholder="Enter office location"
-                    className="mt-1"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="businessPhone">Business Phone *</Label>
-                  <Input
-                    id="businessPhone"
-                    value={formData.businessPhone}
-                    onChange={(e) => setFormData(prev => ({ ...prev, businessPhone: e.target.value }))}
-                    placeholder="Enter business phone"
-                    className="mt-1"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="mobilePhone">Mobile Phone</Label>
-                  <Input
-                    id="mobilePhone"
-                    value={formData.mobilePhone}
-                    onChange={(e) => setFormData(prev => ({ ...prev, mobilePhone: e.target.value }))}
-                    placeholder="Enter mobile phone"
-                    className="mt-1"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="startDate">Start Date *</Label>
-                  <Input
-                    id="startDate"
-                    type="date"
-                    value={formData.startDate}
-                    onChange={(e) => setFormData(prev => ({ ...prev, startDate: e.target.value }))}
-                    className="mt-1"
-                  />
-                </div>
-                
-                <div>
-                  <Label htmlFor="signatureGroup">Signature Group *</Label>
-                  <Input
-                    id="signatureGroup"
-                    value={formData.signatureGroup}
-                    onChange={(e) => setFormData(prev => ({ ...prev, signatureGroup: e.target.value }))}
-                    placeholder="Enter signature group"
-                    className="mt-1"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="usageLocation">Usage Location *</Label>
-                  <Input
-                    id="usageLocation"
-                    value={formData.usageLocation}
-                    onChange={(e) => setFormData(prev => ({ ...prev, usageLocation: e.target.value }))}
-                    placeholder="Enter usage location (country)"
-                    className="mt-1"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="countryDistributionList">Country Distribution List *</Label>
-                  <Input
-                    id="countryDistributionList"
-                    value={formData.countryDistributionList}
-                    onChange={(e) => setFormData(prev => ({ ...prev, countryDistributionList: e.target.value }))}
-                    placeholder="Enter country distribution list"
-                    className="mt-1"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="licenseType">License Type *</Label>
-                  <Select
-                    value={formData.licenseType}
-                    onValueChange={(value) => setFormData(prev => ({ ...prev, licenseType: value }))}
-                  >
-                    <SelectTrigger className="mt-1">
-                      <SelectValue placeholder="Select license type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="email_only">📧 Email Only</SelectItem>
-                      <SelectItem value="full_office">💼 Full Office Apps</SelectItem>
-                      <SelectItem value="teams_only">👥 Teams Only</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="md:col-span-2">
-                  <Label htmlFor="mfaSetup">MFA Setup (Additional Info) *</Label>
-                  <Textarea
-                    id="mfaSetup"
-                    value={formData.mfaSetup}
-                    onChange={(e) => setFormData(prev => ({ ...prev, mfaSetup: e.target.value }))}
-                    placeholder="Private email, phone number, etc., for multi-factor authentication"
-                    className="mt-1 min-h-[80px]"
-                  />
-                </div>
-                
-                <div>
-                  <Label htmlFor="attachedForm">Attached Form</Label>
-                  <div className="mt-1 space-y-2">
-                    <Input
-                      id="attachedForm"
-                      value={formData.attachedForm}
-                      onChange={(e) => setFormData(prev => ({ ...prev, attachedForm: e.target.value }))}
-                      placeholder="Employee onboarding IT checklist"
-                      className="mb-2"
-                    />
-                    <p className="text-xs text-gray-500">
-                      📂 Employee onboarding IT checklist - You can edit this field
-                    </p>
-                  </div>
-                </div>
+                {dynamicFormFields.map(field => renderDynamicFormField(field))}
               </>
             )}
+
+
             
             <div className="md:col-span-2">
               <Label>Attachments</Label>
