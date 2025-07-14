@@ -934,5 +934,14 @@
         "description": "A versão 2.1.0 inclui novo sistema de registro de alterações e navegação aprimorada nas configurações. Confira o registro de alterações para detalhes completos."
       }
     }
+  },
+  "debug": {
+    "title": "Debug & Testes",
+    "description": "Ferramentas para debug e teste do sistema de notificações",
+    "tabs": {
+      "toasts": "Sistema de Toast",
+      "notifications": "Debug Notificações",
+      "tester": "Testador"
+    }
   }
 } 

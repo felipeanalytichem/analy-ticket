@@ -825,5 +825,14 @@
         "description": "La versión 2.1.0 incluye nuevo sistema de registro de cambios y navegación mejorada en la configuración. Consulta el registro de cambios para detalles completos."
       }
     }
+  },
+  "debug": {
+    "title": "Depuración y Pruebas",
+    "description": "Herramientas para depurar y probar el sistema de notificaciones",
+    "tabs": {
+      "toasts": "Sistema de Toast",
+      "notifications": "Depurar Notificaciones",
+      "tester": "Probador"
+    }
   }
 } 

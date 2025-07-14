@@ -6,17 +6,19 @@ import { NotificationTester } from '@/components/notifications/NotificationTeste
 import { ToastTester } from '@/components/debug/ToastTester';
 import { Bug, Bell, TestTube, Layers } from 'lucide-react';
 import { TestRunner } from '@/components/debug/TestRunner';
+import { useTranslation } from 'react-i18next';
 
 export const DebugPage: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <div className="container mx-auto p-6">
       <div className="mb-6">
         <h1 className="text-3xl font-bold flex items-center gap-2">
           <Bug className="h-8 w-8" />
-          Debug & Testes
+          {t('debug.title')}
         </h1>
         <p className="text-gray-600 mt-2">
-          Ferramentas para debug e teste do sistema de notificações
+          {t('debug.description')}
         </p>
       </div>
 
@@ -24,15 +26,15 @@ export const DebugPage: React.FC = () => {
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="toasts" className="flex items-center gap-2">
             <Layers className="h-4 w-4" />
-            Toast System
+            {t('debug.tabs.toasts')}
           </TabsTrigger>
           <TabsTrigger value="notifications" className="flex items-center gap-2">
             <Bell className="h-4 w-4" />
-            Debug Notificações
+            {t('debug.tabs.notifications')}
           </TabsTrigger>
           <TabsTrigger value="tester" className="flex items-center gap-2">
             <TestTube className="h-4 w-4" />
-            Testador
+            {t('debug.tabs.tester')}
           </TabsTrigger>
         </TabsList>
 

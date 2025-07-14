@@ -959,5 +959,14 @@
         "description": "Version 2.1.0 includes new change log system and improved settings navigation. Check the change log for complete details."
       }
     }
+  },
+  "debug": {
+    "title": "Debug & Tests",
+    "description": "Tools for debugging and testing the notification system",
+    "tabs": {
+      "toasts": "Toast System",
+      "notifications": "Debug Notifications",
+      "tester": "Tester"
+    }
   }
 } 
