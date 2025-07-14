@@ -662,7 +662,9 @@
     "selfAssignedDesc": "Ticket {{ticket}} was assigned to you.",
     "selfAssignError": "Unable to assign the ticket. Please try again.",
     "loadError": "Unable to load data. Please try again.",
-    "restricted": "Access restricted to agents."
+    "restricted": "Access restricted to agents.",
+    "agent": "Agent",
+    "unknownUser": "Unknown User"
   },
   "reopen": {
     "title": "Reopen Requests",

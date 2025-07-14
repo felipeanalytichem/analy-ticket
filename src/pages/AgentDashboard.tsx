@@ -498,7 +498,7 @@ export const AgentDashboard = () => {
                         
                         <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
                           <span>
-                            {t('agentDashboard.createdBy')}: {ticket.user?.name || 'Usuário Desconhecido'}
+                            {t('agentDashboard.createdBy')}: {ticket.user?.name || t('agentDashboard.unknownUser')}
                           </span>
                           <span>•</span>
                           <span>
@@ -508,7 +508,7 @@ export const AgentDashboard = () => {
                             <>
                               <span>•</span>
                               <span>
-                                {t('agentDashboard.assignedTo')}: {ticket.assignee?.name || 'Agente'}
+                                {t('agentDashboard.assignedTo')}: {ticket.assignee?.name || t('agentDashboard.agent')}
                               </span>
                             </>
                           )}

@@ -506,7 +506,9 @@
     "selfAssignedDesc": "El ticket {{ticket}} fue asignado a ti.",
     "selfAssignError": "No se pudo asignar el ticket. Por favor, inténtalo de nuevo.",
     "loadError": "No se pudieron cargar los datos. Por favor, inténtalo de nuevo.",
-    "restricted": "Acceso restringido a agentes."
+    "restricted": "Acceso restringido a agentes.",
+    "agent": "Agente",
+    "unknownUser": "Usuario Desconocido"
   },
   "reopen": {
     "title": "Solicitudes de Reapertura",
