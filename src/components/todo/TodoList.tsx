@@ -135,7 +135,7 @@ export const TodoList = () => {
 
   const { userProfile } = useAuth();
   const { triggerRefresh } = useTicketCount();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     loadTasks();
@@ -561,7 +561,6 @@ export const TodoList = () => {
   };
 
   const formatDate = (dateString: string) => {
-    const { i18n } = useTranslation();
     return new Date(dateString).toLocaleDateString(i18n.language, {
       day: '2-digit',
       month: '2-digit',

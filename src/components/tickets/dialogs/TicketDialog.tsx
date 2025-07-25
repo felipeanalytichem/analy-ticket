@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -699,6 +699,9 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
           <DialogTitle className="text-xl font-semibold">
             {ticket ? "Edit Ticket" : "Create New Ticket"}
           </DialogTitle>
+          <DialogDescription>
+            {ticket ? "Update the ticket information below." : "Fill out the form below to create a new support ticket."}
+          </DialogDescription>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-6">

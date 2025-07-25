@@ -13,12 +13,12 @@ const DashboardPage = () => {
   const userRole = userProfile?.role as "user" | "agent" | "admin" || "user";
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4 md:space-y-8 p-4 md:p-6">
       <div>
-        <h1 className="text-4xl font-bold mb-2 text-gray-900 dark:text-white">
+        <h1 className="text-2xl md:text-4xl font-bold mb-2 text-gray-900 dark:text-white">
           Dashboard & Analytics
         </h1>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">
+        <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-4 md:mb-6">
           Welcome, {userProfile?.full_name?.split(' ')[0] || 'User'}
         </p>
         <StatsCards />
@@ -26,14 +26,14 @@ const DashboardPage = () => {
       
       {/* Enhanced Analytics Section for Agents and Admins */}
       {(userRole === "agent" || userRole === "admin") && (
-        <div className="space-y-8">
+        <div className="space-y-4 md:space-y-8">
           {/* Detailed Analytics */}
           <DetailedAnalytics />
           
           {/* Legacy Analytics - keeping for comparison */}
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6">
             <div>
-              <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Legacy Analytics & KPIs</h2>
+              <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-gray-900 dark:text-white">Legacy Analytics & KPIs</h2>
               <AdvancedStatsCards />
             </div>
             <TicketCharts />
@@ -41,11 +41,11 @@ const DashboardPage = () => {
         </div>
       )}
       
-      <div className="grid grid-cols-1 gap-8">
+      <div className="grid grid-cols-1 gap-4 md:gap-8">
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Clock className="h-5 w-5 text-orange-500" />
+            <CardTitle className="text-base md:text-lg flex items-center gap-2">
+              <Clock className="h-4 w-4 md:h-5 md:w-5 text-orange-500" />
               {userRole === "user" ? "My Active Tickets" : "Unassigned Tickets"}
             </CardTitle>
             <CardDescription>

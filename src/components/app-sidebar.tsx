@@ -325,6 +325,12 @@ export function AppSidebar({ userRole, activeTab, onTabChange, onCreateTicket }:
             count: null,
           },
           {
+            title: "SLA Notifications",
+            tab: "sla-notifications",
+            icon: Bell,
+            count: null,
+          },
+          {
             title: "Session Timeout",
             tab: "session-timeout-config",
             icon: Timer,

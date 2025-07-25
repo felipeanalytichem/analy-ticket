@@ -260,20 +260,20 @@ const TicketsPage = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6 p-4 md:p-6">
       {/* Enhanced Header with Gradient */}
-      <div className={cn("rounded-xl p-6 border", theme.bgGradient, theme.borderColor)}>
-        <div className="flex justify-between items-start">
-          <div className="space-y-2">
-            <div className="flex items-center gap-3">
-              <div className={cn("p-2 rounded-lg text-white", theme.gradient)}>
-                <span className="text-2xl">{theme.icon}</span>
+      <div className={cn("rounded-xl p-4 md:p-6 border", theme.bgGradient, theme.borderColor)}>
+        <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
+          <div className="space-y-2 flex-1">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className={cn("p-1.5 md:p-2 rounded-lg text-white", theme.gradient)}>
+                <span className="text-lg md:text-2xl">{theme.icon}</span>
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                <h1 className="text-xl md:text-3xl font-bold text-gray-900 dark:text-white">
                   {getPageTitle()}
                 </h1>
-                <p className={cn("text-sm", theme.textColor)}>
+                <p className={cn("text-xs md:text-sm", theme.textColor)}>
                   {status === "open" && "Tickets waiting for assignment and initial response"}
                   {status === "in-progress" && "Tickets currently being worked on by agents"}
                   {status === "resolved" && "Tickets marked as resolved, awaiting closure"}
@@ -296,11 +296,12 @@ const TicketsPage = () => {
                 console.log('✅ setIsCreateDialogOpen(true) called');
                 console.log('🎯 Dialog should now be open');
               }}
-              className={cn("shadow-lg hover:shadow-xl transition-all duration-200", theme.gradient)}
-              size="lg"
+              className={cn("shadow-lg hover:shadow-xl transition-all duration-200 w-full sm:w-auto", theme.gradient)}
+              size="default"
             >
-              <Plus className="h-5 w-5 mr-2" />
-              New Ticket
+              <Plus className="h-4 w-4 md:h-5 md:w-5 mr-2" />
+              <span className="hidden sm:inline">New Ticket</span>
+              <span className="sm:hidden">New</span>
             </Button>
           )}
         </div>

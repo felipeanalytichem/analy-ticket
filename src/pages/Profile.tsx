@@ -48,6 +48,7 @@ import { UploadService } from '@/lib/uploadService';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR, enUS, es } from 'date-fns/locale';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { useTheme } from '@/components/theme-provider';
 import { AvatarEditor } from '@/components/profile/AvatarEditor';
 import i18n from '@/i18n';

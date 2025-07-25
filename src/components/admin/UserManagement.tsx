@@ -80,6 +80,61 @@ export const UserManagement = () => {
   const [deleteUserId, setDeleteUserId] = useState<string | null>(null);
   const { toast } = useToast();
 
+  const loadUsers = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Error loading users:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load users",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setUsers(data || []);
+    } catch (error) {
+      console.error("Error loading users:", error);
+      toast({
+        title: "Error",
+        description: "Failed to load users",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const checkTempPasswordColumns = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('temporary_password, temporary_password_expires_at, must_change_password')
+        .limit(1);
+      
+      if (!error) {
+        setTempPasswordColumnsExist(true);
+      } else {
+        console.log('Temporary password columns not available:', error);
+        setTempPasswordColumnsExist(false);
+      }
+    } catch (error) {
+      console.log('Temporary password system not available');
+      setTempPasswordColumnsExist(false);
+    }
+  };
+
+  useEffect(() => {
+    loadUsers();
+    checkTempPasswordColumns();
+  }, []);
+
   const roleLabels = {
     admin: "Administrator",
     agent: "Agent", 
@@ -134,57 +189,7 @@ export const UserManagement = () => {
     );
   }
 
-  const loadUsers = async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from("users")
-        .select("*")
-        .order("created_at", { ascending: false });
 
-      if (error) throw error;
-
-      const transformedUsers = data.map(user => ({
-        ...user,
-        name: user.full_name || user.email || 'Name not available'
-      }));
-
-      setUsers(transformedUsers);
-    } catch (error) {
-      console.error("Error loading users:", error);
-      toast({
-        title: "Error",
-        description: "Error loading users. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const checkTempPasswordColumns = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('users')
-        .select('temporary_password, temporary_password_expires_at, must_change_password')
-        .limit(1);
-      
-      if (!error) {
-        setTempPasswordColumnsExist(true);
-      } else {
-        console.log('Temporary password columns not available:', error);
-        setTempPasswordColumnsExist(false);
-      }
-    } catch (error) {
-      console.log('Temporary password system not available');
-      setTempPasswordColumnsExist(false);
-    }
-  };
-
-  useEffect(() => {
-    loadUsers();
-    checkTempPasswordColumns();
-  }, []);
 
   const filteredUsers = users.filter((user) => {
     const matchesSearch = 

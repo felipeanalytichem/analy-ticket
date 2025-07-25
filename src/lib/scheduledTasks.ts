@@ -22,18 +22,20 @@ export class ScheduledTasks {
       }
     }, 60 * 60 * 1000); // Every hour
 
-    // Check SLA warnings every 30 minutes
+    // Check SLA warnings every 2 hours (reduced frequency to prevent spam)
     const slaCheckInterval = setInterval(async () => {
       try {
         console.log('🔄 Running SLA check task...');
         const result = await DatabaseService.checkSLAWarnings();
         if (result.warnings > 0 || result.breaches > 0) {
           console.log(`⚠️ SLA Check: ${result.warnings} warnings, ${result.breaches} breaches`);
+        } else {
+          console.log('✅ SLA Check: No warnings or breaches detected');
         }
       } catch (error) {
         console.error('❌ Error in SLA check task:', error);
       }
-    }, 30 * 60 * 1000); // Every 30 minutes
+    }, 2 * 60 * 60 * 1000); // Every 2 hours
 
     this.intervals.push(autoCloseInterval, slaCheckInterval);
     console.log('✅ Scheduled tasks started');

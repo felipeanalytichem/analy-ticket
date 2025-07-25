@@ -31,7 +31,7 @@ export const SubscriptionDebugger: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [logs, setLogs] = useState<DebugLog[]>([]);
   const [subscriptions, setSubscriptions] = useState<SubscriptionInfo[]>([]);
-  const [sessionInfo, setSessionInfo] = useState<any>(null);
+  const [sessionInfo, setSessionInfo] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(false);
   const [autoRefresh, setAutoRefresh] = useState(false);
   const [filterType, setFilterType] = useState<string>('all');
@@ -40,11 +40,6 @@ export const SubscriptionDebugger: React.FC = () => {
   const logCountRef = useRef(0);
   const isLoggingRef = useRef(false); // Prevent recursive logging
   const isVisibleRef = useRef(false); // Track visibility state persistently
-
-  // Esconder debug para usuários finais
-  if (!userProfile || (userProfile.role !== 'admin' && userProfile.role !== 'agent')) {
-    return null;
-  }
 
   // Initialize visibility from localStorage
   useEffect(() => {
@@ -182,8 +177,7 @@ export const SubscriptionDebugger: React.FC = () => {
   const monitorComponents = () => {
     addLog('component', 'ComponentMonitor', 'Auth Context State', {
       userProfile: userProfile ? { id: userProfile.id, role: userProfile.role } : null,
-      session: session ? { userId: session.user.id, expiresAt: session.expires_at } : null,
-      loading
+      loading: loading
     });
   };
 
@@ -229,6 +223,11 @@ export const SubscriptionDebugger: React.FC = () => {
       addLog('component', 'DebuggerCleanup', 'Subscription Debugger cleaned up');
     };
   }, [isVisible, autoRefresh]);
+
+  // Esconder debug para usuários finais
+  if (!userProfile || (userProfile.role !== 'admin' && userProfile.role !== 'agent')) {
+    return null;
+  }
 
   const clearLogs = () => {
     setLogs([]);

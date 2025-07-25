@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -195,6 +195,9 @@ export const FeedbackPopup = ({
               Avalie seu Atendimento
             </span>
           </DialogTitle>
+          <DialogDescription>
+            Compartilhe sua experiência com nosso atendimento para nos ajudar a melhorar nossos serviços.
+          </DialogDescription>
         </DialogHeader>
 
         {loading ? (

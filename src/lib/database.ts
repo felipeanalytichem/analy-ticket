@@ -1799,32 +1799,93 @@ export class DatabaseService {
   static async createSLAWarningNotification(ticket: any, slaStatus: SLAStatus): Promise<void> {
     try {
       const notifications = [];
+      const now = new Date();
+      const fourHoursAgo = new Date(now.getTime() - 4 * 60 * 60 * 1000);
       
-      // Notify assigned agent
-      if (ticket.assigned_to) {
-        notifications.push({
-          user_id: ticket.assigned_to,
-          type: 'sla_warning',
-          title: '⚠️ SLA Warning',
-          message: `Ticket ${ticket.ticket_number || '#' + ticket.id.slice(-8)} is approaching SLA deadline. ${slaStatus.responseStatus === 'warning' ? 'Response time' : 'Resolution time'} warning.`,
-          ticket_id: ticket.id,
-          priority: 'high',
-          read: false,
-          created_at: new Date().toISOString()
-        });
+      // Check if we already sent a warning notification for this ticket in the last 4 hours
+      const { data: existingNotifications } = await db
+        .from('notifications')
+        .select('id, user_id')
+        .eq('ticket_id', ticket.id)
+        .eq('type', 'sla_warning')
+        .gte('created_at', fourHoursAgo.toISOString());
+
+      const notifiedUsers = new Set(existingNotifications?.map(n => n.user_id) || []);
+      
+      // Calculate warning details for better messaging
+      const responseWarning = slaStatus.responseStatus === 'warning';
+      const resolutionWarning = slaStatus.resolutionStatus === 'warning';
+      const warningType = responseWarning && resolutionWarning ? 'both' : 
+                         responseWarning ? 'response' : 'resolution';
+      
+      // Notify assigned agent (only if not notified in last 4 hours and settings allow)
+      if (ticket.assigned_to && !notifiedUsers.has(ticket.assigned_to)) {
+        const shouldNotify = await this.shouldSendSLANotification(ticket.assigned_to, 'warning', ticket.priority || 'medium');
+        
+        if (shouldNotify) {
+          const warningMessage = warningType === 'both' 
+            ? `Response and resolution deadlines approaching`
+            : warningType === 'response' 
+              ? `Response deadline approaching`
+              : `Resolution deadline approaching`;
+
+          const timeRemaining = warningType === 'response' 
+            ? slaStatus.responseTimeRemaining 
+            : slaStatus.resolutionTimeRemaining;
+
+          notifications.push({
+            user_id: ticket.assigned_to,
+            type: 'sla_warning',
+            title: '⚠️ SLA Warning',
+            message: `Ticket ${ticket.ticket_number || '#' + ticket.id.slice(-8)} - ${warningMessage}. Time remaining: ${timeRemaining}. Priority: ${ticket.priority?.toUpperCase()}`,
+            ticket_id: ticket.id,
+            priority: 'medium',
+            read: false,
+            created_at: now.toISOString()
+          });
+        }
+      }
+
+      // For unassigned tickets approaching SLA deadline, notify admins
+      if (!ticket.assigned_to) {
+        const { data: admins } = await db
+          .from('users')
+          .select('id')
+          .eq('role', 'admin');
+
+        if (admins) {
+          for (const admin of admins) {
+            if (!notifiedUsers.has(admin.id)) {
+              const shouldNotify = await this.shouldSendSLANotification(admin.id, 'warning', ticket.priority || 'medium');
+              
+              if (shouldNotify) {
+                notifications.push({
+                  user_id: admin.id,
+                  type: 'sla_warning',
+                  title: '⚠️ Unassigned Ticket SLA Warning',
+                  message: `Unassigned ticket ${ticket.ticket_number || '#' + ticket.id.slice(-8)} approaching SLA deadline. Assignment needed. Priority: ${ticket.priority?.toUpperCase()}`,
+                  ticket_id: ticket.id,
+                  priority: 'medium',
+                  read: false,
+                  created_at: now.toISOString()
+                });
+              }
+            }
+          }
+        }
       }
       
-      // Notify ticket creator if resolution SLA is at risk and no agent assigned
-      if (slaStatus.resolutionStatus === 'warning' && !ticket.assigned_to) {
+      // Notify ticket creator if resolution SLA is at risk and no agent assigned (only if not recently notified)
+      if (slaStatus.resolutionStatus === 'warning' && !ticket.assigned_to && !notifiedUsers.has(ticket.user_id)) {
         notifications.push({
           user_id: ticket.user_id,
           type: 'sla_warning',
           title: '⏰ Update on Your Ticket',
-          message: `Your ticket ${ticket.ticket_number || '#' + ticket.id.slice(-8)} is being prioritized to meet our service commitment.`,
+          message: `Your ticket ${ticket.ticket_number || '#' + ticket.id.slice(-8)} is being prioritized to meet our service commitment. We're working to assign an agent soon.`,
           ticket_id: ticket.id,
           priority: 'medium',
           read: false,
-          created_at: new Date().toISOString()
+          created_at: now.toISOString()
         });
       }
 
@@ -1832,50 +1893,173 @@ export class DatabaseService {
         const { error } = await db.from('notifications').insert(notifications);
         if (error) {
           console.error('Error creating SLA warning notifications:', error);
+        } else {
+          console.log(`⚠️ Created ${notifications.length} SLA warning notifications for ticket ${ticket.ticket_number || ticket.id}`);
         }
+      } else {
+        console.log(`⏭️ Skipped SLA warning notification for ticket ${ticket.ticket_number || ticket.id} (recently notified)`);
       }
     } catch (error) {
       console.error('Error in createSLAWarningNotification:', error);
     }
   }
 
-  // Create SLA breach notification
+  // Helper function to check if user should receive SLA notifications based on their settings
+  static async shouldSendSLANotification(userId: string, notificationType: 'breach' | 'warning', ticketPriority: string): Promise<boolean> {
+    try {
+      const { data: settings } = await db
+        .from('sla_notification_settings')
+        .select('*')
+        .eq('user_id', userId)
+        .single();
+
+      // If no settings found, use defaults (enabled)
+      if (!settings) return true;
+
+      // Check if notification type is enabled
+      const isEnabled = notificationType === 'breach' 
+        ? settings.breach_notifications_enabled 
+        : settings.warning_notifications_enabled;
+
+      if (!isEnabled) return false;
+
+      // Check priority filter
+      if (settings.priority_filter === 'urgent_only' && ticketPriority !== 'urgent') {
+        return false;
+      }
+      if (settings.priority_filter === 'high_urgent' && !['high', 'urgent'].includes(ticketPriority)) {
+        return false;
+      }
+
+      // Check quiet hours
+      if (settings.quiet_hours_start && settings.quiet_hours_end) {
+        const currentTime = new Date().toTimeString().slice(0, 5); // HH:MM format
+        const isInQuietHours = currentTime >= settings.quiet_hours_start && currentTime <= settings.quiet_hours_end;
+        
+        // Allow urgent breaches even during quiet hours
+        if (isInQuietHours && !(notificationType === 'breach' && ticketPriority === 'urgent')) {
+          return false;
+        }
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Error checking SLA notification settings:', error);
+      return true; // Default to sending notifications if there's an error
+    }
+  }
+
+  // Create SLA breach notification with duplicate prevention
   static async createSLABreachNotification(ticket: any, slaStatus: SLAStatus): Promise<void> {
     try {
       const notifications = [];
+      const now = new Date();
+      const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
       
-      // Notify assigned agent with high priority
-      if (ticket.assigned_to) {
-        notifications.push({
-          user_id: ticket.assigned_to,
-          type: 'sla_breach',
-          title: '🚨 SLA Breach Alert',
-          message: `URGENT: Ticket ${ticket.ticket_number || '#' + ticket.id.slice(-8)} has exceeded SLA deadline. Immediate action required.`,
-          ticket_id: ticket.id,
-          priority: 'urgent',
-          read: false,
-          created_at: new Date().toISOString()
-        });
-      }
-      
-      // Notify all admins about SLA breach
-      const { data: admins } = await db
-        .from('users')
-        .select('id')
-        .eq('role', 'admin');
+      // Check if we already sent a breach notification for this ticket in the last hour
+      const { data: existingNotifications } = await db
+        .from('notifications')
+        .select('id, user_id')
+        .eq('ticket_id', ticket.id)
+        .eq('type', 'sla_breach')
+        .gte('created_at', oneHourAgo.toISOString());
 
-      if (admins) {
-        for (const admin of admins) {
+      const notifiedUsers = new Set(existingNotifications?.map(n => n.user_id) || []);
+      
+      // Calculate breach details for better messaging
+      const responseOverdue = slaStatus.responseStatus === 'overdue';
+      const resolutionOverdue = slaStatus.resolutionStatus === 'overdue';
+      const breachType = responseOverdue && resolutionOverdue ? 'both' : 
+                        responseOverdue ? 'response' : 'resolution';
+      
+      const breachDetails = {
+        response: responseOverdue ? `Response overdue by ${slaStatus.responseTimeRemaining}` : null,
+        resolution: resolutionOverdue ? `Resolution overdue by ${slaStatus.resolutionTimeRemaining}` : null
+      };
+
+      // Notify assigned agent with high priority (only if not notified in last hour and settings allow)
+      if (ticket.assigned_to && !notifiedUsers.has(ticket.assigned_to)) {
+        const shouldNotify = await this.shouldSendSLANotification(ticket.assigned_to, 'breach', ticket.priority || 'medium');
+        
+        if (shouldNotify) {
+          const breachMessage = breachType === 'both' 
+            ? `Response and resolution deadlines exceeded`
+            : breachType === 'response' 
+              ? `Response deadline exceeded`
+              : `Resolution deadline exceeded`;
+
           notifications.push({
-            user_id: admin.id,
+            user_id: ticket.assigned_to,
             type: 'sla_breach',
-            title: '🚨 SLA Breach - Admin Alert',
-            message: `SLA breach detected for ticket ${ticket.ticket_number || '#' + ticket.id.slice(-8)}. Agent: ${ticket.assignee?.full_name || 'Unassigned'}`,
+            title: '🚨 SLA Breach Alert',
+            message: `URGENT: Ticket ${ticket.ticket_number || '#' + ticket.id.slice(-8)} - ${breachMessage}. Priority: ${ticket.priority?.toUpperCase()}`,
             ticket_id: ticket.id,
             priority: 'urgent',
             read: false,
-            created_at: new Date().toISOString()
+            created_at: now.toISOString()
           });
+        }
+      }
+      
+      // For admins, create a summary notification instead of individual ones
+      // Only send admin notifications every 2 hours to prevent spam
+      const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000);
+      const { data: recentAdminNotifications } = await db
+        .from('notifications')
+        .select('id')
+        .eq('type', 'sla_breach')
+        .like('title', '%Admin Alert%')
+        .gte('created_at', twoHoursAgo.toISOString());
+
+      // Only send admin notifications if none were sent in the last 2 hours
+      if (!recentAdminNotifications || recentAdminNotifications.length === 0) {
+        // Get current SLA breach count for context
+        const { data: allBreachedTickets } = await db
+          .from('tickets_new')
+          .select('id, ticket_number, priority, assigned_to, users!tickets_new_assigned_to_fkey(full_name)')
+          .in('status', ['open', 'in_progress']);
+
+        let totalBreaches = 0;
+        const breachSummary = { high: 0, urgent: 0, unassigned: 0 };
+
+        if (allBreachedTickets) {
+          for (const t of allBreachedTickets) {
+            const status = await this.calculateTicketSLAStatus(t);
+            if (status.responseStatus === 'overdue' || status.resolutionStatus === 'overdue') {
+              totalBreaches++;
+              if (t.priority === 'urgent') breachSummary.urgent++;
+              else if (t.priority === 'high') breachSummary.high++;
+              if (!t.assigned_to) breachSummary.unassigned++;
+            }
+          }
+        }
+
+        const { data: admins } = await db
+          .from('users')
+          .select('id')
+          .eq('role', 'admin');
+
+        if (admins && totalBreaches > 0) {
+          const summaryMessage = totalBreaches === 1 
+            ? `SLA breach: Ticket ${ticket.ticket_number || '#' + ticket.id.slice(-8)} (${ticket.priority}). Agent: ${ticket.assignee?.full_name || 'Unassigned'}`
+            : `${totalBreaches} tickets in SLA breach. Urgent: ${breachSummary.urgent}, High: ${breachSummary.high}, Unassigned: ${breachSummary.unassigned}`;
+
+          for (const admin of admins) {
+            const shouldNotify = await this.shouldSendSLANotification(admin.id, 'breach', ticket.priority || 'medium');
+            
+            if (shouldNotify) {
+              notifications.push({
+                user_id: admin.id,
+                type: 'sla_breach',
+                title: totalBreaches === 1 ? '🚨 SLA Breach - Admin Alert' : `🚨 SLA Breach Summary (${totalBreaches} tickets)`,
+                message: summaryMessage,
+                ticket_id: totalBreaches === 1 ? ticket.id : null,
+                priority: 'high', // Reduced from urgent to high for admins
+                read: false,
+                created_at: now.toISOString()
+              });
+            }
+          }
         }
       }
 
@@ -1883,7 +2067,11 @@ export class DatabaseService {
         const { error } = await db.from('notifications').insert(notifications);
         if (error) {
           console.error('Error creating SLA breach notifications:', error);
+        } else {
+          console.log(`📧 Created ${notifications.length} SLA breach notifications (${notifications.filter(n => n.title.includes('Admin')).length} admin, ${notifications.length - notifications.filter(n => n.title.includes('Admin')).length} agent)`);
         }
+      } else {
+        console.log(`⏭️ Skipped SLA breach notification for ticket ${ticket.ticket_number || ticket.id} (recently notified)`);
       }
     } catch (error) {
       console.error('Error in createSLABreachNotification:', error);

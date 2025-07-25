@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -106,6 +106,9 @@ export const FeedbackViewDialog = ({
               Feedback do Atendimento
             </span>
           </DialogTitle>
+          <DialogDescription>
+            Visualize a avaliação e comentários deixados pelo usuário sobre o atendimento recebido.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6 pt-2">

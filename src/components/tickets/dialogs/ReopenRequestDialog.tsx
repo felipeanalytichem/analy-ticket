@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -94,6 +94,9 @@ export const ReopenRequestDialog = ({
             <RotateCcw className="h-5 w-5 text-blue-600" />
             {t('tickets.reopen.title')}
           </DialogTitle>
+          <DialogDescription>
+            Request to reopen a closed ticket by providing a reason for why it needs to be reopened.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">

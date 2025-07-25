@@ -29,6 +29,7 @@ import ChangeLog from '@/pages/ChangeLog';
 import UserManagementPage from '@/pages/UserManagementPage';
 import CategoryManagementPage from '@/pages/CategoryManagementPage';
 import SLAConfigPage from '@/pages/SLAConfigPage';
+import { SLANotificationSettings } from '@/components/admin/SLANotificationSettings';
 import SessionTimeoutConfigPage from '@/pages/SessionTimeoutConfigPage';
 
 // Legacy pages
@@ -289,6 +290,16 @@ function App() {
                   <ProtectedRoute>
                     <AppLayout>
                       <SLAConfigPage />
+                    </AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/sla-notifications"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout>
+                      <SLANotificationSettings />
                     </AppLayout>
                   </ProtectedRoute>
                 }
