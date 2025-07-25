@@ -31,6 +31,9 @@ import CategoryManagementPage from '@/pages/CategoryManagementPage';
 import SLAConfigPage from '@/pages/SLAConfigPage';
 import { SLANotificationSettings } from '@/components/admin/SLANotificationSettings';
 import SessionTimeoutConfigPage from '@/pages/SessionTimeoutConfigPage';
+import WorkloadDashboardPage from '@/pages/WorkloadDashboardPage';
+import AssignmentRulesPage from '@/pages/AssignmentRulesPage';
+import CategoryExpertisePage from '@/pages/CategoryExpertisePage';
 
 // Legacy pages
 import { Notifications } from '@/pages/Notifications';
@@ -322,6 +325,36 @@ function App() {
                       <Suspense fallback={<PageLoading />}> 
                         <KnowledgeAdminPage />
                       </Suspense>
+                    </AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/workload"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout>
+                      <WorkloadDashboardPage />
+                    </AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/assignment-rules"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout>
+                      <AssignmentRulesPage />
+                    </AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/category-expertise"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout>
+                      <CategoryExpertisePage />
                     </AppLayout>
                   </ProtectedRoute>
                 }

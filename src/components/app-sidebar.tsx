@@ -28,6 +28,7 @@ import {
   FolderOpen,
   MessageSquare,
   ChevronRight,
+  Target,
 } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import {
@@ -340,6 +341,24 @@ export function AppSidebar({ userRole, activeTab, onTabChange, onCreateTicket }:
             title: t('sidebar.knowledgeAdmin'),
             tab: "knowledge-admin",
             icon: BookOpen,
+            count: null,
+          },
+          {
+            title: "Workload Dashboard",
+            tab: "workload-dashboard",
+            icon: BarChart,
+            count: null,
+          },
+          {
+            title: "Assignment Rules",
+            tab: "assignment-rules",
+            icon: Zap,
+            count: null,
+          },
+          {
+            title: "Category Expertise",
+            tab: "category-expertise",
+            icon: Target,
             count: null,
           },
           {
