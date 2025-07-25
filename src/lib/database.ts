@@ -684,30 +684,394 @@ export class DatabaseService {
   }
 
   static async saveSubcategoryFormFields(subcategoryId: string, formFields: DynamicFormField[]): Promise<void> {
-    const { error } = await db
-      .from('subcategories')
-      .update({ dynamic_form_fields: formFields })
-      .eq('id', subcategoryId);
+    console.log('🔧 DatabaseService.saveSubcategoryFormFields called:', { subcategoryId, fieldCount: formFields?.length || 0 });
+    
+    // Input validation
+    if (!subcategoryId || typeof subcategoryId !== 'string' || subcategoryId.trim() === '') {
+      const error = new Error('Invalid subcategory ID: must be a non-empty string');
+      console.error('🔧 Validation error:', error.message);
+      throw error;
+    }
 
-    if (error) {
-      console.error('Error saving subcategory form fields:', error);
+    if (!Array.isArray(formFields)) {
+      const error = new Error('Invalid form fields: must be an array');
+      console.error('🔧 Validation error:', error.message);
+      throw error;
+    }
+
+    // Validate each form field before saving
+    const validationErrors: string[] = [];
+    const validatedFields: DynamicFormField[] = [];
+
+    for (let i = 0; i < formFields.length; i++) {
+      const field = formFields[i];
+      
+      // Basic field validation
+      if (!field || typeof field !== 'object') {
+        validationErrors.push(`Field at index ${i}: must be a valid object`);
+        continue;
+      }
+
+      // Validate required properties
+      if (!field.id || typeof field.id !== 'string' || field.id.trim() === '') {
+        validationErrors.push(`Field at index ${i}: ID is required and must be a non-empty string`);
+        continue;
+      }
+
+      if (!field.type || !['text', 'textarea', 'select', 'checkbox', 'date', 'number'].includes(field.type)) {
+        validationErrors.push(`Field at index ${i}: type must be one of: text, textarea, select, checkbox, date, number`);
+        continue;
+      }
+
+      if (typeof field.label !== 'string') {
+        validationErrors.push(`Field at index ${i}: label must be a string`);
+        continue;
+      }
+
+      if (typeof field.required !== 'boolean') {
+        validationErrors.push(`Field at index ${i}: required must be a boolean`);
+        continue;
+      }
+
+      if (typeof field.enabled !== 'boolean') {
+        validationErrors.push(`Field at index ${i}: enabled must be a boolean`);
+        continue;
+      }
+
+      // Validate select field options
+      if (field.type === 'select') {
+        if (!field.options || !Array.isArray(field.options) || field.options.length === 0) {
+          validationErrors.push(`Field at index ${i}: select fields must have at least one option`);
+          continue;
+        }
+        
+        if (field.options.some(opt => typeof opt !== 'string' || opt.trim() === '')) {
+          validationErrors.push(`Field at index ${i}: all select options must be non-empty strings`);
+          continue;
+        }
+      }
+
+      // Validate optional properties
+      if (field.placeholder !== undefined && typeof field.placeholder !== 'string') {
+        validationErrors.push(`Field at index ${i}: placeholder must be a string`);
+        continue;
+      }
+
+      if (field.help_text !== undefined && typeof field.help_text !== 'string') {
+        validationErrors.push(`Field at index ${i}: help_text must be a string`);
+        continue;
+      }
+
+      // Create clean field object with only valid properties
+      const cleanField: DynamicFormField = {
+        id: field.id.trim(),
+        type: field.type,
+        label: field.label.trim(),
+        required: field.required,
+        enabled: field.enabled
+      };
+
+      // Add optional properties if they exist and are valid
+      if (field.options && Array.isArray(field.options)) {
+        cleanField.options = field.options.map(opt => opt.trim()).filter(opt => opt.length > 0);
+      }
+
+      if (field.placeholder && typeof field.placeholder === 'string') {
+        cleanField.placeholder = field.placeholder.trim();
+      }
+
+      if (field.help_text && typeof field.help_text === 'string') {
+        cleanField.help_text = field.help_text.trim();
+      }
+
+      validatedFields.push(cleanField);
+    }
+
+    // Check for validation errors
+    if (validationErrors.length > 0) {
+      const error = new Error(`Form field validation failed: ${validationErrors.join('; ')}`);
+      console.error('🔧 Validation errors:', validationErrors);
+      throw error;
+    }
+
+    // Check for duplicate field IDs
+    const fieldIds = validatedFields.map(f => f.id);
+    const uniqueIds = new Set(fieldIds);
+    if (fieldIds.length !== uniqueIds.size) {
+      const duplicates = fieldIds.filter((id, index) => fieldIds.indexOf(id) !== index);
+      const error = new Error(`Duplicate field IDs detected: ${duplicates.join(', ')}`);
+      console.error('🔧 Duplicate ID error:', error.message);
+      throw error;
+    }
+
+    // Check for duplicate field labels (non-empty labels only)
+    const nonEmptyLabels = validatedFields
+      .map(f => f.label.toLowerCase().trim())
+      .filter(label => label.length > 0);
+    const uniqueLabels = new Set(nonEmptyLabels);
+    if (nonEmptyLabels.length !== uniqueLabels.size) {
+      const duplicates = nonEmptyLabels.filter((label, index) => nonEmptyLabels.indexOf(label) !== index);
+      const error = new Error(`Duplicate field labels detected: ${duplicates.join(', ')}`);
+      console.error('🔧 Duplicate label error:', error.message);
+      throw error;
+    }
+
+    console.log('🔧 Validation passed, saving', validatedFields.length, 'fields');
+
+    try {
+      // Verify subcategory exists before updating
+      const { data: subcategory, error: fetchError } = await db
+        .from('subcategories')
+        .select('id, name')
+        .eq('id', subcategoryId)
+        .single();
+
+      if (fetchError) {
+        console.error('🔧 Error fetching subcategory:', fetchError);
+        throw new Error(`Failed to verify subcategory exists: ${fetchError.message}`);
+      }
+
+      if (!subcategory) {
+        const error = new Error(`Subcategory with ID ${subcategoryId} not found`);
+        console.error('🔧 Subcategory not found:', error.message);
+        throw error;
+      }
+
+      console.log('🔧 Subcategory verified:', subcategory.name);
+
+      // Perform the update with proper JSON serialization
+      const { error: updateError } = await db
+        .from('subcategories')
+        .update({ 
+          dynamic_form_fields: validatedFields,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', subcategoryId);
+
+      if (updateError) {
+        console.error('🔧 Database update error:', updateError);
+        throw new Error(`Failed to save form fields: ${updateError.message}`);
+      }
+
+      console.log('🔧 Form fields saved successfully for subcategory:', subcategory.name);
+
+    } catch (error) {
+      console.error('🔧 Error in saveSubcategoryFormFields:', error);
+      
+      // Re-throw with more context if it's not already our custom error
+      if (error instanceof Error && !error.message.includes('Failed to')) {
+        throw new Error(`Database operation failed: ${error.message}`);
+      }
+      
       throw error;
     }
   }
 
   static async getSubcategoryFormFields(subcategoryId: string): Promise<DynamicFormField[]> {
-    const { data, error } = await db
-      .from('subcategories')
-      .select('dynamic_form_fields')
-      .eq('id', subcategoryId)
-      .single();
-
-    if (error) {
-      console.error('Error getting subcategory form fields:', error);
+    console.log('🔧 DatabaseService.getSubcategoryFormFields called:', { subcategoryId });
+    
+    // Input validation
+    if (!subcategoryId || typeof subcategoryId !== 'string' || subcategoryId.trim() === '') {
+      const error = new Error('Invalid subcategory ID: must be a non-empty string');
+      console.error('🔧 Validation error:', error.message);
       throw error;
     }
 
-    return data?.dynamic_form_fields || [];
+    try {
+      // Verify subcategory exists and get form fields
+      const { data, error } = await db
+        .from('subcategories')
+        .select('id, name, dynamic_form_fields')
+        .eq('id', subcategoryId.trim())
+        .single();
+
+      if (error) {
+        console.error('🔧 Database query error:', error);
+        
+        // Handle specific error cases
+        if (error.code === 'PGRST116') {
+          throw new Error(`Subcategory with ID ${subcategoryId} not found`);
+        }
+        
+        throw new Error(`Failed to fetch form fields: ${error.message}`);
+      }
+
+      if (!data) {
+        const error = new Error(`Subcategory with ID ${subcategoryId} not found`);
+        console.error('🔧 Subcategory not found:', error.message);
+        throw error;
+      }
+
+      console.log('🔧 Subcategory found:', data.name);
+
+      // Handle the form fields data
+      let formFields: DynamicFormField[] = [];
+      
+      if (data.dynamic_form_fields) {
+        // Handle different possible data formats
+        if (Array.isArray(data.dynamic_form_fields)) {
+          formFields = data.dynamic_form_fields;
+        } else if (typeof data.dynamic_form_fields === 'string') {
+          // Handle case where data might be stored as JSON string
+          try {
+            const parsed = JSON.parse(data.dynamic_form_fields);
+            if (Array.isArray(parsed)) {
+              formFields = parsed;
+            } else {
+              console.warn('🔧 Parsed form fields is not an array:', typeof parsed);
+              formFields = [];
+            }
+          } catch (parseError) {
+            console.error('🔧 Failed to parse form fields JSON:', parseError);
+            formFields = [];
+          }
+        } else if (typeof data.dynamic_form_fields === 'object') {
+          // Handle case where it's already an object but not an array
+          console.warn('🔧 Form fields is object but not array:', typeof data.dynamic_form_fields);
+          formFields = [];
+        }
+      }
+
+      console.log('🔧 Raw form fields from database:', formFields?.length || 0, 'fields');
+
+      // Validate and clean the form fields
+      const validatedFields: DynamicFormField[] = [];
+      const validationErrors: string[] = [];
+
+      if (formFields && Array.isArray(formFields)) {
+        for (let i = 0; i < formFields.length; i++) {
+          const field = formFields[i];
+          
+          // Basic field validation
+          if (!field || typeof field !== 'object') {
+            validationErrors.push(`Field at index ${i}: must be a valid object`);
+            continue;
+          }
+
+          // Validate required properties
+          if (!field.id || typeof field.id !== 'string' || field.id.trim() === '') {
+            validationErrors.push(`Field at index ${i}: ID is required and must be a non-empty string`);
+            continue;
+          }
+
+          if (!field.type || !['text', 'textarea', 'select', 'checkbox', 'date', 'number'].includes(field.type)) {
+            validationErrors.push(`Field at index ${i}: type must be one of: text, textarea, select, checkbox, date, number`);
+            continue;
+          }
+
+          if (typeof field.label !== 'string') {
+            validationErrors.push(`Field at index ${i}: label must be a string`);
+            continue;
+          }
+
+          if (typeof field.required !== 'boolean') {
+            validationErrors.push(`Field at index ${i}: required must be a boolean`);
+            continue;
+          }
+
+          if (typeof field.enabled !== 'boolean') {
+            validationErrors.push(`Field at index ${i}: enabled must be a boolean`);
+            continue;
+          }
+
+          // Validate select field options
+          if (field.type === 'select') {
+            if (!field.options || !Array.isArray(field.options) || field.options.length === 0) {
+              validationErrors.push(`Field at index ${i}: select fields must have at least one option`);
+              continue;
+            }
+            
+            if (field.options.some(opt => typeof opt !== 'string' || opt.trim() === '')) {
+              validationErrors.push(`Field at index ${i}: all select options must be non-empty strings`);
+              continue;
+            }
+          }
+
+          // Validate optional properties
+          if (field.placeholder !== undefined && typeof field.placeholder !== 'string') {
+            validationErrors.push(`Field at index ${i}: placeholder must be a string`);
+            continue;
+          }
+
+          if (field.help_text !== undefined && typeof field.help_text !== 'string') {
+            validationErrors.push(`Field at index ${i}: help_text must be a string`);
+            continue;
+          }
+
+          // Create clean field object
+          const cleanField: DynamicFormField = {
+            id: field.id.trim(),
+            type: field.type,
+            label: field.label.trim(),
+            required: field.required,
+            enabled: field.enabled
+          };
+
+          // Add optional properties if they exist and are valid
+          if (field.options && Array.isArray(field.options)) {
+            cleanField.options = field.options.map(opt => opt.trim()).filter(opt => opt.length > 0);
+          }
+
+          if (field.placeholder && typeof field.placeholder === 'string') {
+            cleanField.placeholder = field.placeholder.trim();
+          }
+
+          if (field.help_text && typeof field.help_text === 'string') {
+            cleanField.help_text = field.help_text.trim();
+          }
+
+          validatedFields.push(cleanField);
+        }
+      }
+
+      // Log validation errors but don't throw - return cleaned data
+      if (validationErrors.length > 0) {
+        console.warn('🔧 Form field validation warnings (returning cleaned data):', validationErrors);
+      }
+
+      // Check for and remove duplicate field IDs
+      const seenIds = new Set<string>();
+      const deduplicatedFields = validatedFields.filter(field => {
+        if (seenIds.has(field.id)) {
+          console.warn('🔧 Removing duplicate field ID:', field.id);
+          return false;
+        }
+        seenIds.add(field.id);
+        return true;
+      });
+
+      // Check for and log duplicate labels (but don't remove them as they might be intentional)
+      const labelCounts = new Map<string, number>();
+      deduplicatedFields.forEach(field => {
+        if (field.label.trim()) {
+          const label = field.label.toLowerCase().trim();
+          labelCounts.set(label, (labelCounts.get(label) || 0) + 1);
+        }
+      });
+
+      const duplicateLabels = Array.from(labelCounts.entries())
+        .filter(([_, count]) => count > 1)
+        .map(([label, _]) => label);
+
+      if (duplicateLabels.length > 0) {
+        console.warn('🔧 Duplicate field labels detected (not removing):', duplicateLabels);
+      }
+
+      console.log('🔧 Returning', deduplicatedFields.length, 'validated form fields');
+      console.log('🔧 Field labels:', deduplicatedFields.map(f => f.label));
+
+      return deduplicatedFields;
+
+    } catch (error) {
+      console.error('🔧 Error in getSubcategoryFormFields:', error);
+      
+      // Re-throw with more context if it's not already our custom error
+      if (error instanceof Error && !error.message.includes('Failed to') && !error.message.includes('not found')) {
+        throw new Error(`Database operation failed: ${error.message}`);
+      }
+      
+      throw error;
+    }
   }
 
   static async getCategoriesForTicketForm(): Promise<Array<{ id: string; name: string; subcategories: Array<{ id: string; name: string }> }>> {

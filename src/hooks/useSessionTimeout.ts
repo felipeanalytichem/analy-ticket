@@ -37,13 +37,13 @@ const loadConfigFromStorage = (): Required<SessionTimeoutConfig> => {
 
 export function useSessionTimeout(config: SessionTimeoutConfig = {}) {
   const { user, signOut } = useAuth();
-  
+
   // State for dynamic config that can be updated
   const [dynamicConfig, setDynamicConfig] = useState<Required<SessionTimeoutConfig>>(() => loadConfigFromStorage());
-  
+
   // Apply any overrides from props
   const finalConfig = { ...dynamicConfig, ...config };
-  
+
   const [state, setState] = useState<SessionTimeoutState>({
     isActive: false,
     timeRemaining: finalConfig.timeoutMinutes * 60 * 1000,
@@ -70,7 +70,7 @@ export function useSessionTimeout(config: SessionTimeoutConfig = {}) {
     };
 
     window.addEventListener('sessionTimeoutSettingsChanged', handleSettingsChange);
-    
+
     return () => {
       window.removeEventListener('sessionTimeoutSettingsChanged', handleSettingsChange);
     };
@@ -79,11 +79,11 @@ export function useSessionTimeout(config: SessionTimeoutConfig = {}) {
   // Reset activity timer
   const resetActivity = useCallback(() => {
     if (!isActiveRef.current) return;
-    
+
     const now = new Date();
     lastActivityRef.current = now;
     warningShownRef.current = false;
-    
+
     setState(prev => ({
       ...prev,
       lastActivity: now,
@@ -97,10 +97,10 @@ export function useSessionTimeout(config: SessionTimeoutConfig = {}) {
   // Handle automatic logout
   const handleAutoLogout = useCallback(async () => {
     console.log('⏰ Session timeout - automatically logging out user');
-    
+
     // Stop monitoring immediately to prevent multiple logout attempts
     isActiveRef.current = false;
-    
+
     setState(prev => ({
       ...prev,
       isActive: false,
@@ -112,7 +112,7 @@ export function useSessionTimeout(config: SessionTimeoutConfig = {}) {
       clearInterval(checkIntervalRef.current);
       checkIntervalRef.current = undefined;
     }
-    
+
     // Show notification
     toast.error('Session Expired', {
       description: 'You have been automatically logged out due to inactivity.',
@@ -126,7 +126,7 @@ export function useSessionTimeout(config: SessionTimeoutConfig = {}) {
       console.log('✅ SignOut completed');
     } catch (error) {
       console.error('❌ Error during automatic logout:', error);
-      
+
       // Force redirect even if signOut fails
       setTimeout(() => {
         console.log('🔄 Force redirecting after signOut error...');
@@ -138,12 +138,12 @@ export function useSessionTimeout(config: SessionTimeoutConfig = {}) {
   // Show warning notification
   const showTimeoutWarning = useCallback(() => {
     if (warningShownRef.current) return;
-    
+
     warningShownRef.current = true;
     const remainingMinutes = configRef.current.warningMinutes;
-    
+
     console.log(`⚠️ Showing session timeout warning - ${remainingMinutes} minutes remaining`);
-    
+
     setState(prev => ({
       ...prev,
       showWarning: true,
@@ -226,12 +226,12 @@ export function useSessionTimeout(config: SessionTimeoutConfig = {}) {
     }
 
     console.log(`🔒 Starting session timeout monitoring (${configRef.current.timeoutMinutes} minutes, checking every ${configRef.current.checkIntervalSeconds}s)`);
-    
+
     const now = new Date();
     lastActivityRef.current = now;
     isActiveRef.current = true;
     warningShownRef.current = false;
-    
+
     setState(prev => ({
       ...prev,
       isActive: true,
@@ -247,25 +247,25 @@ export function useSessionTimeout(config: SessionTimeoutConfig = {}) {
     checkIntervalRef.current = setInterval(() => {
       checkSessionStatus();
     }, configRef.current.checkIntervalSeconds * 1000);
-    
+
     console.log('✅ Session monitoring started successfully');
   }, [user, checkSessionStatus]);
 
   // Stop session timeout monitoring
   const stopMonitoring = useCallback(() => {
     console.log('🔓 Stopping session timeout monitoring');
-    
+
     setState(prev => ({
       ...prev,
       isActive: false,
       showWarning: false,
     }));
-    
+
     if (checkIntervalRef.current) {
       clearInterval(checkIntervalRef.current);
       checkIntervalRef.current = undefined;
     }
-    
+
     isActiveRef.current = false;
     warningShownRef.current = false;
   }, []);
@@ -279,7 +279,7 @@ export function useSessionTimeout(config: SessionTimeoutConfig = {}) {
 
     console.log('👂 Setting up activity listeners');
     const events = ['mousedown', 'mousemove', 'keydown', 'scroll', 'touchstart', 'click'];
-    
+
     events.forEach(event => {
       document.addEventListener(event, handleActivity, { passive: true });
     });
@@ -297,7 +297,7 @@ export function useSessionTimeout(config: SessionTimeoutConfig = {}) {
   // Initialize monitoring when user logs in
   useEffect(() => {
     console.log('🔧 Session timeout initialization - user:', !!user, 'isActive:', isActiveRef.current);
-    
+
     if (user && !isActiveRef.current) {
       console.log('🚀 User logged in, starting session monitoring');
       startMonitoring();
