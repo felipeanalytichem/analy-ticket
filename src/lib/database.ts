@@ -394,8 +394,94 @@ export interface UserProfile {
   avatar_url?: string;
 }
 
+// Security audit logging interfaces
+export interface SecurityAuditLog {
+  id: string;
+  user_id: string;
+  action: 'unauthorized_ticket_access' | 'invalid_ticket_query' | 'ticket_access_denied';
+  ticket_id?: string;
+  user_role: string;
+  ip_address?: string;
+  user_agent?: string;
+  error_message?: string;
+  metadata?: any;
+  created_at: string;
+}
+
 // Database service class
 export class DatabaseService {
+  // Helper function to calculate if a closed ticket is within the 7-day visibility window
+  static isClosedTicketVisible(closedAt: string | null): boolean {
+    if (!closedAt) return true; // Not closed, so visible
+    
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const closedDate = new Date(closedAt);
+    
+    // Handle invalid dates
+    if (isNaN(closedDate.getTime())) {
+      return false; // Invalid date treated as very old
+    }
+    
+    return closedDate >= sevenDaysAgo;
+  }
+
+  // Enhanced time-based filtering utility for closed tickets
+  static getClosedTicketVisibilityInfo(closedAt: string | null): {
+    isVisible: boolean;
+    closedAt: Date | null;
+    daysSinceClosed: number | null;
+    visibilityExpiresAt: Date | null;
+  } {
+    if (!closedAt) {
+      return {
+        isVisible: true,
+        closedAt: null,
+        daysSinceClosed: null,
+        visibilityExpiresAt: null
+      };
+    }
+
+    const closedDate = new Date(closedAt);
+    
+    // Handle invalid dates
+    if (isNaN(closedDate.getTime())) {
+      return {
+        isVisible: false,
+        closedAt: null,
+        daysSinceClosed: null,
+        visibilityExpiresAt: null
+      };
+    }
+
+    const now = new Date();
+    const timeDiffMs = now.getTime() - closedDate.getTime();
+    const daysSinceClosed = Math.floor(timeDiffMs / (1000 * 60 * 60 * 24));
+    
+    const visibilityExpiresAt = new Date(closedDate);
+    visibilityExpiresAt.setDate(visibilityExpiresAt.getDate() + 7);
+    
+    // A ticket is visible if it was closed less than 7 full days ago
+    // This means if it's been exactly 7 days (168 hours), it's still visible
+    // But if it's been 7 days + any amount of time, it's not visible
+    const sevenDaysInMs = 7 * 24 * 60 * 60 * 1000;
+    const isVisible = timeDiffMs <= sevenDaysInMs;
+    
+    return {
+      isVisible,
+      closedAt: closedDate,
+      daysSinceClosed,
+      visibilityExpiresAt
+    };
+  }
+
+  // Database query helper for time-based closed ticket filtering
+  static buildClosedTicketFilter(): string {
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    
+    return `and(status.eq.closed,closed_at.gte.${sevenDaysAgo.toISOString()})`;
+  }
   // User operations
   static async getUsers(): Promise<User[]> {
     const { data, error } = await db
@@ -1125,8 +1211,10 @@ export class DatabaseService {
     unassignedOnly?: boolean;
     statusFilter?: string;
     limit?: number;
-    userRole?: string;
+    userRole?: 'user' | 'agent' | 'admin';
     searchTerm?: string;
+    showAllAgentTickets?: boolean;
+    includeClosedTickets?: boolean;
   } = {}): Promise<TicketWithDetails[]> {
     try {
       // Get tickets using correct column names
@@ -1134,44 +1222,65 @@ export class DatabaseService {
         .from('tickets_new')
         .select('*');
 
-      // Apply assignment filters FIRST
-      if (options.assignedOnly && options.userId) {
-        query = query.eq('assigned_to', options.userId);
-      } else if (options.unassignedOnly) {
-        query = query.is('assigned_to', null);
-      }
-
-      // Apply visibility rules based on user role and showAll setting
-      if (!options.showAll && options.userId) {
-        if (options.userRole === 'user') {
-          // Users can only see tickets they created (regardless of assignment)
-          query = query.eq('user_id', options.userId);
-        } else if (options.userRole === 'agent' && !options.searchTerm && !options.assignedOnly && !options.unassignedOnly) {
-          // Agents can see: unassigned tickets OR tickets assigned to them
-          query = query.or(`assigned_to.is.null,assigned_to.eq.${options.userId}`);
+      // Apply strict user-based filtering for regular users
+      if (options.userRole === 'user' && options.userId) {
+        // Users can ONLY see tickets they created
+        query = query.eq('user_id', options.userId);
+        
+        // Apply time-based filtering for closed tickets (7-day visibility window)
+        if (options.statusFilter !== 'all') {
+          // Include open, in_progress, resolved tickets
+          // Include closed tickets only if closed within 7 days using the utility function
+          query = query.or(`
+            status.in.(open,in_progress,resolved),
+            ${DatabaseService.buildClosedTicketFilter()}
+          `);
         }
-        // Admins with showAll=false will see all tickets (no additional filter)
-      }
-
-      // Apply status filters SECOND
-      if (options.statusFilter) {
-        if (options.statusFilter === 'my_tickets') {
-          // For "My Tickets" - show all status of tickets assigned to user
-          // (no status filter, but already filtered by assignment above)
-        } else if (options.statusFilter === 'all') {
-          // For "All Tickets" - no status filter (show all statuses)
-        } else if (options.statusFilter === 'active') {
-          // Special filter for active tickets - only open and in_progress
-          query = query.in('status', ['open', 'in_progress']);
-          
-          // Apply agent visibility rules for "active" tickets
-          if (options.userRole === 'agent' && options.userId && !options.searchTerm && !options.showAll) {
-            // For agents without search: show unassigned tickets OR tickets assigned to them
-            query = query.or(`assigned_to.is.null,assigned_to.eq.${options.userId}`);
-          }
+      } else {
+        // Agent and Admin filtering logic
+        
+        // Handle showAllAgentTickets option for agents
+        if (options.userRole === 'agent' && options.showAllAgentTickets) {
+          // Show tickets assigned to any agent (not just current user)
+          query = query.not('assigned_to', 'is', null);
         } else {
-          // Standard status filter
-          query = query.eq('status', options.statusFilter);
+          // Apply assignment filters
+          if (options.assignedOnly && options.userId) {
+            query = query.eq('assigned_to', options.userId);
+          } else if (options.unassignedOnly) {
+            query = query.is('assigned_to', null);
+          }
+
+          // Apply visibility rules based on user role and showAll setting
+          if (!options.showAll && options.userId) {
+            if (options.userRole === 'agent' && !options.searchTerm && !options.assignedOnly && !options.unassignedOnly && !options.showAllAgentTickets) {
+              // Agents can see: unassigned tickets OR tickets assigned to them
+              query = query.or(`assigned_to.is.null,assigned_to.eq.${options.userId}`);
+            }
+            // Admins with showAll=false will see all tickets (no additional filter)
+          }
+        }
+
+        // Apply status filters for agents and admins
+        if (options.statusFilter) {
+          if (options.statusFilter === 'my_tickets') {
+            // For "My Tickets" - show all status of tickets assigned to user
+            // (no status filter, but already filtered by assignment above)
+          } else if (options.statusFilter === 'all') {
+            // For "All Tickets" - no status filter (show all statuses)
+          } else if (options.statusFilter === 'active') {
+            // Special filter for active tickets - only open and in_progress
+            query = query.in('status', ['open', 'in_progress']);
+            
+            // Apply agent visibility rules for "active" tickets
+            if (options.userRole === 'agent' && options.userId && !options.searchTerm && !options.showAll && !options.showAllAgentTickets) {
+              // For agents without search: show unassigned tickets OR tickets assigned to them
+              query = query.or(`assigned_to.is.null,assigned_to.eq.${options.userId}`);
+            }
+          } else {
+            // Standard status filter
+            query = query.eq('status', options.statusFilter);
+          }
         }
       }
 
@@ -1277,17 +1386,124 @@ export class DatabaseService {
     }
   }
 
-  static async getTicketById(ticketId: string): Promise<TicketWithDetails> {
+  static async getTicketById(ticketId: string, options?: {
+    userId?: string;
+    userRole?: 'user' | 'agent' | 'admin';
+    ipAddress?: string;
+    userAgent?: string;
+  }): Promise<TicketWithDetails> {
     try {
+      // Input validation
+      if (!ticketId || typeof ticketId !== 'string' || ticketId.trim() === '') {
+        const error = new Error('Invalid ticket ID: must be a non-empty string');
+        error.name = 'InvalidInput';
+        throw error;
+      }
+
       // Get ticket without foreign key relationships
       const { data: ticket, error } = await db
         .from('tickets_new')
         .select('*')
-        .eq('id', ticketId)
+        .eq('id', ticketId.trim())
         .single();
       
-      if (error) throw error;
-      if (!ticket) throw new Error('Ticket not found');
+      if (error) {
+        // Handle specific database errors
+        if (error.code === 'PGRST116') {
+          const notFoundError = new Error('Ticket not found');
+          notFoundError.name = 'NotFound';
+          throw notFoundError;
+        }
+        throw error;
+      }
+      
+      if (!ticket) {
+        const notFoundError = new Error('Ticket not found');
+        notFoundError.name = 'NotFound';
+        throw notFoundError;
+      }
+
+      // Enhanced user permission validation for unauthorized access prevention
+      if (options?.userId && options?.userRole) {
+        const { userId, userRole, ipAddress, userAgent } = options;
+        
+        if (userRole === 'user') {
+          // Users can only access tickets they created
+          if (ticket.user_id !== userId) {
+            // Log security event for unauthorized access attempt
+            await this.logSecurityEvent({
+              userId,
+              action: 'unauthorized_ticket_access',
+              ticketId: ticket.id,
+              userRole,
+              ipAddress,
+              userAgent,
+              errorMessage: 'User attempted to access ticket they do not own',
+              metadata: {
+                attemptedTicketOwnerId: ticket.user_id,
+                ticketStatus: ticket.status,
+                timestamp: new Date().toISOString()
+              }
+            });
+
+            const error = new Error('Access denied: You can only view your own tickets');
+            error.name = 'UnauthorizedAccess';
+            throw error;
+          }
+          
+          // Apply time-based filtering for closed tickets (7-day visibility window)
+          if (ticket.status === 'closed' && ticket.closed_at) {
+            if (!this.isClosedTicketVisible(ticket.closed_at)) {
+              // Log security event for accessing expired closed ticket
+              await this.logSecurityEvent({
+                userId,
+                action: 'ticket_access_denied',
+                ticketId: ticket.id,
+                userRole,
+                ipAddress,
+                userAgent,
+                errorMessage: 'User attempted to access closed ticket outside 7-day visibility window',
+                metadata: {
+                  ticketClosedAt: ticket.closed_at,
+                  daysSinceClosed: Math.floor((new Date().getTime() - new Date(ticket.closed_at).getTime()) / (1000 * 60 * 60 * 24)),
+                  timestamp: new Date().toISOString()
+                }
+              });
+
+              // Return generic "not found" error to prevent information disclosure
+              const notFoundError = new Error('Ticket not found');
+              notFoundError.name = 'NotFound';
+              throw notFoundError;
+            }
+          }
+        } else if (userRole === 'agent') {
+          // Agents can access tickets assigned to them or unassigned tickets
+          const canAccess = !ticket.assigned_to || ticket.assigned_to === userId;
+          
+          if (!canAccess) {
+            // Log security event for agent accessing unauthorized ticket
+            await this.logSecurityEvent({
+              userId,
+              action: 'unauthorized_ticket_access',
+              ticketId: ticket.id,
+              userRole,
+              ipAddress,
+              userAgent,
+              errorMessage: 'Agent attempted to access ticket assigned to another agent',
+              metadata: {
+                ticketAssignedTo: ticket.assigned_to,
+                ticketStatus: ticket.status,
+                timestamp: new Date().toISOString()
+              }
+            });
+
+            const error = new Error('Access denied: You can only view tickets assigned to you or unassigned tickets');
+            error.name = 'UnauthorizedAccess';
+            throw error;
+          }
+        }
+        // Admins have full access - no additional checks needed
+      }
 
       // Get user data separately
       const userIds = new Set<string>();
@@ -1334,6 +1550,33 @@ export class DatabaseService {
 
       return ticketWithDetails;
     } catch (error) {
+      // Enhanced error handling with proper logging
+      if (error instanceof Error) {
+        // Log security-related errors for audit purposes
+        if (error.name === 'UnauthorizedAccess' || error.name === 'NotFound') {
+          // Security errors are already logged above, just re-throw
+          throw error;
+        }
+        
+        // Log other errors for debugging
+        if (options?.userId) {
+          await this.logSecurityEvent({
+            userId: options.userId,
+            action: 'invalid_ticket_query',
+            ticketId: ticketId,
+            userRole: options.userRole || 'unknown',
+            ipAddress: options.ipAddress,
+            userAgent: options.userAgent,
+            errorMessage: error.message,
+            metadata: {
+              errorName: error.name,
+              errorStack: error.stack,
+              timestamp: new Date().toISOString()
+            }
+          });
+        }
+      }
+      
       throw error;
     }
   }
@@ -4933,6 +5176,69 @@ export class DatabaseService {
     });
 
     return load;
+  }
+
+  // Security audit logging methods
+  static async logSecurityEvent(eventData: {
+    userId: string;
+    action: 'unauthorized_ticket_access' | 'invalid_ticket_query' | 'ticket_access_denied';
+    ticketId?: string;
+    userRole: string;
+    ipAddress?: string;
+    userAgent?: string;
+    errorMessage?: string;
+    metadata?: any;
+  }): Promise<void> {
+    try {
+      // For now, we'll log to console and could extend to database table later
+      const logEntry: SecurityAuditLog = {
+        id: crypto.randomUUID(),
+        user_id: eventData.userId,
+        action: eventData.action,
+        ticket_id: eventData.ticketId,
+        user_role: eventData.userRole,
+        ip_address: eventData.ipAddress,
+        user_agent: eventData.userAgent,
+        error_message: eventData.errorMessage,
+        metadata: eventData.metadata,
+        created_at: new Date().toISOString()
+      };
+
+      // Log to console for immediate visibility
+      console.warn('🔒 SECURITY AUDIT LOG:', {
+        timestamp: logEntry.created_at,
+        userId: logEntry.user_id,
+        action: logEntry.action,
+        ticketId: logEntry.ticket_id,
+        userRole: logEntry.user_role,
+        errorMessage: logEntry.error_message
+      });
+
+      // TODO: In a production environment, this should be stored in a dedicated audit log table
+      // For now, we could store it in a notifications table or create a dedicated audit table
+      
+      // Optional: Store in notifications table as a security alert for admins
+      if (eventData.action === 'unauthorized_ticket_access') {
+        try {
+          await db.from('notifications').insert({
+            user_id: 'system', // System notification
+            type: 'security_alert',
+            title: 'Unauthorized Ticket Access Attempt',
+            message: `User ${eventData.userId} (${eventData.userRole}) attempted to access ticket ${eventData.ticketId} without permission`,
+            ticket_id: eventData.ticketId,
+            read: false,
+            priority: 'high',
+            created_at: new Date().toISOString()
+          });
+        } catch (notificationError) {
+          console.error('Failed to create security notification:', notificationError);
+        }
+      }
+
+    } catch (error) {
+      console.error('Failed to log security event:', error);
+      // Don't throw error to avoid breaking the main flow
+    }
   }
 
 }

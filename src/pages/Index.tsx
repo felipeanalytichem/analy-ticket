@@ -145,26 +145,51 @@ const Index = () => {
                   </div>
                 )}
                 
-                <div className="grid grid-cols-1 gap-8">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg flex items-center gap-2">
-                        <Clock className="h-5 w-5 text-orange-500" />
-                        Unassigned Tickets
-                      </CardTitle>
-                      <CardDescription>Tickets that are currently unassigned and awaiting assignment</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <TicketList 
-                        key={`recent-${ticketListKey}`} 
-                        limit={5} 
-                        showAll={true} 
-                        unassignedOnly={true}
-                        statusFilter="open"
-                      />
-                    </CardContent>
-                  </Card>
-                </div>
+                <section 
+                  aria-labelledby="unassigned-tickets-title"
+                  role="region"
+                >
+                  <div className="grid grid-cols-1 gap-8">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle 
+                          id="unassigned-tickets-title"
+                          className="text-lg flex items-center gap-2"
+                        >
+                          <Clock 
+                            className="h-5 w-5 text-orange-500" 
+                            aria-hidden="true"
+                          />
+                          Unassigned Tickets
+                        </CardTitle>
+                        <CardDescription>
+                          Tickets that are currently unassigned and awaiting assignment
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div
+                          role="region"
+                          aria-labelledby="unassigned-tickets-title"
+                          aria-describedby="unassigned-tickets-description"
+                        >
+                          <div 
+                            id="unassigned-tickets-description" 
+                            className="sr-only"
+                          >
+                            List of unassigned tickets requiring attention, showing up to 5 most recent items. Use keyboard navigation to browse and assign tickets.
+                          </div>
+                          <TicketList 
+                            key={`recent-${ticketListKey}`} 
+                            limit={5} 
+                            showAll={true} 
+                            unassignedOnly={true}
+                            statusFilter="open"
+                          />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </section>
               </div>
             )}
 

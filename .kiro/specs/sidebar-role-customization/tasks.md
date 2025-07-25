@@ -12,9 +12,6 @@
 
 - [x] 2. Implement agent role customization
 
-
-
-
   - Hide "My Tickets" menu item for agents and admins.
   - Set "Agent Dashboard" as default landing page for agents
   - Ensure agent-specific menu items are properly displayed
@@ -70,6 +67,7 @@
   - _Requirements: 3.1, 5.3_
 
 - [x] 10. Integration and final testing
+
 
   - Test complete role-based navigation workflows
   - Verify proper menu behavior for all user roles

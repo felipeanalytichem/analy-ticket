@@ -28,9 +28,11 @@ interface TicketListProps {
   assignedOnly?: boolean;
   unassignedOnly?: boolean;
   statusFilter?: string;
+  showAllAgentTickets?: boolean;
+  customTickets?: TicketWithDetails[];
 }
 
-export const TicketList = ({ limit, showAll = true, assignedOnly = false, unassignedOnly = false, statusFilter }: TicketListProps) => {
+export const TicketList = ({ limit, showAll = true, assignedOnly = false, unassignedOnly = false, statusFilter, showAllAgentTickets = false, customTickets }: TicketListProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [localStatusFilter, setLocalStatusFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
@@ -52,12 +54,19 @@ export const TicketList = ({ limit, showAll = true, assignedOnly = false, unassi
   const { t } = useTranslation();
   const isMobile = useIsMobile();
 
-  // Load tickets from database
+  // Load tickets from database or use custom tickets
   useEffect(() => {
     const loadTickets = async () => {
       try {
         setLoading(true);
         setError(null);
+        
+        // If custom tickets are provided, use them instead of fetching from database
+        if (customTickets) {
+          setTickets(customTickets);
+          setLoading(false);
+          return;
+        }
         
         if (!userProfile) {
           setError("User profile not loaded");
@@ -73,7 +82,8 @@ export const TicketList = ({ limit, showAll = true, assignedOnly = false, unassi
           statusFilter,
           userRole: userProfile.role,
           searchTerm: searchTerm.trim() || undefined,
-          limit
+          limit,
+          showAllAgentTickets
         };
         
         const ticketData = await DatabaseService.getTickets(options);
@@ -108,6 +118,8 @@ export const TicketList = ({ limit, showAll = true, assignedOnly = false, unassi
     showAll,
     searchTerm,
     limit,
+    showAllAgentTickets,
+    customTickets,
     toast
   ]);
 

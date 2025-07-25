@@ -41,39 +41,65 @@ const DashboardPage = () => {
         </div>
       )}
       
-      <div className="grid grid-cols-1 gap-4 md:gap-8">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base md:text-lg flex items-center gap-2">
-              <Clock className="h-4 w-4 md:h-5 md:w-5 text-orange-500" />
-              {userRole === "user" ? "My Active Tickets" : "Unassigned Tickets"}
-            </CardTitle>
-            <CardDescription>
-              {userRole === "user" 
-                ? "Your tickets that are currently open or in progress"
-                : "Tickets that are currently unassigned and awaiting assignment"
-              }
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {userRole === "user" ? (
-              <TicketList 
-                limit={5} 
-                showAll={false}
-                assignedOnly={false}
-                statusFilter="active"
-              />
-            ) : (
-              <TicketList 
-                limit={5} 
-                showAll={true} 
-                unassignedOnly={true}
-                statusFilter="open"
-              />
-            )}
-          </CardContent>
-        </Card>
-      </div>
+      <section 
+        aria-labelledby="tickets-section-title"
+        role="region"
+      >
+        <div className="grid grid-cols-1 gap-4 md:gap-8">
+          <Card>
+            <CardHeader>
+              <CardTitle 
+                id="tickets-section-title"
+                className="text-base md:text-lg flex items-center gap-2"
+              >
+                <Clock 
+                  className="h-4 w-4 md:h-5 md:w-5 text-orange-500" 
+                  aria-hidden="true"
+                />
+                {userRole === "user" ? "My Active Tickets" : "Unassigned Tickets"}
+              </CardTitle>
+              <CardDescription>
+                {userRole === "user" 
+                  ? "Your tickets that are currently open or in progress"
+                  : "Tickets that are currently unassigned and awaiting assignment"
+                }
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div
+                role="region"
+                aria-labelledby="tickets-section-title"
+                aria-describedby="tickets-section-description"
+              >
+                <div 
+                  id="tickets-section-description" 
+                  className="sr-only"
+                >
+                  {userRole === "user" 
+                    ? "List of your active tickets showing up to 5 most recent items. Use keyboard navigation to browse through tickets."
+                    : "List of unassigned tickets requiring attention, showing up to 5 most recent items. Use keyboard navigation to browse and assign tickets."
+                  }
+                </div>
+                {userRole === "user" ? (
+                  <TicketList 
+                    limit={5} 
+                    showAll={false}
+                    assignedOnly={false}
+                    statusFilter="active"
+                  />
+                ) : (
+                  <TicketList 
+                    limit={5} 
+                    showAll={true} 
+                    unassignedOnly={true}
+                    statusFilter="open"
+                  />
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
     </div>
   );
 };

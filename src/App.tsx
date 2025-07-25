@@ -21,6 +21,7 @@ import Settings from '@/pages/Settings';
 import DashboardPage from '@/pages/DashboardPage';
 import AnalyticsPage from '@/pages/AnalyticsPage';
 import TicketsPage from '@/pages/TicketsPage';
+import AllAgentTicketsPage from '@/pages/AllAgentTicketsPage';
 import KnowledgeBasePage from '@/pages/KnowledgeBasePage';
 import { KnowledgeArticleView } from '@/components/knowledge/KnowledgeArticleView';
 import TodoPage from '@/pages/TodoPage';
@@ -203,6 +204,19 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              
+              {/* All Agent Tickets route - must come before parameterized route */}
+              <Route
+                path="/tickets/all-agents"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout>
+                      <AllAgentTicketsPage />
+                    </AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              
               <Route
                 path="/tickets/:status"
                 element={
