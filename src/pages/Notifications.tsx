@@ -115,28 +115,30 @@ export const Notifications: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="container mx-auto p-4 md:p-6 space-y-4 md:space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-            <Bell className="h-8 w-8" />
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight flex items-center gap-2">
+            <Bell className="h-6 w-6 md:h-8 md:w-8" />
             Notifications
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">
             Manage your system notifications
           </p>
         </div>
         
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           <Button
             variant="outline"
             size="sm"
             onClick={handleRefresh}
             disabled={loading}
+            className="flex-1 sm:flex-none"
           >
             <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-            Update
+            <span className="hidden sm:inline">Update</span>
+            <span className="sm:hidden">Update</span>
           </Button>
           
           {unreadCount > 0 && (
@@ -144,9 +146,11 @@ export const Notifications: React.FC = () => {
               variant="default"
               size="sm"
               onClick={handleMarkAllAsRead}
+              className="flex-1 sm:flex-none"
             >
               <CheckCheck className="h-4 w-4 mr-2" />
-              Mark all as read ({unreadCount})
+              <span className="hidden md:inline">Mark all as read ({unreadCount})</span>
+              <span className="md:hidden">Mark all ({unreadCount})</span>
             </Button>
           )}
         </div>
