@@ -218,35 +218,35 @@ export function AppSidebar({ userRole, activeTab, onTabChange, onCreateTicket }:
         icon: FileText,
         count: null,
         type: "collapsible" as const,
-        roles: ["user", "admin"], // Hidden for agents
+        roles: ["user"], // Hidden for agents and admins
         subItems: [
           {
             title: t('sidebar.openTickets'),
             tab: "open-tickets",
             icon: AlertCircle,
             count: ticketCounts.open,
-            roles: ["user", "admin"]
+            roles: ["user"]
           },
           {
             title: t('sidebar.inProgressTickets'),
             tab: "in-progress-tickets",
             icon: Play,
             count: ticketCounts.in_progress,
-            roles: ["user", "admin"]
+            roles: ["user"]
           },
           {
             title: t('sidebar.resolvedTickets'),
             tab: "resolved-tickets",
             icon: CheckCircle,
             count: ticketCounts.resolved,
-            roles: ["user", "admin"]
+            roles: ["user"]
           },
           {
             title: t('sidebar.closedTickets'),
             tab: "closed-tickets",
             icon: XCircle,
             count: ticketCounts.closed,
-            roles: ["user", "admin"]
+            roles: ["user"]
           }
         ]
       },
@@ -263,6 +263,14 @@ export function AppSidebar({ userRole, activeTab, onTabChange, onCreateTicket }:
         tab: "all-tickets",
         icon: Ticket,
         count: unassignedCount,
+        type: "regular" as const,
+        roles: ["agent", "admin"]
+      },
+      {
+        title: t('sidebar.allAgentTickets'),
+        tab: "all-agent-tickets",
+        icon: Users,
+        count: null,
         type: "regular" as const,
         roles: ["agent", "admin"]
       },
