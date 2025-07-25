@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -36,8 +36,22 @@ const Index = () => {
   const { userProfile } = useAuth();
   const { triggerRefresh } = useTicketCount();
   const userRole = userProfile?.role as "user" | "agent" | "admin" || "user";
+  
+  // Helper function to get default route based on user role
+  const getDefaultRoute = (role: "user" | "agent" | "admin"): string => {
+    switch (role) {
+      case "agent":
+        return "agent-dashboard";
+      case "admin":
+        return "dashboard"; // Analytics for admins
+      case "user":
+      default:
+        return "dashboard";
+    }
+  };
+  
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [activeTab, setActiveTab] = useState(getDefaultRoute(userRole));
   const [filters, setFilters] = useState({});
   const [ticketListKey, setTicketListKey] = useState(0);
 
@@ -51,6 +65,16 @@ const Index = () => {
     // Trigger sidebar count refresh
     triggerRefresh();
   };
+
+  // Update activeTab when user role changes to ensure proper default landing page
+  useEffect(() => {
+    const defaultRoute = getDefaultRoute(userRole);
+    // Only update if we're currently on a default route (dashboard or agent-dashboard)
+    // This prevents overriding user navigation when they're actively using the app
+    if (activeTab === "dashboard" || activeTab === "agent-dashboard") {
+      setActiveTab(defaultRoute);
+    }
+  }, [userRole]);
 
   // Debug: Log current activeTab
   console.log('🔍 Current activeTab:', activeTab, 'userRole:', userRole);

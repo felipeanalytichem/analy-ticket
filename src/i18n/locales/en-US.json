@@ -103,6 +103,7 @@
   },
   "sidebar": {
     "dashboard": "Dashboard",
+    "analytics": "Analytics",
     "createTicket": "Create Ticket",
     "myTickets": "My Tickets",
     "openTickets": "Open Tickets",

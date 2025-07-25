@@ -1,5 +1,5 @@
 import { useEffect, Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { TicketCountProvider } from '@/contexts/TicketCountContext';
 import { ThemeProvider } from '@/components/theme-provider';
@@ -9,6 +9,7 @@ import { useCategoryInitializer } from '@/hooks/useCategoryInitializer';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { PageLoading } from '@/components/ui/page-loading';
 import { SessionTimeoutManager } from '@/components/auth/SessionTimeoutManager';
+import { useAuth } from '@/contexts/AuthContext';
 
 // Auth pages
 import Login from '@/pages/Login';
@@ -47,6 +48,31 @@ import AgentDashboard from '@/pages/AgentDashboard';
 const ReportsPage = lazy(() => import('@/pages/ReportsPage'));
 const IntegrationsPage = lazy(() => import('@/pages/IntegrationsPage'));
 const KnowledgeAdminPage = lazy(() => import('@/pages/KnowledgeAdminPage'));
+
+// Role-based default route component
+function RoleBasedDefaultRoute() {
+  const { userProfile } = useAuth();
+  
+  if (!userProfile) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // Determine default route based on user role
+  const getDefaultRoute = (role: string) => {
+    switch (role) {
+      case "agent":
+        return "/agent-dashboard";
+      case "admin":
+        return "/dashboard"; // Analytics for admins (renamed in sidebar)
+      case "user":
+      default:
+        return "/dashboard";
+    }
+  };
+
+  const defaultRoute = getDefaultRoute(userProfile.role);
+  return <Navigate to={defaultRoute} replace />;
+}
 
 function App() {
   // Initialize categories automatically
@@ -141,9 +167,7 @@ function App() {
                 path="/"
                 element={
                   <ProtectedRoute>
-                    <AppLayout>
-                      <DashboardPage />
-                    </AppLayout>
+                    <RoleBasedDefaultRoute />
                   </ProtectedRoute>
                 }
               />

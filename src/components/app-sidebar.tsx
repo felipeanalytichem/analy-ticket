@@ -10,7 +10,6 @@ import {
   Home,
   FileText,
   BarChart3,
-  Download,
   Plug,
   Clock,
   Timer,
@@ -19,18 +18,14 @@ import {
   XCircle,
   TestTube,
   AlertCircle,
-  Pause,
   Play,
-  CheckSquare,
   ListTodo,
   Zap,
   BarChart,
   FolderOpen,
-  MessageSquare,
   ChevronRight,
   Target,
 } from "lucide-react";
-import { useLocation } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -72,17 +67,18 @@ interface MenuItem {
   icon: React.ComponentType<{ className?: string }>;
   count: number | null;
   type: "regular" | "collapsible";
+  roles: ("user" | "agent" | "admin")[];
   subItems?: Array<{
     title: string;
     tab: string;
     icon: React.ComponentType<{ className?: string }>;
     count: number | null;
+    roles: ("user" | "agent" | "admin")[];
   }>;
 }
 
 export function AppSidebar({ userRole, activeTab, onTabChange, onCreateTicket }: AppSidebarProps) {
-  const location = useLocation();
-  const { user, userProfile } = useAuth();
+  const { userProfile } = useAuth();
   const { refreshKey } = useTicketCount();
   const [ticketCounts, setTicketCounts] = useState({
     open: 0,
@@ -197,21 +193,24 @@ export function AppSidebar({ userRole, activeTab, onTabChange, onCreateTicket }:
     return () => clearInterval(interval);
   }, [userProfile?.id, userRole, refreshKey]); // Added refreshKey as dependency
 
-  const getMainMenuItems = (): MenuItem[] => {
-    const items: MenuItem[] = [
+  // Helper function to build menu items with role-based filtering
+  const buildMenuForRole = (role: "user" | "agent" | "admin"): MenuItem[] => {
+    const allItems: MenuItem[] = [
       {
-        title: t('sidebar.dashboard'),
+        title: role === "admin" ? t('sidebar.analytics') || "Analytics" : t('sidebar.dashboard'),
         tab: "dashboard",
         icon: Home,
         count: null,
-        type: "regular" as const
+        type: "regular" as const,
+        roles: ["user", "agent", "admin"]
       },
       {
         title: t('sidebar.createTicket'),
         tab: "create-ticket",
         icon: Plus,
         count: null,
-        type: "regular" as const
+        type: "regular" as const,
+        roles: ["user", "agent", "admin"]
       },
       {
         title: t('sidebar.myTickets'),
@@ -219,174 +218,195 @@ export function AppSidebar({ userRole, activeTab, onTabChange, onCreateTicket }:
         icon: FileText,
         count: null,
         type: "collapsible" as const,
+        roles: ["user", "admin"], // Hidden for agents
         subItems: [
           {
             title: t('sidebar.openTickets'),
             tab: "open-tickets",
             icon: AlertCircle,
             count: ticketCounts.open,
+            roles: ["user", "admin"]
           },
           {
             title: t('sidebar.inProgressTickets'),
             tab: "in-progress-tickets",
             icon: Play,
             count: ticketCounts.in_progress,
+            roles: ["user", "admin"]
           },
           {
             title: t('sidebar.resolvedTickets'),
             tab: "resolved-tickets",
             icon: CheckCircle,
             count: ticketCounts.resolved,
+            roles: ["user", "admin"]
           },
           {
             title: t('sidebar.closedTickets'),
             tab: "closed-tickets",
             icon: XCircle,
             count: ticketCounts.closed,
+            roles: ["user", "admin"]
           }
         ]
-      }
-    ];
-
-    if (userRole === "agent" || userRole === "admin") {
-      items.push(
-        {
-          title: t('sidebar.agentDashboard'),
-          tab: "agent-dashboard",
-          icon: TicketCheck,
-          count: null,
-          type: "regular" as const
-        },
-        {
-          title: t('sidebar.unassignedTickets'),
-          tab: "all-tickets",
-          icon: Ticket,
-          count: unassignedCount,
-          type: "regular" as const
-        },
-        {
-          title: t('sidebar.reopenRequests'),
-          tab: "reopen-requests",
-          icon: RotateCcw,
-          count: null,
-          type: "regular" as const
-        },
-        {
-          title: t('sidebar.todo'),
-          tab: "todo",
-          icon: ListTodo,
-          count: todoCount,
-          type: "regular" as const
-        }
-      );
-    }
-
-    items.push(
+      },
+      {
+        title: t('sidebar.agentDashboard'),
+        tab: "agent-dashboard",
+        icon: TicketCheck,
+        count: null,
+        type: "regular" as const,
+        roles: ["agent", "admin"] // Hidden for users
+      },
+      {
+        title: t('sidebar.unassignedTickets'),
+        tab: "all-tickets",
+        icon: Ticket,
+        count: unassignedCount,
+        type: "regular" as const,
+        roles: ["agent", "admin"]
+      },
+      {
+        title: t('sidebar.reopenRequests'),
+        tab: "reopen-requests",
+        icon: RotateCcw,
+        count: null,
+        type: "regular" as const,
+        roles: ["agent", "admin"]
+      },
+      {
+        title: t('sidebar.todo'),
+        tab: "todo",
+        icon: ListTodo,
+        count: todoCount,
+        type: "regular" as const,
+        roles: ["agent", "admin"]
+      },
       {
         title: t('sidebar.knowledgeBase'),
         tab: "knowledge",
         icon: BookOpen,
         count: null,
-        type: "regular" as const
+        type: "regular" as const,
+        roles: ["user", "agent", "admin"]
       },
       {
         title: t('sidebar.reports'),
         tab: "reports",
         icon: BarChart3,
         count: null,
-        type: "regular" as const
-      }
-    );
-
-    // Add administration menu for admins
-    if (userRole === "admin") {
-      items.push({
+        type: "regular" as const,
+        roles: ["user", "agent", "admin"]
+      },
+      {
         title: t('sidebar.administration'),
         tab: "administration",
         icon: Settings,
         count: null,
         type: "collapsible" as const,
+        roles: ["admin"],
         subItems: [
           {
             title: t('sidebar.userManagement'),
             tab: "admin",
             icon: Users,
             count: null,
+            roles: ["admin"]
           },
           {
             title: t('sidebar.categoryManagement'),
             tab: "category-management",
             icon: FolderOpen,
             count: null,
+            roles: ["admin"]
           },
           {
             title: t('sidebar.slaConfiguration'),
             tab: "sla-config",
             icon: Clock,
             count: null,
+            roles: ["admin"]
           },
           {
             title: "SLA Notifications",
             tab: "sla-notifications",
             icon: Bell,
             count: null,
+            roles: ["admin"]
           },
           {
             title: "Session Timeout",
             tab: "session-timeout-config",
             icon: Timer,
             count: null,
+            roles: ["admin"]
           },
           {
             title: t('sidebar.knowledgeAdmin'),
             tab: "knowledge-admin",
             icon: BookOpen,
             count: null,
+            roles: ["admin"]
           },
           {
             title: "Workload Dashboard",
             tab: "workload-dashboard",
             icon: BarChart,
             count: null,
+            roles: ["admin"]
           },
           {
             title: "Assignment Rules",
             tab: "assignment-rules",
             icon: Zap,
             count: null,
+            roles: ["admin"]
           },
           {
             title: "Category Expertise",
             tab: "category-expertise",
             icon: Target,
             count: null,
+            roles: ["admin"]
           },
           {
             title: t('sidebar.integrations'),
             tab: "integrations",
             icon: Plug,
             count: null,
+            roles: ["admin"]
           },
           {
             title: t('sidebar.debug'),
             tab: "debug",
             icon: TestTube,
             count: null,
-          },
+            roles: ["admin"]
+          }
         ]
-      });
-    }
+      }
+    ];
 
-    return items;
+    // Filter items based on user role
+    return allItems.filter(item => {
+      if (!item.roles.includes(role)) return false;
+      
+      // Filter sub-items if they exist
+      if (item.subItems) {
+        item.subItems = item.subItems.filter(subItem => subItem.roles.includes(role));
+        // Keep parent item only if it has visible sub-items
+        return item.subItems.length > 0;
+      }
+      
+      return true;
+    });
   };
 
-  const getAdminMenuItems = () => {
-    // This function is no longer needed as admin items are now in main menu
-    return [];
+  const getMainMenuItems = (): MenuItem[] => {
+    return buildMenuForRole(userRole);
   };
 
   const mainMenuItems = getMainMenuItems();
-  const adminMenuItems = getAdminMenuItems();
 
   const renderMenuItem = (item: MenuItem) => {
     const isActive = activeTab === item.tab;

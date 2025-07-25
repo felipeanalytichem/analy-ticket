@@ -79,6 +79,7 @@
   },
   "sidebar": {
     "dashboard": "Painel",
+    "analytics": "Análises",
     "createTicket": "Criar Ticket",
     "myTickets": "Meus Tickets",
     "openTickets": "Tickets Abertos",
