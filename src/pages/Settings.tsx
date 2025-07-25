@@ -129,30 +129,31 @@ export default function Settings() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-4 md:py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8">
+        <div className="mb-6 md:mb-8">
           <Button
             variant="ghost"
             onClick={() => navigate('/')}
             className="mb-4"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            {t('settings.backToDashboard')}
+            <span className="hidden sm:inline">{t('settings.backToDashboard')}</span>
+            <span className="sm:hidden">Back</span>
           </Button>
           
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
               {t('settings.title')}
             </h1>
-            <p className="mt-2 text-gray-600 dark:text-gray-400">
+            <p className="mt-2 text-sm md:text-base text-gray-600 dark:text-gray-400">
               {t('settings.subtitle')}
             </p>
           </div>
         </div>
 
-        <Tabs defaultValue="security" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+        <Tabs defaultValue="security" className="space-y-4 md:space-y-6">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 h-auto">
             <TabsTrigger value="security" className="flex items-center gap-2">
               <Shield className="h-4 w-4" />
               {t('settings.tabs.security')}

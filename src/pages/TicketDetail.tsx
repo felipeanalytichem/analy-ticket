@@ -44,6 +44,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { motion, AnimatePresence } from "framer-motion";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 import { InternalComments } from "@/components/tickets/InternalComments";
 import { ActivityLog } from "@/components/tickets/ActivityLog";
@@ -186,36 +187,40 @@ export const TicketDetail = () => {
         animate={{ opacity: 1, y: 0 }}
         className="sticky top-0 z-50 bg-zinc-900/80 backdrop-blur-lg border-b border-zinc-800"
       >
-        <div className="container py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+        <div className="container py-3 md:py-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2 md:gap-4 w-full sm:w-auto">
               <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                Back
-                </Button>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-zinc-500">{ticket.id}</span>
-                <Badge variant={getStatusVariant(ticket.status)}>
+                <span className="hidden sm:inline">Back</span>
+                <span className="sm:hidden">Back</span>
+              </Button>
+              <div className="flex items-center gap-1 md:gap-2 flex-wrap">
+                <span className="text-xs md:text-sm text-zinc-500 truncate max-w-[100px] md:max-w-none">{ticket.id}</span>
+                <Badge variant={getStatusVariant(ticket.status)} className="text-xs">
                   {ticket.status}
                 </Badge>
-                <Badge variant={getPriorityVariant(ticket.priority)}>
-                    {ticket.priority}
+                <Badge variant={getPriorityVariant(ticket.priority)} className="text-xs">
+                  {ticket.priority}
                 </Badge>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" onClick={() => window.print()}>
-                <Printer className="h-4 w-4 mr-2" />
-                Print
+            <div className="flex items-center gap-1 md:gap-2 w-full sm:w-auto">
+              <Button variant="outline" size="sm" onClick={() => window.print()} className="flex-1 sm:flex-none">
+                <Printer className="h-4 w-4 mr-1 md:mr-2" />
+                <span className="hidden md:inline">Print</span>
+                <span className="md:hidden">Print</span>
               </Button>
-              <Button variant="outline" size="sm" onClick={() => copyToClipboard(window.location.href)}>
-                <Share2 className="h-4 w-4 mr-2" />
-                Share
+              <Button variant="outline" size="sm" onClick={() => copyToClipboard(window.location.href)} className="flex-1 sm:flex-none">
+                <Share2 className="h-4 w-4 mr-1 md:mr-2" />
+                <span className="hidden md:inline">Share</span>
+                <span className="md:hidden">Share</span>
               </Button>
               {canViewInternalFeatures && (
-                <Button variant="default" size="sm">
-                  <Edit className="h-4 w-4 mr-2" />
-                  Edit
+                <Button variant="default" size="sm" className="flex-1 sm:flex-none">
+                  <Edit className="h-4 w-4 mr-1 md:mr-2" />
+                  <span className="hidden md:inline">Edit</span>
+                  <span className="md:hidden">Edit</span>
                 </Button>
               )}
             </div>
