@@ -6,13 +6,14 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { UserCheck, Loader2, Users, User, Clock, AlertCircle, UserPlus } from "lucide-react";
+import { UserCheck, Loader2, Users, User, Clock, AlertCircle, UserPlus, Brain, Zap } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useTicketCount } from "@/contexts/TicketCountContext";
 import { useTranslation } from "react-i18next";
 import DatabaseService, { TicketWithDetails } from "@/lib/database";
 import { toast } from "@/components/ui/sonner";
 import { useAuth } from "@/contexts/AuthContext";
+import { assignmentService, type AgentMetrics, type AssignmentResult } from "@/lib/assignmentService";
 
 interface Agent {
   id: string;
@@ -37,9 +38,13 @@ export const QuickAssignDialog = ({
 }: QuickAssignDialogProps) => {
   const [selectedAgent, setSelectedAgent] = useState<string>("");
   const [agents, setAgents] = useState<Agent[]>([]);
+  const [agentMetrics, setAgentMetrics] = useState<AgentMetrics[]>([]);
+  const [intelligentSuggestion, setIntelligentSuggestion] = useState<AssignmentResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingAgents, setIsLoadingAgents] = useState(false);
+  const [isLoadingSuggestion, setIsLoadingSuggestion] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showIntelligentMode, setShowIntelligentMode] = useState(false);
   const { triggerRefresh } = useTicketCount();
   const { t } = useTranslation();
   const { userProfile } = useAuth();
@@ -93,6 +98,7 @@ export const QuickAssignDialog = ({
   useEffect(() => {
     if (open) {
       loadAgents();
+      loadIntelligentSuggestion();
       // Pre-select current agent if ticket is already assigned
       if (ticket?.assigned_to) {
         setSelectedAgent(ticket.assigned_to);
@@ -125,11 +131,65 @@ export const QuickAssignDialog = ({
         role: user.role
       }));
       setAgents(mappedAgents);
+
+      // Also load agent metrics for intelligent suggestions
+      const metrics = await assignmentService.getAvailableAgents();
+      setAgentMetrics(metrics);
     } catch (err) {
       console.error('Error loading agents:', err);
       setError(t('tickets.assign.loadAgentsError'));
     } finally {
       setIsLoadingAgents(false);
+    }
+  };
+
+  const loadIntelligentSuggestion = async () => {
+    if (!ticket) return;
+    
+    setIsLoadingSuggestion(true);
+    try {
+      const suggestion = await assignmentService.findBestAgent({
+        priority: ticket.priority,
+        category_id: ticket.category_id,
+        title: ticket.title,
+        description: ticket.description || '',
+      });
+      setIntelligentSuggestion(suggestion);
+    } catch (err) {
+      console.error('Error getting intelligent suggestion:', err);
+    } finally {
+      setIsLoadingSuggestion(false);
+    }
+  };
+
+  const handleIntelligentAssign = async () => {
+    if (!ticket) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const result = await assignmentService.assignTicket(ticket.id);
+      
+      if (result.success) {
+        toast.success('Ticket Assigned Successfully', {
+          description: `Assigned to ${result.assignedAgent?.full_name}. ${result.reason}`
+        });
+        
+        triggerRefresh();
+        onAssigned();
+        onOpenChange(false);
+      } else {
+        throw new Error(result.reason);
+      }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to assign ticket';
+      setError(errorMessage);
+      toast.error('Assignment Failed', {
+        description: errorMessage
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -221,6 +281,61 @@ export const QuickAssignDialog = ({
             </Alert>
           )}
 
+          {/* Intelligent Assignment Toggle */}
+          {isAdmin && (
+            <div className="flex items-center justify-between p-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
+              <div className="flex items-center gap-2">
+                <Brain className="h-4 w-4 text-blue-600" />
+                <span className="text-sm font-medium">Intelligent Assignment</span>
+              </div>
+              <Button
+                type="button"
+                variant={showIntelligentMode ? "default" : "outline"}
+                size="sm"
+                onClick={() => setShowIntelligentMode(!showIntelligentMode)}
+                disabled={isLoadingSuggestion}
+              >
+                {isLoadingSuggestion ? (
+                  <Loader2 className="h-3 w-3 animate-spin mr-1" />
+                ) : (
+                  <Zap className="h-3 w-3 mr-1" />
+                )}
+                {showIntelligentMode ? 'Manual' : 'AI Mode'}
+              </Button>
+            </div>
+          )}
+
+          {/* Intelligent Suggestion Display */}
+          {isAdmin && showIntelligentMode && intelligentSuggestion && (
+            <div className="space-y-3">
+              {intelligentSuggestion.success ? (
+                <Alert className="border-green-200 bg-green-50 dark:bg-green-950/30">
+                  <Brain className="h-4 w-4 text-green-600" />
+                  <AlertDescription>
+                    <div className="space-y-2">
+                      <div className="font-medium text-green-800 dark:text-green-200">
+                        AI Recommendation: {intelligentSuggestion.assignedAgent?.full_name}
+                      </div>
+                      <div className="text-sm text-green-700 dark:text-green-300">
+                        {intelligentSuggestion.reason}
+                      </div>
+                      <div className="text-xs text-green-600 dark:text-green-400">
+                        Confidence: {Math.round(intelligentSuggestion.confidence)}%
+                      </div>
+                    </div>
+                  </AlertDescription>
+                </Alert>
+              ) : (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    {intelligentSuggestion.reason}
+                  </AlertDescription>
+                </Alert>
+              )}
+            </div>
+          )}
+
           {isAdmin ? (
             <div className="space-y-4">
               <Label htmlFor="agent-select">{t('tickets.assign.selectAgent')}</Label>
@@ -233,22 +348,41 @@ export const QuickAssignDialog = ({
                   <SelectValue placeholder={t('tickets.assign.selectAgentPlaceholder')} />
                 </SelectTrigger>
                 <SelectContent>
-                  {agents.map((agent) => (
-                    <SelectItem key={agent.id} value={agent.id}>
-                      <div className="flex items-center gap-2">
-                        <Avatar className="h-6 w-6">
-                          <AvatarImage src={agent.avatar_url || ''} />
-                          <AvatarFallback>{getInitials(agent.full_name)}</AvatarFallback>
-                        </Avatar>
-                        <span>{agent.full_name}</span>
-                        {agent.role === 'admin' && (
-                          <Badge variant="secondary" className="ml-2">
-                            {t('common.admin')}
-                          </Badge>
-                        )}
-                      </div>
-                    </SelectItem>
-                  ))}
+                  {agents.map((agent) => {
+                    const metrics = agentMetrics.find(m => m.id === agent.id);
+                    const isRecommended = intelligentSuggestion?.assignedAgent?.id === agent.id;
+                    
+                    return (
+                      <SelectItem key={agent.id} value={agent.id}>
+                        <div className="flex items-center gap-2 w-full">
+                          <Avatar className="h-6 w-6">
+                            <AvatarImage src={agent.avatar_url || ''} />
+                            <AvatarFallback>{getInitials(agent.full_name)}</AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <span>{agent.full_name}</span>
+                              {isRecommended && (
+                                <Badge variant="secondary" className="text-xs bg-green-100 text-green-800">
+                                  AI Pick
+                                </Badge>
+                              )}
+                              {agent.role === 'admin' && (
+                                <Badge variant="secondary" className="text-xs">
+                                  {t('common.admin')}
+                                </Badge>
+                              )}
+                            </div>
+                            {metrics && (
+                              <div className="text-xs text-muted-foreground">
+                                {metrics.currentWorkload}/{metrics.maxConcurrentTickets} tickets • {metrics.availability}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </SelectItem>
+                    );
+                  })}
                 </SelectContent>
               </Select>
             </div>
@@ -270,7 +404,7 @@ export const QuickAssignDialog = ({
             </ul>
           </div>
 
-          <DialogFooter>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
             <Button
               type="button"
               variant="outline"
@@ -279,6 +413,29 @@ export const QuickAssignDialog = ({
             >
               {t('common.cancel')}
             </Button>
+            
+            {/* Intelligent Assignment Button */}
+            {isAdmin && intelligentSuggestion?.success && (
+              <Button
+                type="button"
+                onClick={handleIntelligentAssign}
+                disabled={isLoading}
+                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Assigning...
+                  </>
+                ) : (
+                  <>
+                    <Brain className="mr-2 h-4 w-4" />
+                    Assign with AI
+                  </>
+                )}
+              </Button>
+            )}
+            
             <Button
               type="submit"
               disabled={!selectedAgent || isLoading}
