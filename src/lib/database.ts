@@ -1232,7 +1232,7 @@ export class DatabaseService {
           // Include open, in_progress, resolved tickets
           // Include closed tickets only if closed within 7 days using the utility function
           query = query.or(`
-            status.in.(open,in_progress,resolved),
+            status.in.("open","in_progress","resolved"),
             ${DatabaseService.buildClosedTicketFilter()}
           `);
         }
