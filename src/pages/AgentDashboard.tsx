@@ -132,11 +132,11 @@ export const AgentDashboard = () => {
 
     // Filtro por tab ativo - este tem prioridade sobre outros filtros de status
     if (activeTab === "assigned") {
-      filtered = filtered.filter(t => t.assigned_to === userProfile?.id && t.status !== 'closed');
+      filtered = filtered.filter(t => t.assigned_to === userProfile?.id && t.status !== 'closed' && t.status !== 'resolved');
     } else if (activeTab === "unassigned") {
-      filtered = filtered.filter(t => !t.assigned_to && t.status !== 'closed');
+      filtered = filtered.filter(t => !t.assigned_to && t.status !== 'closed' && t.status !== 'resolved');
     } else if (activeTab === "urgent") {
-      filtered = filtered.filter(t => (t.priority === 'urgent' || t.priority === 'high') && t.status !== 'closed');
+      filtered = filtered.filter(t => (t.priority === 'urgent' || t.priority === 'high') && t.status !== 'closed' && t.status !== 'resolved');
     } else if (activeTab === "closed") {
       filtered = filtered.filter(t => t.status === 'closed');
     } else if (activeTab === "all") {
@@ -150,7 +150,7 @@ export const AgentDashboard = () => {
         // Para a aba "All", mostrar tickets atribuídos ao agente ou não atribuídos
         // E aplicar filtro de status apenas se especificamente selecionado no dropdown
         if (statusFilter === "all") {
-          return (isAssignedToAgent || isUnassigned) && isNotClosed;
+          return (isAssignedToAgent || isUnassigned) && isNotClosed && t.status !== 'resolved';
         } else {
           // Se há um filtro de status específico, aplicá-lo
           return (isAssignedToAgent || isUnassigned) && t.status === statusFilter;
@@ -299,7 +299,7 @@ export const AgentDashboard = () => {
           <Button onClick={loadAgentData} variant="outline" size="sm" className="flex-1 sm:flex-none">
             <RefreshCw className="h-4 w-4 mr-2" />
             <span className="hidden sm:inline">{t('common.refresh')}</span>
-            <span className="sm:hidden">Refresh</span>
+            <span className="sm:hidden">{t('common.refresh')}</span>
           </Button>
         </div>
       </div>
@@ -421,15 +421,15 @@ export const AgentDashboard = () => {
         <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="assigned" className="flex items-center gap-2">
             <User className="h-4 w-4" />
-            {t('agentDashboard.myTickets')} ({tickets.filter(t => t.assigned_to === userProfile?.id && t.status !== 'closed').length})
+            {t('agentDashboard.myTickets')} ({tickets.filter(t => t.assigned_to === userProfile?.id && t.status !== 'closed' && t.status !== 'resolved').length})
           </TabsTrigger>
           <TabsTrigger value="unassigned" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
-            {t('agentDashboard.unassigned')} ({tickets.filter(t => !t.assigned_to && t.status !== 'closed').length})
+            {t('agentDashboard.unassigned')} ({tickets.filter(t => !t.assigned_to && t.status !== 'closed' && t.status !== 'resolved').length})
           </TabsTrigger>
           <TabsTrigger value="urgent" className="flex items-center gap-2">
             <AlertCircle className="h-4 w-4" />
-            {t('agentDashboard.urgent')} ({tickets.filter(t => (t.priority === 'urgent' || t.priority === 'high') && t.status !== 'closed').length})
+            {t('agentDashboard.urgent')} ({tickets.filter(t => (t.priority === 'urgent' || t.priority === 'high') && t.status !== 'closed' && t.status !== 'resolved').length})
           </TabsTrigger>
           <TabsTrigger value="closed" className="flex items-center gap-2">
             <CheckCircle className="h-4 w-4" />
@@ -437,7 +437,7 @@ export const AgentDashboard = () => {
           </TabsTrigger>
           <TabsTrigger value="all" className="flex items-center gap-2">
             <Target className="h-4 w-4" />
-            All ({tickets.filter(t => (t.assigned_to === userProfile?.id || !t.assigned_to) && t.status !== 'closed').length})
+            {t('common.all')} ({tickets.filter(t => (t.assigned_to === userProfile?.id || !t.assigned_to) && t.status !== 'closed' && t.status !== 'resolved').length})
           </TabsTrigger>
         </TabsList>
 
