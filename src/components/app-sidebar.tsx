@@ -105,55 +105,57 @@ export function AppSidebar({ userRole, activeTab, onTabChange, onCreateTicket }:
       if (!userProfile?.id) return;
 
       try {
-        // For normal users, load tickets they created (not assigned)
-        // For agents/admins, load tickets assigned to them
+        // Get tickets based on user role:
+        // - Users: tickets they created (user_id = userId)
+        // - Agents/Admins: tickets assigned to them (assigned_to = userId)
         const isNormalUser = userRole === "user";
         
-        const [openTickets, inProgressTickets, resolvedTickets, closedTickets, unassignedTickets] = await Promise.all([
+        // Get all relevant tickets in one query, then count by status
+        // This ensures consistent filtering logic
+        const [allUserTickets, unassignedTickets] = await Promise.all([
           DatabaseService.getTickets({
             userId: userProfile.id,
             userRole: userRole,
-            assignedOnly: !isNormalUser, // Normal users see their created tickets, not assigned
-            showAll: false, // Only show user's relevant tickets for counts
-            statusFilter: "open"
+            assignedOnly: !isNormalUser, // Users: false (created tickets), Agents: true (assigned tickets)
+            showAll: false,
+            statusFilter: "all" // Get all statuses, then count them
           }),
+          // Get unassigned tickets for agents/admins
           DatabaseService.getTickets({
             userId: userProfile.id,
             userRole: userRole,
-            assignedOnly: !isNormalUser, // Normal users see their created tickets, not assigned
-            showAll: false, // Only show user's relevant tickets for counts
-            statusFilter: "in_progress"
-          }),
-          DatabaseService.getTickets({
-            userId: userProfile.id,
-            userRole: userRole,
-            assignedOnly: !isNormalUser, // Normal users see their created tickets, not assigned
-            showAll: false, // Only show user's relevant tickets for counts
-            statusFilter: "resolved"
-          }),
-          DatabaseService.getTickets({
-            userId: userProfile.id,
-            userRole: userRole,
-            assignedOnly: !isNormalUser, // Normal users see their created tickets, not assigned
-            showAll: false, // Only show user's relevant tickets for counts
-            statusFilter: "closed"
-          }),
-          // Buscar tickets abertos e não assignados para "All Tickets"
-          DatabaseService.getTickets({
-            userId: userProfile.id,
-            userRole: userRole,
-            showAll: true, // Ver todos os tickets
+            showAll: true,
             statusFilter: "open",
-            unassignedOnly: true // Nova opção para buscar apenas não assignados
+            unassignedOnly: true
           })
         ]);
 
-        setTicketCounts({
-          open: openTickets.length,
-          in_progress: inProgressTickets.length,
-          resolved: resolvedTickets.length,
-          closed: closedTickets.length,
+        // Count tickets by status from the single query result
+        const counts = {
+          open: 0,
+          in_progress: 0,
+          resolved: 0,
+          closed: 0,
+        };
+
+        allUserTickets.forEach(ticket => {
+          switch (ticket.status) {
+            case 'open':
+              counts.open++;
+              break;
+            case 'in_progress':
+              counts.in_progress++;
+              break;
+            case 'resolved':
+              counts.resolved++;
+              break;
+            case 'closed':
+              counts.closed++;
+              break;
+          }
         });
+
+        setTicketCounts(counts);
         
         setUnassignedCount(unassignedTickets.length);
       } catch (error) {
@@ -336,14 +338,14 @@ export function AppSidebar({ userRole, activeTab, onTabChange, onCreateTicket }:
             roles: ["admin"]
           },
           {
-            title: "SLA Notifications",
+            title: t('sidebar.slaNotifications'),
             tab: "sla-notifications",
             icon: Bell,
             count: null,
             roles: ["admin"]
           },
           {
-            title: "Session Timeout",
+            title: t('sidebar.sessionTimeout'),
             tab: "session-timeout-config",
             icon: Timer,
             count: null,
@@ -357,21 +359,21 @@ export function AppSidebar({ userRole, activeTab, onTabChange, onCreateTicket }:
             roles: ["admin"]
           },
           {
-            title: "Workload Dashboard",
+            title: t('sidebar.workloadDashboard'),
             tab: "workload-dashboard",
             icon: BarChart,
             count: null,
             roles: ["admin"]
           },
           {
-            title: "Assignment Rules",
+            title: t('sidebar.assignmentRules'),
             tab: "assignment-rules",
             icon: Zap,
             count: null,
             roles: ["admin"]
           },
           {
-            title: "Category Expertise",
+            title: t('sidebar.categoryExpertise'),
             tab: "category-expertise",
             icon: Target,
             count: null,

@@ -1,0 +1,55 @@
+{
+  "timestamp": "2025-07-31T16:36:01.793Z",
+  "summary": {
+    "totalLanguages": 6,
+    "baseLanguage": "en-US",
+    "averageCompletion": 87
+  },
+  "languageStats": {
+    "de-DE": {
+      "name": "German (Germany)",
+      "completionPercentage": 97,
+      "totalKeys": 1222,
+      "expectedKeys": 1250,
+      "missingKeysCount": 41,
+      "extraKeysCount": 13,
+      "status": "excellent"
+    },
+    "nl-NL": {
+      "name": "Dutch (Netherlands)",
+      "completionPercentage": 97,
+      "totalKeys": 1222,
+      "expectedKeys": 1250,
+      "missingKeysCount": 41,
+      "extraKeysCount": 13,
+      "status": "excellent"
+    },
+    "fr-FR": {
+      "name": "French (France)",
+      "completionPercentage": 97,
+      "totalKeys": 1222,
+      "expectedKeys": 1250,
+      "missingKeysCount": 41,
+      "extraKeysCount": 13,
+      "status": "excellent"
+    },
+    "pt-BR": {
+      "name": "Portuguese (Brazil)",
+      "completionPercentage": 71,
+      "totalKeys": 901,
+      "expectedKeys": 1250,
+      "missingKeysCount": 359,
+      "extraKeysCount": 10,
+      "status": "fair"
+    },
+    "es-ES": {
+      "name": "Spanish (Spain)",
+      "completionPercentage": 72,
+      "totalKeys": 899,
+      "expectedKeys": 1250,
+      "missingKeysCount": 351,
+      "extraKeysCount": 0,
+      "status": "fair"
+    }
+  }
+}

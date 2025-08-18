@@ -1,0 +1,49 @@
+{
+  "timestamp": "2025-07-31T14:15:39.104Z",
+  "audit": {
+    "filesScanned": 301,
+    "totalFiles": 301,
+    "hardcodedStrings": 3214,
+    "missingKeys": 528,
+    "duplicateKeys": 611
+  },
+  "translations": {
+    "supportedLocales": [
+      "de-DE",
+      "en-US",
+      "es-ES",
+      "fr-FR",
+      "nl-NL",
+      "pt-BR"
+    ],
+    "totalKeys": 1091,
+    "keysByLocale": {
+      "de-DE": 1091,
+      "en-US": 1078,
+      "es-ES": 811,
+      "fr-FR": 1091,
+      "nl-NL": 1091,
+      "pt-BR": 856
+    }
+  },
+  "recommendations": [
+    {
+      "type": "hardcoded_strings",
+      "priority": "high",
+      "message": "Found 3214 hardcoded strings that should be moved to translation files",
+      "action": "Replace hardcoded strings with translation keys using the SafeTranslation component"
+    },
+    {
+      "type": "missing_keys",
+      "priority": "medium",
+      "message": "Found 528 missing translation keys across languages",
+      "action": "Add missing keys to ensure consistent translations across all supported languages"
+    },
+    {
+      "type": "duplicate_keys",
+      "priority": "low",
+      "message": "Found 611 duplicate translation values",
+      "action": "Consider consolidating duplicate translations to reduce maintenance overhead"
+    }
+  ]
+}

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, AlertCircle, RefreshCw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useTranslation } from "react-i18next";
 
 export interface ChartContainerProps {
   title: string;
@@ -29,6 +30,7 @@ export const ChartContainer: React.FC<ChartContainerProps> = ({
   description
 }) => {
   const isMobile = useIsMobile();
+  const { t } = useTranslation();
 
   // Loading skeleton component
   const LoadingSkeleton = () => (
@@ -39,7 +41,7 @@ export const ChartContainer: React.FC<ChartContainerProps> = ({
       <div className="flex flex-col items-center gap-3">
         <Loader2 className="h-8 w-8 animate-spin text-gray-400 dark:text-gray-500" />
         <div className="text-sm text-gray-500 dark:text-gray-400">
-          Loading chart data...
+          {t('common.loading')}
         </div>
       </div>
     </div>
@@ -57,10 +59,10 @@ export const ChartContainer: React.FC<ChartContainerProps> = ({
         </div>
         <div className="space-y-2">
           <h3 className="font-medium text-red-900 dark:text-red-100">
-            Chart Error
+            {t('common.error')}
           </h3>
           <p className="text-sm text-red-700 dark:text-red-300 max-w-sm">
-            {error || "Unable to load chart data. Please try again."}
+            {error || t('dashboard.chartLoadError', 'Unable to load chart data. Please try again.')}
           </p>
         </div>
         {onRetry && (
@@ -71,7 +73,7 @@ export const ChartContainer: React.FC<ChartContainerProps> = ({
             className="border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900/20"
           >
             <RefreshCw className="h-4 w-4 mr-2" />
-            Retry
+            {t('common.retry')}
           </Button>
         )}
       </div>

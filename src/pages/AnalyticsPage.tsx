@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+import { SafeTranslation } from '@/components/ui/SafeTranslation';
 import { 
   BarChart3, 
   TrendingUp, 
@@ -35,7 +36,7 @@ const AnalyticsPage = () => {
           </CardHeader>
           <CardContent className="text-center">
             <p className="text-gray-600 dark:text-gray-400 mb-4">
-              Advanced analytics are only available to agents and administrators.
+              <SafeTranslation i18nKey="admin.accessDenied.agentsAndAdmins" fallback="Advanced analytics are only available to agents and administrators." />
             </p>
             <Badge variant="secondary" className="px-3 py-1">
               <Users className="h-4 w-4 mr-1" />

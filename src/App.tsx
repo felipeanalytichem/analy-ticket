@@ -9,6 +9,7 @@ import { useCategoryInitializer } from '@/hooks/useCategoryInitializer';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { PageLoading } from '@/components/ui/page-loading';
 import { SessionTimeoutManager } from '@/components/auth/SessionTimeoutManager';
+import { SimpleSessionManager } from '@/components/session/SimpleSessionManager';
 import { useAuth } from '@/contexts/AuthContext';
 
 // Auth pages
@@ -42,6 +43,7 @@ import { Notifications } from '@/pages/Notifications';
 import { ReopenRequests } from '@/pages/ReopenRequests';
 import { DebugPage } from '@/pages/DebugPage';
 import UpdateCategoriesPage from '@/pages/UpdateCategoriesPage';
+import DiagnosticsPage from '@/pages/DiagnosticsPage';
 import TicketDetail from '@/pages/TicketDetail';
 import AgentDashboard from '@/pages/AgentDashboard';
 
@@ -92,7 +94,7 @@ function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <AuthProvider>
-        <SessionTimeoutManager>
+        <SimpleSessionManager>
           <TicketCountProvider>
             <Router>
               <Routes>
@@ -140,6 +142,15 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <DebugPage />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/diagnostics"
+                element={
+                  <ProtectedRoute>
+                    <DiagnosticsPage />
                   </ProtectedRoute>
                 }
               />
@@ -308,7 +319,7 @@ function App() {
               <Route
                 path="/admin/users"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requiredRole="admin">
                     <AppLayout>
                       <UserManagementPage />
                     </AppLayout>
@@ -401,7 +412,7 @@ function App() {
             <Toaster />
           </Router>
         </TicketCountProvider>
-        </SessionTimeoutManager>
+        </SimpleSessionManager>
       </AuthProvider>
     </ThemeProvider>
   );

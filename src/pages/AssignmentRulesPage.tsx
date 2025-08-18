@@ -3,6 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Navigate } from 'react-router-dom';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertTriangle } from 'lucide-react';
+import { SafeTranslation } from '@/components/ui/SafeTranslation';
 
 export default function AssignmentRulesPage() {
   const { userProfile, loading } = useAuth();
@@ -25,7 +26,7 @@ export default function AssignmentRulesPage() {
         <Alert variant="destructive">
           <AlertTriangle className="h-4 w-4" />
           <AlertDescription>
-            Access denied. This page is only available to administrators.
+            <SafeTranslation i18nKey="admin.accessDenied.title" fallback="Access denied. This page is only available to administrators." />
           </AlertDescription>
         </Alert>
       </div>

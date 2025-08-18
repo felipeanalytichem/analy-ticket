@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Clock } from "lucide-react";
+import { SafeTranslation } from "@/components/ui/SafeTranslation";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -112,7 +113,7 @@ const Index = () => {
                 className="bg-blue-600 hover:bg-blue-700 text-white"
               >
                 <Plus className="h-4 w-4 mr-2" />
-                New Ticket
+                <SafeTranslation i18nKey="tickets.newTicket" fallback="New Ticket" />
               </Button>
               <UserProfile />
             </div>
@@ -126,10 +127,14 @@ const Index = () => {
               <div className="space-y-8">
                 <div>
                   <h1 className="text-4xl font-bold mb-2 text-gray-900 dark:text-white">
-                    Dashboard & Analytics
+                    <SafeTranslation i18nKey="dashboard.title" fallback="Dashboard & Analytics" />
                   </h1>
                   <p className="text-gray-600 dark:text-gray-400 mb-6">
-                    Welcome, {userProfile?.full_name?.split(' ')[0] || 'User'}
+                    <SafeTranslation 
+                      i18nKey="dashboard.welcome" 
+                      fallback="Welcome, {name}" 
+                      values={{ name: userProfile?.full_name?.split(' ')[0] || 'User' }}
+                    />
                   </p>
                   <StatsCards />
                 </div>
@@ -138,7 +143,9 @@ const Index = () => {
                 {(userRole === "agent" || userRole === "admin") && (
                   <div className="space-y-6">
                     <div>
-                      <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Analytics & KPIs</h2>
+                      <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+                        <SafeTranslation i18nKey="dashboard.analyticsKpis" fallback="Analytics & KPIs" />
+                      </h2>
                       <AdvancedStatsCards />
                     </div>
                     <TicketCharts />
@@ -160,10 +167,13 @@ const Index = () => {
                             className="h-5 w-5 text-orange-500" 
                             aria-hidden="true"
                           />
-                          Unassigned Tickets
+                          <SafeTranslation i18nKey="sidebar.unassignedTickets" fallback="Unassigned Tickets" />
                         </CardTitle>
                         <CardDescription>
-                          Tickets that are currently unassigned and awaiting assignment
+                          <SafeTranslation 
+                            i18nKey="dashboard.unassignedTicketsDescription" 
+                            fallback="Tickets that are currently unassigned and awaiting assignment" 
+                          />
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
@@ -176,7 +186,10 @@ const Index = () => {
                             id="unassigned-tickets-description" 
                             className="sr-only"
                           >
-                            List of unassigned tickets requiring attention, showing up to 5 most recent items. Use keyboard navigation to browse and assign tickets.
+                            <SafeTranslation 
+                              i18nKey="dashboard.unassignedTicketsAriaDescription" 
+                              fallback="List of unassigned tickets requiring attention, showing up to 5 most recent items. Use keyboard navigation to browse and assign tickets." 
+                            />
                           </div>
                           <TicketList 
                             key={`recent-${ticketListKey}`} 
@@ -201,12 +214,12 @@ const Index = () => {
               <div className="space-y-6">
                 <div className="flex justify-between items-center">
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                    {activeTab === "tickets" && "My Tickets"}
-                    {activeTab === "all-tickets" && "All Tickets"}
-                    {activeTab === "open-tickets" && "Open Tickets"}
-                    {activeTab === "in-progress-tickets" && "In Progress Tickets"}
-                    {activeTab === "resolved-tickets" && "Resolved Tickets"}
-                    {activeTab === "closed-tickets" && "Closed Tickets"}
+                    {activeTab === "tickets" && <SafeTranslation i18nKey="navigation.myTickets" fallback="My Tickets" />}
+                    {activeTab === "all-tickets" && <SafeTranslation i18nKey="navigation.allTickets" fallback="All Tickets" />}
+                    {activeTab === "open-tickets" && <SafeTranslation i18nKey="navigation.openTickets" fallback="Open Tickets" />}
+                    {activeTab === "in-progress-tickets" && <SafeTranslation i18nKey="navigation.inProgressTickets" fallback="In Progress Tickets" />}
+                    {activeTab === "resolved-tickets" && <SafeTranslation i18nKey="navigation.resolvedTickets" fallback="Resolved Tickets" />}
+                    {activeTab === "closed-tickets" && <SafeTranslation i18nKey="navigation.closedTickets" fallback="Closed Tickets" />}
                   </h2>
                   {(activeTab === "tickets" || activeTab === "all-tickets" || activeTab === "open-tickets" || activeTab === "in-progress-tickets") && (
                     <Button
@@ -222,7 +235,7 @@ const Index = () => {
                       className="bg-blue-600 hover:bg-blue-700"
                     >
                       <Plus className="h-4 w-4 mr-2" />
-                      New Ticket
+                      <SafeTranslation i18nKey="tickets.newTicket" fallback="New Ticket" />
                     </Button>
                   )}
                 </div>
@@ -260,7 +273,9 @@ const Index = () => {
             {activeTab === "knowledge" && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Knowledge Base</h2>
+                  <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+                    <SafeTranslation i18nKey="navigation.knowledge" fallback="Knowledge Base" />
+                  </h2>
                 </div>
                 <KnowledgeBase />
               </div>
@@ -269,9 +284,11 @@ const Index = () => {
             {activeTab === "todo" && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">To-Do List</h2>
+                  <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+                    <SafeTranslation i18nKey="todo.manageTitle" fallback="To-Do List" />
+                  </h2>
                   <p className="text-gray-600 dark:text-gray-400">
-                    Manage your ticket-related tasks
+                    <SafeTranslation i18nKey="todo.manageDesc" fallback="Manage your ticket-related tasks" />
                   </p>
                 </div>
                 <TodoList />
@@ -281,7 +298,9 @@ const Index = () => {
             {activeTab === "reports" && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Reports & Export</h2>
+                  <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+                    <SafeTranslation i18nKey="reports.title" fallback="Reports & Export" />
+                  </h2>
                 </div>
                 <ReportExporter />
               </div>
@@ -290,7 +309,9 @@ const Index = () => {
             {activeTab === "integrations" && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">External Integrations</h2>
+                  <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+                    <SafeTranslation i18nKey="integrations.listTitle" fallback="External Integrations" />
+                  </h2>
                 </div>
                 <ExternalIntegrations />
               </div>
@@ -300,10 +321,10 @@ const Index = () => {
               <div className="space-y-8">
                 <div>
                   <h1 className="text-4xl font-bold mb-2 text-gray-900 dark:text-white">
-                    Notification System
+                    <SafeTranslation i18nKey="notifications.systemTitle" fallback="Notification System" />
                   </h1>
                   <p className="text-gray-600 dark:text-gray-400">
-                    Real-time notification system demonstration
+                    <SafeTranslation i18nKey="notifications.systemDescription" fallback="Real-time notification system demonstration" />
                   </p>
                 </div>
                 <NotificationDemo />
@@ -314,10 +335,10 @@ const Index = () => {
               <div className="space-y-8">
                 <div>
                   <h1 className="text-4xl font-bold mb-2 text-gray-900 dark:text-white">
-                    Notification Tester
+                    <SafeTranslation i18nKey="notifications.testerTitle" fallback="Notification Tester" />
                   </h1>
                   <p className="text-gray-600 dark:text-gray-400">
-                    Tool to test the real-time notification system
+                    <SafeTranslation i18nKey="notifications.testerDescription" fallback="Tool to test the real-time notification system" />
                   </p>
                 </div>
                 <NotificationTester />
@@ -327,7 +348,9 @@ const Index = () => {
             {activeTab === "admin" && userRole === "admin" && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">User Management</h2>
+                  <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+                    <SafeTranslation i18nKey="navigation.adminUsers" fallback="User Management" />
+                  </h2>
                 </div>
                 <UserManagement />
               </div>
@@ -342,7 +365,9 @@ const Index = () => {
             {activeTab === "sla-config" && userRole === "admin" && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">SLA Configuration</h2>
+                  <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+                    <SafeTranslation i18nKey="navigation.adminSla" fallback="SLA Configuration" />
+                  </h2>
                 </div>
                 <SLAConfiguration />
               </div>
@@ -351,7 +376,9 @@ const Index = () => {
             {activeTab === "reopen-requests" && (userRole === "agent" || userRole === "admin") && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Reopen Requests</h2>
+                  <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+                    <SafeTranslation i18nKey="navigation.reopenRequests" fallback="Reopen Requests" />
+                  </h2>
                 </div>
                 <ReopenRequests />
               </div>

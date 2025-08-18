@@ -1,0 +1,141 @@
+{
+  "timestamp": "2025-07-31T16:36:01.823Z",
+  "auditScope": {
+    "targetLanguages": [
+      {
+        "code": "en-US",
+        "name": "English (US)",
+        "isBase": true
+      },
+      {
+        "code": "de-DE",
+        "name": "German (Germany)",
+        "isBase": false
+      },
+      {
+        "code": "nl-NL",
+        "name": "Dutch (Netherlands)",
+        "isBase": false
+      },
+      {
+        "code": "fr-FR",
+        "name": "French (France)",
+        "isBase": false
+      },
+      {
+        "code": "pt-BR",
+        "name": "Portuguese (Brazil)",
+        "isBase": false
+      },
+      {
+        "code": "es-ES",
+        "name": "Spanish (Spain)",
+        "isBase": false
+      }
+    ],
+    "filesScanned": 258,
+    "totalFiles": 258
+  },
+  "completionOverview": {
+    "averageCompletion": 87,
+    "languageStats": [
+      {
+        "locale": "de-DE",
+        "name": "German (Germany)",
+        "completion": 97,
+        "status": "excellent"
+      },
+      {
+        "locale": "nl-NL",
+        "name": "Dutch (Netherlands)",
+        "completion": 97,
+        "status": "excellent"
+      },
+      {
+        "locale": "fr-FR",
+        "name": "French (France)",
+        "completion": 97,
+        "status": "excellent"
+      },
+      {
+        "locale": "es-ES",
+        "name": "Spanish (Spain)",
+        "completion": 72,
+        "status": "fair"
+      },
+      {
+        "locale": "pt-BR",
+        "name": "Portuguese (Brazil)",
+        "completion": 71,
+        "status": "fair"
+      }
+    ]
+  },
+  "issuesSummary": {
+    "hardcodedStrings": 2644,
+    "missingKeys": 833,
+    "consistencyIssues": 5
+  },
+  "recommendations": [
+    {
+      "type": "low_completion",
+      "priority": "high",
+      "message": "2 languages have completion rates below 80%",
+      "languages": [
+        {
+          "locale": "pt-BR",
+          "name": "Portuguese (Brazil)",
+          "completion": 71
+        },
+        {
+          "locale": "es-ES",
+          "name": "Spanish (Spain)",
+          "completion": 72
+        }
+      ],
+      "action": "Focus on completing missing translations for these languages first"
+    },
+    {
+      "type": "hardcoded_strings",
+      "priority": "high",
+      "message": "Found 2644 hardcoded strings (2056 high priority)",
+      "action": "Replace hardcoded strings with translation keys, starting with high priority items"
+    },
+    {
+      "type": "consistency_issues",
+      "priority": "medium",
+      "message": "Found 5 consistency issues across languages",
+      "action": "Review and fix empty values and untranslated content"
+    }
+  ],
+  "nextSteps": [
+    {
+      "step": 1,
+      "title": "Complete Missing Translations",
+      "description": "Add 833 missing translation keys across all languages",
+      "estimatedTime": "17 days",
+      "priority": "high"
+    },
+    {
+      "step": 2,
+      "title": "Replace Hardcoded Strings",
+      "description": "Replace 2644 hardcoded strings with translation keys",
+      "estimatedTime": "89 days",
+      "priority": "high"
+    },
+    {
+      "step": 3,
+      "title": "Fix Consistency Issues",
+      "description": "Resolve 5 consistency issues",
+      "estimatedTime": "2-3 days",
+      "priority": "medium"
+    },
+    {
+      "step": 4,
+      "title": "Validation and Testing",
+      "description": "Test all languages for proper display and functionality",
+      "estimatedTime": "3-5 days",
+      "priority": "medium"
+    }
+  ]
+}

@@ -1,0 +1,6255 @@
+{
+  "timestamp": "2025-07-31T16:30:40.207Z",
+  "summary": {
+    "totalLanguages": 6,
+    "validatedLanguages": 6,
+    "totalErrors": 0,
+    "totalWarnings": 0,
+    "languagesWithIssues": 5
+  },
+  "errors": [],
+  "warnings": [],
+  "validationResults": {
+    "de-DE": {
+      "name": "German (Germany)",
+      "issues": {
+        "missingKeys": 41,
+        "extraKeys": 13,
+        "emptyValues": 0,
+        "untranslatedValues": 52,
+        "duplicateValues": 148
+      },
+      "details": {
+        "missingKeys": [
+          "common.button",
+          "common.promise",
+          "common.retry",
+          "common.actions",
+          "common.avgResolution",
+          "common.chat",
+          "common.startTheConversation",
+          "common.sent",
+          "common.category",
+          "common.passed",
+          "common.featured",
+          "common.status",
+          "common.priority",
+          "common.apply",
+          "common.pending",
+          "common.conditions",
+          "common.maxConcurrentTicketsPerAgent",
+          "common.ticketNotFound",
+          "errors.errorLoadingAgents",
+          "errors.errorUploadingFile",
+          "errors.errorRemovingReaction",
+          "errors.errorSendingMessage",
+          "errors.errorAddingReaction",
+          "errors.errorSubmittingFeedback",
+          "errors.errorMarkingAllNotifications",
+          "errors.errorDeletingNotification",
+          "errors.errorCreatingTask",
+          "errors.failedUrl",
+          "errors.errorAssigningTicket",
+          "errors.errorLoadingSessionTimeout",
+          "errors.errorCreatingNotification",
+          "errors.errorMarkingNotificationAsRead",
+          "errors.errorGettingChatMessages",
+          "errors.errorSendingChatMessage",
+          "errors.errorUploadingChatFile",
+          "errors.errorMarkingChatAsRead",
+          "errors.errorGettingChatParticipants",
+          "errors.errorGettingUnreadCount",
+          "errors.validationError",
+          "errors.todoTasksFunctionalityRequired",
+          "errors.errorCreatingSignedUrl"
+        ],
+        "extraKeys": [
+          "profile.french",
+          "profile.dutch",
+          "profile.german",
+          "todo.actions.assign",
+          "todo.actions.assignToMe",
+          "todo.actions.reassign",
+          "todo.actions.resolve",
+          "todo.actions.close",
+          "todo.actions.reopen",
+          "todo.actions.viewDetails",
+          "todo.actions.transfer",
+          "chat.typePlaceholder",
+          "chat.searchPlaceholder"
+        ],
+        "duplicateValues": [
+          {
+            "value": "Speichern",
+            "keys": [
+              "common.save",
+              "admin.userForm.save",
+              "admin.slaConfiguration.save",
+              "todo.actions.save",
+              "todo.edit.save"
+            ]
+          },
+          {
+            "value": "Abbrechen",
+            "keys": [
+              "common.cancel",
+              "admin.userManagement.cancel",
+              "admin.userForm.cancel",
+              "admin.slaConfiguration.cancel",
+              "admin.assignmentRules.cancel",
+              "todo.actions.cancel",
+              "todo.edit.cancel",
+              "chat.cancel"
+            ]
+          },
+          {
+            "value": "Bearbeiten",
+            "keys": [
+              "common.edit",
+              "tickets.detail.edit",
+              "tickets.actions.edit",
+              "admin.slaConfiguration.edit",
+              "todo.actions.edit"
+            ]
+          },
+          {
+            "value": "Löschen",
+            "keys": [
+              "common.delete",
+              "common.clear",
+              "header.clear",
+              "tickets.actions.delete",
+              "todo.actions.delete"
+            ]
+          },
+          {
+            "value": "Schließen",
+            "keys": [
+              "common.close",
+              "tickets.detail.close",
+              "tickets.actions.close",
+              "todo.actions.close"
+            ]
+          },
+          {
+            "value": "Laden...",
+            "keys": [
+              "common.loading",
+              "tickets.assign.loading",
+              "admin.categoryManagement.loading"
+            ]
+          },
+          {
+            "value": "Fehler",
+            "keys": [
+              "common.error",
+              "tickets.error",
+              "tickets.bug",
+              "admin.userPasswordDialog.copyError",
+              "auth.error",
+              "integrations.status.error"
+            ]
+          },
+          {
+            "value": "Erfolg",
+            "keys": [
+              "common.success",
+              "tickets.success"
+            ]
+          },
+          {
+            "value": "Warnung",
+            "keys": [
+              "common.warning",
+              "tickets.warningAttachments",
+              "sla.status.warning"
+            ]
+          },
+          {
+            "value": "Zurück",
+            "keys": [
+              "common.back",
+              "tickets.detail.back"
+            ]
+          },
+          {
+            "value": "Entfernen",
+            "keys": [
+              "common.remove",
+              "admin.userManagement.remove"
+            ]
+          },
+          {
+            "value": "Senden",
+            "keys": [
+              "common.send",
+              "chat.send"
+            ]
+          },
+          {
+            "value": "Erstellen",
+            "keys": [
+              "common.create",
+              "admin.userForm.create"
+            ]
+          },
+          {
+            "value": "Aktualisieren",
+            "keys": [
+              "common.update",
+              "common.refresh",
+              "header.refresh",
+              "admin.workloadDashboard.refresh"
+            ]
+          },
+          {
+            "value": "Vorschau",
+            "keys": [
+              "common.preview",
+              "titles.preview"
+            ]
+          },
+          {
+            "value": "Herunterladen",
+            "keys": [
+              "common.download",
+              "header.download",
+              "titles.download"
+            ]
+          },
+          {
+            "value": "Hochladen",
+            "keys": [
+              "common.upload",
+              "header.upload"
+            ]
+          },
+          {
+            "value": "Filtern",
+            "keys": [
+              "common.filter",
+              "header.filter"
+            ]
+          },
+          {
+            "value": "Exportieren",
+            "keys": [
+              "common.export",
+              "header.export"
+            ]
+          },
+          {
+            "value": "Importieren",
+            "keys": [
+              "common.import",
+              "header.import"
+            ]
+          },
+          {
+            "value": "Teilen",
+            "keys": [
+              "common.share",
+              "header.share",
+              "tickets.detail.share"
+            ]
+          },
+          {
+            "value": "Drucken",
+            "keys": [
+              "common.print",
+              "header.print",
+              "tickets.detail.print"
+            ]
+          },
+          {
+            "value": "Gesamt Tickets",
+            "keys": [
+              "common.totalTickets",
+              "header.totalTickets",
+              "dashboard.totalTickets"
+            ]
+          },
+          {
+            "value": "Agent",
+            "keys": [
+              "common.agent",
+              "header.agent",
+              "profile.agent",
+              "admin.userManagement.agent",
+              "admin.userListItem.agent",
+              "auth.agent",
+              "reports.agent"
+            ]
+          },
+          {
+            "value": "Unbekannter Benutzer",
+            "keys": [
+              "common.unknownUser",
+              "header.unknownUser",
+              "notifications.fallback.unknownUser"
+            ]
+          },
+          {
+            "value": "Alle",
+            "keys": [
+              "common.all",
+              "header.all",
+              "todo.allTab"
+            ]
+          },
+          {
+            "value": "© 2024 AnalytiChem GmbH. Alle Rechte vorbehalten.",
+            "keys": [
+              "common.copyright",
+              "header.copyright",
+              "auth.copyright"
+            ]
+          },
+          {
+            "value": "Ups! Seite nicht gefunden",
+            "keys": [
+              "common.pageNotFound",
+              "header.pageNotFound"
+            ]
+          },
+          {
+            "value": "Zurück zur Startseite",
+            "keys": [
+              "common.returnToHome",
+              "header.returnToHome"
+            ]
+          },
+          {
+            "value": "Administrator",
+            "keys": [
+              "common.admin",
+              "header.admin",
+              "profile.admin",
+              "admin.userManagement.administrator",
+              "admin.userListItem.administrator",
+              "auth.administrator"
+            ]
+          },
+          {
+            "value": "Willkommen zurück",
+            "keys": [
+              "common.welcomeBack",
+              "header.welcomeBack",
+              "auth.welcomeBack"
+            ]
+          },
+          {
+            "value": "Tickets suchen...",
+            "keys": [
+              "search.placeholder",
+              "agentDashboard.searchPlaceholder",
+              "placeholders.searchTickets"
+            ]
+          },
+          {
+            "value": "Status",
+            "keys": [
+              "filter.status",
+              "tickets.reopen.statusLabel",
+              "tickets.fields.status",
+              "todo.edit.status.label",
+              "reports.status"
+            ]
+          },
+          {
+            "value": "Priorität",
+            "keys": [
+              "filter.priority",
+              "tickets.priority",
+              "tickets.fields.priority",
+              "todo.priorityLabel",
+              "reports.priority"
+            ]
+          },
+          {
+            "value": "Alle Status",
+            "keys": [
+              "filter.allStatuses",
+              "tickets.allStatus",
+              "agentDashboard.statusAll"
+            ]
+          },
+          {
+            "value": "Alle Prioritäten",
+            "keys": [
+              "filter.allPriorities",
+              "tickets.allPriorities",
+              "todo.allPriorities",
+              "agentDashboard.priorityAll"
+            ]
+          },
+          {
+            "value": "Dashboard",
+            "keys": [
+              "navigation.dashboard",
+              "sidebar.dashboard"
+            ]
+          },
+          {
+            "value": "Tickets",
+            "keys": [
+              "navigation.tickets",
+              "admin.workloadDashboard.tickets"
+            ]
+          },
+          {
+            "value": "Meine Tickets",
+            "keys": [
+              "navigation.myTickets",
+              "sidebar.myTickets",
+              "dashboard.myTickets",
+              "agentDashboard.myTickets"
+            ]
+          },
+          {
+            "value": "Offene Tickets",
+            "keys": [
+              "navigation.openTickets",
+              "sidebar.openTickets",
+              "dashboard.openTickets"
+            ]
+          },
+          {
+            "value": "In Bearbeitung",
+            "keys": [
+              "navigation.inProgressTickets",
+              "sidebar.inProgressTickets",
+              "tickets.status.inProgress",
+              "sla.in_progress",
+              "sla.status.in_progress",
+              "status.inProgress",
+              "todo.inProgressLabel",
+              "todo.edit.status.inProgress"
+            ]
+          },
+          {
+            "value": "Gelöst",
+            "keys": [
+              "navigation.resolvedTickets",
+              "sidebar.resolvedTickets",
+              "tickets.status.resolved",
+              "status.resolved"
+            ]
+          },
+          {
+            "value": "Geschlossen",
+            "keys": [
+              "navigation.closedTickets",
+              "sidebar.closedTickets",
+              "tickets.status.closed",
+              "status.closed"
+            ]
+          },
+          {
+            "value": "Analytics",
+            "keys": [
+              "navigation.analytics",
+              "sidebar.analytics"
+            ]
+          },
+          {
+            "value": "Wissensdatenbank",
+            "keys": [
+              "navigation.knowledge",
+              "sidebar.knowledgeBase",
+              "tickets.detail.knowledgeBase",
+              "tickets.knowledgeBase"
+            ]
+          },
+          {
+            "value": "Berichte",
+            "keys": [
+              "navigation.reports",
+              "sidebar.reports",
+              "reports.title"
+            ]
+          },
+          {
+            "value": "Integrationen",
+            "keys": [
+              "navigation.integrations",
+              "sidebar.integrations",
+              "integrations.title"
+            ]
+          },
+          {
+            "value": "Verwaltung",
+            "keys": [
+              "navigation.admin",
+              "sidebar.administration"
+            ]
+          },
+          {
+            "value": "Einstellungen",
+            "keys": [
+              "navigation.settings",
+              "profile.preferences",
+              "settings.title"
+            ]
+          },
+          {
+            "value": "Benachrichtigungen",
+            "keys": [
+              "navigation.notifications",
+              "tickets.notifications",
+              "profile.notifications",
+              "todo.notificationsSection",
+              "notifications.title",
+              "settings.tabs.notifications"
+            ]
+          },
+          {
+            "value": "Abmelden",
+            "keys": [
+              "navigation.logout",
+              "auth.logout",
+              "auth.signOut"
+            ]
+          },
+          {
+            "value": "Agent Dashboard",
+            "keys": [
+              "navigation.agentDashboard",
+              "sidebar.agentDashboard",
+              "agentDashboard.title"
+            ]
+          },
+          {
+            "value": "Wiedereröffnungsanfragen",
+            "keys": [
+              "navigation.reopenRequests",
+              "sidebar.reopenRequests"
+            ]
+          },
+          {
+            "value": "Aufgaben",
+            "keys": [
+              "navigation.todo",
+              "sidebar.todo",
+              "tickets.tasks",
+              "tickets.detail.tasks"
+            ]
+          },
+          {
+            "value": "Benutzerverwaltung",
+            "keys": [
+              "navigation.adminUsers",
+              "sidebar.userManagement",
+              "admin.userManagement.title"
+            ]
+          },
+          {
+            "value": "Kategorienverwaltung",
+            "keys": [
+              "navigation.adminCategories",
+              "admin.categoryManagement.title"
+            ]
+          },
+          {
+            "value": "SLA Konfiguration",
+            "keys": [
+              "navigation.adminSla",
+              "sidebar.slaConfiguration"
+            ]
+          },
+          {
+            "value": "Hauptmenü",
+            "keys": [
+              "navigation.mainMenu",
+              "sidebar.mainMenu"
+            ]
+          },
+          {
+            "value": "Kategorien",
+            "keys": [
+              "sidebar.categoryManagement",
+              "admin.workloadDashboard.categories"
+            ]
+          },
+          {
+            "value": "Durchschn. Lösungszeit",
+            "keys": [
+              "dashboard.avgResolutionTime",
+              "profile.avgResolutionTime"
+            ]
+          },
+          {
+            "value": "Heute Gelöst",
+            "keys": [
+              "dashboard.resolvedToday",
+              "agentDashboard.resolvedToday"
+            ]
+          },
+          {
+            "value": "Ziel",
+            "keys": [
+              "dashboard.goal",
+              "sla.target"
+            ]
+          },
+          {
+            "value": "Verfügbar",
+            "keys": [
+              "dashboard.available",
+              "admin.workloadDashboard.available"
+            ]
+          },
+          {
+            "value": "Titel",
+            "keys": [
+              "tickets.title",
+              "tickets.fields.title"
+            ]
+          },
+          {
+            "value": "Beschreibung",
+            "keys": [
+              "tickets.description",
+              "tickets.detail.description",
+              "tickets.fields.description",
+              "admin.assignmentRules.description",
+              "todo.descriptionLabel"
+            ]
+          },
+          {
+            "value": "Offen",
+            "keys": [
+              "tickets.status.open",
+              "status.open"
+            ]
+          },
+          {
+            "value": "Ausstehend",
+            "keys": [
+              "tickets.status.pending",
+              "status.pending",
+              "todo.pendingLabel",
+              "todo.edit.status.pending",
+              "reopen.pending",
+              "reopen.status.pending"
+            ]
+          },
+          {
+            "value": "Kategorie",
+            "keys": [
+              "tickets.category",
+              "tickets.detail.category",
+              "tickets.fields.category",
+              "reports.category"
+            ]
+          },
+          {
+            "value": "Zugewiesen An",
+            "keys": [
+              "tickets.assignedTo",
+              "tickets.assigned_to",
+              "tickets.fields.assignedTo"
+            ]
+          },
+          {
+            "value": "Erstellt Von",
+            "keys": [
+              "tickets.createdBy",
+              "tickets.created_by"
+            ]
+          },
+          {
+            "value": "Erstellt Am",
+            "keys": [
+              "tickets.createdAt",
+              "tickets.fields.createdAt"
+            ]
+          },
+          {
+            "value": "Aktualisiert Am",
+            "keys": [
+              "tickets.updatedAt",
+              "tickets.fields.updatedAt"
+            ]
+          },
+          {
+            "value": "Gelöst Am",
+            "keys": [
+              "tickets.resolvedAt",
+              "tickets.fields.resolvedAt"
+            ]
+          },
+          {
+            "value": "Geschlossen Am",
+            "keys": [
+              "tickets.closedAt",
+              "tickets.fields.closedAt"
+            ]
+          },
+          {
+            "value": "Kommentare",
+            "keys": [
+              "tickets.comments",
+              "tickets.detail.comments"
+            ]
+          },
+          {
+            "value": "Ticket Lösen",
+            "keys": [
+              "tickets.resolve.title",
+              "tickets.resolve.resolveButton"
+            ]
+          },
+          {
+            "value": "Aktueller Status",
+            "keys": [
+              "tickets.resolve.currentStatus",
+              "tickets.close.statusLabel",
+              "tickets.assign.currentStatus"
+            ]
+          },
+          {
+            "value": "Ticket Schließen",
+            "keys": [
+              "tickets.close.title",
+              "tickets.close.confirm"
+            ]
+          },
+          {
+            "value": "Sende...",
+            "keys": [
+              "tickets.reopen.sending",
+              "auth.sending"
+            ]
+          },
+          {
+            "value": "Antragsteller",
+            "keys": [
+              "tickets.requester",
+              "tickets.detail.requester"
+            ]
+          },
+          {
+            "value": "Startdatum",
+            "keys": [
+              "tickets.start_date",
+              "tickets.startDate",
+              "reports.initialDate"
+            ]
+          },
+          {
+            "value": "Abteilung",
+            "keys": [
+              "tickets.department",
+              "tickets.detail.department"
+            ]
+          },
+          {
+            "value": "Chat",
+            "keys": [
+              "tickets.detail.chat",
+              "chat.tab"
+            ]
+          },
+          {
+            "value": "Fälligkeitsdatum",
+            "keys": [
+              "tickets.detail.dueDate",
+              "todo.dueDateLabel",
+              "todo.edit.dueDate"
+            ]
+          },
+          {
+            "value": "Mir zuweisen",
+            "keys": [
+              "tickets.detail.assignToMe",
+              "todo.actions.assignToMe"
+            ]
+          },
+          {
+            "value": "Benutzerdefinierte Felder",
+            "keys": [
+              "tickets.detail.customFields",
+              "admin.categoryManagement.customFields"
+            ]
+          },
+          {
+            "value": "Tags",
+            "keys": [
+              "tickets.detail.tags",
+              "tickets.tags",
+              "todo.edit.tags",
+              "todo.tagsSection"
+            ]
+          },
+          {
+            "value": "Mir Zuweisen",
+            "keys": [
+              "tickets.assign.assignToMe",
+              "tickets.actions.assignToMe"
+            ]
+          },
+          {
+            "value": "Agent Zuweisen",
+            "keys": [
+              "tickets.assign.assignToAgent",
+              "tickets.assign.assignButton"
+            ]
+          },
+          {
+            "value": "Fehler beim Zuweisen des Tickets",
+            "keys": [
+              "tickets.assign.error",
+              "tickets.errorAssigningTicket"
+            ]
+          },
+          {
+            "value": "Zuweisen",
+            "keys": [
+              "tickets.actions.assign",
+              "todo.actions.assign"
+            ]
+          },
+          {
+            "value": "Lösen",
+            "keys": [
+              "tickets.actions.resolve",
+              "todo.actions.resolve"
+            ]
+          },
+          {
+            "value": "Übertragen",
+            "keys": [
+              "tickets.actions.transfer",
+              "todo.actions.transfer"
+            ]
+          },
+          {
+            "value": "Unterkategorie",
+            "keys": [
+              "tickets.fields.subcategory",
+              "tickets.subcategory"
+            ]
+          },
+          {
+            "value": "Kategorie auswählen",
+            "keys": [
+              "tickets.placeholders.selectCategory",
+              "tickets.selectCategory"
+            ]
+          },
+          {
+            "value": "Unterkategorie auswählen",
+            "keys": [
+              "tickets.placeholders.selectSubcategory",
+              "tickets.selectSubcategory"
+            ]
+          },
+          {
+            "value": "Keine Tickets gefunden",
+            "keys": [
+              "tickets.noTicketsFound",
+              "agentDashboard.noTicketsTitle"
+            ]
+          },
+          {
+            "value": "Fehler beim Laden der Tickets",
+            "keys": [
+              "tickets.errorLoadingTickets",
+              "agentDashboard.loadError"
+            ]
+          },
+          {
+            "value": "Grund",
+            "keys": [
+              "tickets.reason",
+              "reopen.reason"
+            ]
+          },
+          {
+            "value": "Zufriedenheit",
+            "keys": [
+              "tickets.satisfaction",
+              "admin.workloadDashboard.satisfaction"
+            ]
+          },
+          {
+            "value": "Ticket anzeigen",
+            "keys": [
+              "tickets.viewTicket",
+              "notifications.actions.viewTicket"
+            ]
+          },
+          {
+            "value": "Ticket {{ticketNumber}} wurde Ihnen zugewiesen",
+            "keys": [
+              "tickets.ticketAssignedToYou",
+              "notifications.types.ticket_assigned.message"
+            ]
+          },
+          {
+            "value": "Keine Benachrichtigungen",
+            "keys": [
+              "tickets.noNotifications",
+              "notifications.empty"
+            ]
+          },
+          {
+            "value": "Alle als gelesen markieren",
+            "keys": [
+              "tickets.markAllAsRead",
+              "notifications.markAllRead"
+            ]
+          },
+          {
+            "value": "Enddatum",
+            "keys": [
+              "tickets.endDate",
+              "reports.finalDate"
+            ]
+          },
+          {
+            "value": "SLA Status",
+            "keys": [
+              "tickets.slaStatus",
+              "sla.status_label"
+            ]
+          },
+          {
+            "value": "Pflichtfelder fehlen",
+            "keys": [
+              "tickets.requiredFieldsMissing",
+              "tickets.requiredFieldsMissingDynamic"
+            ]
+          },
+          {
+            "value": "Ticket zugewiesen",
+            "keys": [
+              "tickets.ticketAssigned",
+              "profile.assignedTicket",
+              "notifications.types.ticket_assigned.title"
+            ]
+          },
+          {
+            "value": "Persönliche Informationen",
+            "keys": [
+              "tickets.personalInformation",
+              "profile.personalInformation"
+            ]
+          },
+          {
+            "value": "Überfällig",
+            "keys": [
+              "sla.overdue",
+              "sla.status.overdue"
+            ]
+          },
+          {
+            "value": "Aktiv",
+            "keys": [
+              "sla.active",
+              "admin.categoryManagement.active",
+              "admin.assignmentRules.active"
+            ]
+          },
+          {
+            "value": "Abgeschlossen",
+            "keys": [
+              "sla.completed",
+              "todo.completedLabel",
+              "todo.edit.status.completed"
+            ]
+          },
+          {
+            "value": "Dringend",
+            "keys": [
+              "priority.urgent",
+              "agentDashboard.urgent"
+            ]
+          },
+          {
+            "value": "Zurück zum Dashboard",
+            "keys": [
+              "profile.backToDashboard",
+              "settings.backToDashboard"
+            ]
+          },
+          {
+            "value": "Sicherheit",
+            "keys": [
+              "profile.security",
+              "settings.tabs.security"
+            ]
+          },
+          {
+            "value": "Passwort Ändern",
+            "keys": [
+              "profile.changePassword",
+              "settings.security.title",
+              "settings.security.changePassword"
+            ]
+          },
+          {
+            "value": "Benutzer",
+            "keys": [
+              "profile.user",
+              "admin.userManagement.user",
+              "admin.userListItem.user",
+              "auth.user"
+            ]
+          },
+          {
+            "value": "Neuer Benutzer",
+            "keys": [
+              "admin.userManagement.newUser",
+              "admin.userForm.newUser"
+            ]
+          },
+          {
+            "value": "Benutzer Bearbeiten",
+            "keys": [
+              "admin.userManagement.editUser",
+              "admin.userForm.editUser"
+            ]
+          },
+          {
+            "value": "Einladungs-E-Mail senden",
+            "keys": [
+              "admin.userManagement.sendInvitation",
+              "admin.userListItem.sendInvitation"
+            ]
+          },
+          {
+            "value": "Neues temporäres Passwort generieren",
+            "keys": [
+              "admin.userManagement.resetTempPassword",
+              "admin.userListItem.generateTempPassword"
+            ]
+          },
+          {
+            "value": "Vollständiger Name",
+            "keys": [
+              "admin.userForm.fullName",
+              "auth.fullName"
+            ]
+          },
+          {
+            "value": "E-Mail",
+            "keys": [
+              "admin.userForm.email",
+              "auth.email"
+            ]
+          },
+          {
+            "value": "Offline",
+            "keys": [
+              "admin.categoryManagement.offline",
+              "admin.workloadDashboard.offline"
+            ]
+          },
+          {
+            "value": "Unterkategorien",
+            "keys": [
+              "admin.categoryManagement.subcategories",
+              "admin.workloadDashboard.subcategories"
+            ]
+          },
+          {
+            "value": "Konfiguration speichern",
+            "keys": [
+              "admin.assignmentRules.saveConfiguration",
+              "integrations.saveConfig"
+            ]
+          },
+          {
+            "value": "Anmelden",
+            "keys": [
+              "auth.login",
+              "auth.signIn",
+              "auth.signInLink"
+            ]
+          },
+          {
+            "value": "Registrieren",
+            "keys": [
+              "auth.register",
+              "auth.signUp"
+            ]
+          },
+          {
+            "value": "Passwort muss mindestens 6 Zeichen lang sein",
+            "keys": [
+              "auth.passwordMinLength",
+              "messages.passwordTooShort"
+            ]
+          },
+          {
+            "value": "Passwörter stimmen nicht überein",
+            "keys": [
+              "auth.passwordsDontMatch",
+              "messages.passwordsDoNotMatch",
+              "settings.security.errors.passwordsDontMatch"
+            ]
+          },
+          {
+            "value": "Geben Sie Ihr neues Passwort ein",
+            "keys": [
+              "auth.enterNewPassword",
+              "settings.security.enterNewPassword"
+            ]
+          },
+          {
+            "value": "Neues Passwort",
+            "keys": [
+              "auth.newPassword",
+              "settings.security.newPassword"
+            ]
+          },
+          {
+            "value": "Neues Passwort bestätigen",
+            "keys": [
+              "auth.confirmNewPassword",
+              "auth.confirmNewPasswordPlaceholder"
+            ]
+          },
+          {
+            "value": "Geschätzte Stunden",
+            "keys": [
+              "todo.estimatedHoursLabel",
+              "todo.edit.estimatedHours"
+            ]
+          },
+          {
+            "value": "z.B. 2.5",
+            "keys": [
+              "todo.estimatedHoursPlaceholder",
+              "todo.edit.estimatedHoursPlaceholder"
+            ]
+          },
+          {
+            "value": "Zugewiesen an",
+            "keys": [
+              "todo.edit.assignedTo",
+              "agentDashboard.assignedTo"
+            ]
+          },
+          {
+            "value": "Agent auswählen...",
+            "keys": [
+              "todo.edit.assignedToPlaceholder",
+              "placeholders.selectAgent"
+            ]
+          },
+          {
+            "value": "Verwandtes Ticket",
+            "keys": [
+              "todo.edit.relatedTicket",
+              "todo.relatedTicketLabel"
+            ]
+          },
+          {
+            "value": "Ticket auswählen...",
+            "keys": [
+              "todo.edit.relatedTicketPlaceholder",
+              "placeholders.selectTicket"
+            ]
+          },
+          {
+            "value": "Kein Ticket",
+            "keys": [
+              "todo.edit.noTicket",
+              "todo.noTicket"
+            ]
+          },
+          {
+            "value": "Tag eingeben...",
+            "keys": [
+              "todo.tagPlaceholder",
+              "placeholders.enterTag"
+            ]
+          },
+          {
+            "value": "Wiedereröffnungsanträge",
+            "keys": [
+              "reopen.title",
+              "reopen.pageTitle"
+            ]
+          },
+          {
+            "value": "Kommentar",
+            "keys": [
+              "reopen.commentLabel",
+              "reopen.comment"
+            ]
+          },
+          {
+            "value": "Kommentar hinzufügen...",
+            "keys": [
+              "reopen.commentPlaceholder",
+              "comments.addPlaceholder",
+              "placeholders.addComment"
+            ]
+          },
+          {
+            "value": "Testnachricht...",
+            "keys": [
+              "integrations.testMessagePlaceholder",
+              "placeholders.testMessage"
+            ]
+          },
+          {
+            "value": "Nachricht eingeben...",
+            "keys": [
+              "chat.typeMessage",
+              "chat.typePlaceholder"
+            ]
+          },
+          {
+            "value": "Datei anhängen",
+            "keys": [
+              "chat.attachFile",
+              "aria.attachFile"
+            ]
+          },
+          {
+            "value": "Bild anhängen",
+            "keys": [
+              "chat.attachImage",
+              "aria.attachImage"
+            ]
+          }
+        ],
+        "emptyValues": [],
+        "untranslatedValues": [
+          "common.info",
+          "common.agent",
+          "common.admin",
+          "header.agent",
+          "header.admin",
+          "filter.status",
+          "navigation.dashboard",
+          "navigation.tickets",
+          "navigation.analytics",
+          "navigation.agentDashboard",
+          "sidebar.dashboard",
+          "sidebar.analytics",
+          "sidebar.agentDashboard",
+          "sidebar.debug",
+          "sidebar.helpDeskSystem",
+          "dashboard.title",
+          "dashboard.analyticsKpis",
+          "tickets.reopen.ticketLabel",
+          "tickets.reopen.statusLabel",
+          "tickets.detail.chat",
+          "tickets.detail.feedback",
+          "tickets.detail.tags",
+          "tickets.fields.status",
+          "tickets.slaStatus",
+          "tickets.support",
+          "tickets.tags",
+          "sla.monitor",
+          "sla.status_label",
+          "profile.system",
+          "profile.agent",
+          "profile.admin",
+          "admin.userManagement.administrator",
+          "admin.userManagement.agent",
+          "admin.userPasswordDialog.name",
+          "admin.userListItem.administrator",
+          "admin.userListItem.agent",
+          "admin.categoryManagement.online",
+          "admin.categoryManagement.offline",
+          "admin.workloadDashboard.offline",
+          "auth.administrator",
+          "auth.agent",
+          "todo.edit.status.label",
+          "todo.edit.tags",
+          "todo.tagsSection",
+          "agentDashboard.title",
+          "reports.formatLabel",
+          "reports.status",
+          "reports.agent",
+          "integrations.port",
+          "chat.tab",
+          "settings.appearance.themes.system",
+          "settings.about.version"
+        ]
+      }
+    },
+    "nl-NL": {
+      "name": "Dutch (Netherlands)",
+      "issues": {
+        "missingKeys": 41,
+        "extraKeys": 13,
+        "emptyValues": 0,
+        "untranslatedValues": 525,
+        "duplicateValues": 111
+      },
+      "details": {
+        "missingKeys": [
+          "common.button",
+          "common.promise",
+          "common.retry",
+          "common.actions",
+          "common.avgResolution",
+          "common.chat",
+          "common.startTheConversation",
+          "common.sent",
+          "common.category",
+          "common.passed",
+          "common.featured",
+          "common.status",
+          "common.priority",
+          "common.apply",
+          "common.pending",
+          "common.conditions",
+          "common.maxConcurrentTicketsPerAgent",
+          "common.ticketNotFound",
+          "errors.errorLoadingAgents",
+          "errors.errorUploadingFile",
+          "errors.errorRemovingReaction",
+          "errors.errorSendingMessage",
+          "errors.errorAddingReaction",
+          "errors.errorSubmittingFeedback",
+          "errors.errorMarkingAllNotifications",
+          "errors.errorDeletingNotification",
+          "errors.errorCreatingTask",
+          "errors.failedUrl",
+          "errors.errorAssigningTicket",
+          "errors.errorLoadingSessionTimeout",
+          "errors.errorCreatingNotification",
+          "errors.errorMarkingNotificationAsRead",
+          "errors.errorGettingChatMessages",
+          "errors.errorSendingChatMessage",
+          "errors.errorUploadingChatFile",
+          "errors.errorMarkingChatAsRead",
+          "errors.errorGettingChatParticipants",
+          "errors.errorGettingUnreadCount",
+          "errors.validationError",
+          "errors.todoTasksFunctionalityRequired",
+          "errors.errorCreatingSignedUrl"
+        ],
+        "extraKeys": [
+          "profile.french",
+          "profile.dutch",
+          "profile.german",
+          "todo.actions.assign",
+          "todo.actions.assignToMe",
+          "todo.actions.reassign",
+          "todo.actions.resolve",
+          "todo.actions.close",
+          "todo.actions.reopen",
+          "todo.actions.viewDetails",
+          "todo.actions.transfer",
+          "chat.typePlaceholder",
+          "chat.searchPlaceholder"
+        ],
+        "duplicateValues": [
+          {
+            "value": "Opslaan",
+            "keys": [
+              "common.save",
+              "admin.userForm.save",
+              "admin.slaConfiguration.save",
+              "todo.actions.save"
+            ]
+          },
+          {
+            "value": "Annuleren",
+            "keys": [
+              "common.cancel",
+              "admin.userManagement.cancel",
+              "admin.userForm.cancel",
+              "admin.slaConfiguration.cancel",
+              "admin.assignmentRules.cancel",
+              "todo.actions.cancel",
+              "todo.edit.cancel",
+              "chat.cancel"
+            ]
+          },
+          {
+            "value": "Bewerken",
+            "keys": [
+              "common.edit",
+              "tickets.detail.edit",
+              "admin.slaConfiguration.edit",
+              "todo.actions.edit"
+            ]
+          },
+          {
+            "value": "Verwijderen",
+            "keys": [
+              "common.delete",
+              "common.remove",
+              "admin.userManagement.remove",
+              "todo.actions.delete"
+            ]
+          },
+          {
+            "value": "Sluiten",
+            "keys": [
+              "common.close",
+              "tickets.detail.close",
+              "todo.actions.close"
+            ]
+          },
+          {
+            "value": "Laden...",
+            "keys": [
+              "common.loading",
+              "admin.categoryManagement.loading"
+            ]
+          },
+          {
+            "value": "Fout",
+            "keys": [
+              "common.error",
+              "tickets.error",
+              "admin.userPasswordDialog.copyError"
+            ]
+          },
+          {
+            "value": "Succes",
+            "keys": [
+              "common.success",
+              "tickets.success"
+            ]
+          },
+          {
+            "value": "Waarschuwing",
+            "keys": [
+              "common.warning",
+              "tickets.warningAttachments"
+            ]
+          },
+          {
+            "value": "Terug",
+            "keys": [
+              "common.back",
+              "tickets.detail.back"
+            ]
+          },
+          {
+            "value": "Verzenden",
+            "keys": [
+              "common.send",
+              "chat.send"
+            ]
+          },
+          {
+            "value": "Aanmaken",
+            "keys": [
+              "common.create",
+              "admin.userForm.create"
+            ]
+          },
+          {
+            "value": "Downloaden",
+            "keys": [
+              "common.download",
+              "header.download"
+            ]
+          },
+          {
+            "value": "Uploaden",
+            "keys": [
+              "common.upload",
+              "header.upload"
+            ]
+          },
+          {
+            "value": "Filteren",
+            "keys": [
+              "common.filter",
+              "header.filter"
+            ]
+          },
+          {
+            "value": "Wissen",
+            "keys": [
+              "common.clear",
+              "header.clear"
+            ]
+          },
+          {
+            "value": "Vernieuwen",
+            "keys": [
+              "common.refresh",
+              "header.refresh",
+              "admin.workloadDashboard.refresh"
+            ]
+          },
+          {
+            "value": "Exporteren",
+            "keys": [
+              "common.export",
+              "header.export"
+            ]
+          },
+          {
+            "value": "Importeren",
+            "keys": [
+              "common.import",
+              "header.import"
+            ]
+          },
+          {
+            "value": "Delen",
+            "keys": [
+              "common.share",
+              "header.share",
+              "tickets.detail.share"
+            ]
+          },
+          {
+            "value": "Afdrukken",
+            "keys": [
+              "common.print",
+              "header.print",
+              "tickets.detail.print"
+            ]
+          },
+          {
+            "value": "Totaal Tickets",
+            "keys": [
+              "common.totalTickets",
+              "header.totalTickets",
+              "dashboard.totalTickets"
+            ]
+          },
+          {
+            "value": "Agent",
+            "keys": [
+              "common.agent",
+              "header.agent",
+              "profile.agent",
+              "admin.userManagement.agent",
+              "admin.userListItem.agent",
+              "auth.agent",
+              "reports.agent",
+              "notifications.fallback.defaultAgent"
+            ]
+          },
+          {
+            "value": "Onbekende Gebruiker",
+            "keys": [
+              "common.unknownUser",
+              "header.unknownUser"
+            ]
+          },
+          {
+            "value": "Alle",
+            "keys": [
+              "common.all",
+              "header.all"
+            ]
+          },
+          {
+            "value": "© 2024 AnalytiChem GmbH. Alle rechten voorbehouden.",
+            "keys": [
+              "common.copyright",
+              "header.copyright",
+              "auth.copyright"
+            ]
+          },
+          {
+            "value": "Oeps! Pagina niet gevonden",
+            "keys": [
+              "common.pageNotFound",
+              "header.pageNotFound"
+            ]
+          },
+          {
+            "value": "Terug naar Home",
+            "keys": [
+              "common.returnToHome",
+              "header.returnToHome"
+            ]
+          },
+          {
+            "value": "Beheerder",
+            "keys": [
+              "common.admin",
+              "header.admin",
+              "admin.userManagement.administrator",
+              "admin.userListItem.administrator",
+              "auth.administrator"
+            ]
+          },
+          {
+            "value": "Welkom terug",
+            "keys": [
+              "common.welcomeBack",
+              "header.welcomeBack",
+              "auth.welcomeBack"
+            ]
+          },
+          {
+            "value": "Status",
+            "keys": [
+              "filter.status",
+              "tickets.reopen.statusLabel",
+              "tickets.fields.status",
+              "todo.edit.status.label",
+              "agentDashboard.statusFilter",
+              "reports.status"
+            ]
+          },
+          {
+            "value": "Prioriteit",
+            "keys": [
+              "filter.priority",
+              "tickets.priority",
+              "todo.priorityLabel"
+            ]
+          },
+          {
+            "value": "Alle Statussen",
+            "keys": [
+              "filter.allStatuses",
+              "tickets.allStatus"
+            ]
+          },
+          {
+            "value": "Alle Prioriteiten",
+            "keys": [
+              "filter.allPriorities",
+              "tickets.allPriorities",
+              "todo.allPriorities"
+            ]
+          },
+          {
+            "value": "Dashboard",
+            "keys": [
+              "navigation.dashboard",
+              "sidebar.dashboard"
+            ]
+          },
+          {
+            "value": "Mijn Tickets",
+            "keys": [
+              "navigation.myTickets",
+              "sidebar.myTickets",
+              "dashboard.myTickets"
+            ]
+          },
+          {
+            "value": "Open Tickets",
+            "keys": [
+              "navigation.openTickets",
+              "sidebar.openTickets",
+              "dashboard.openTickets"
+            ]
+          },
+          {
+            "value": "In Behandeling",
+            "keys": [
+              "navigation.inProgressTickets",
+              "sidebar.inProgressTickets",
+              "status.inProgress",
+              "todo.inProgressLabel"
+            ]
+          },
+          {
+            "value": "Opgelost",
+            "keys": [
+              "navigation.resolvedTickets",
+              "sidebar.resolvedTickets",
+              "status.resolved"
+            ]
+          },
+          {
+            "value": "Gesloten",
+            "keys": [
+              "navigation.closedTickets",
+              "sidebar.closedTickets",
+              "status.closed"
+            ]
+          },
+          {
+            "value": "Analytics",
+            "keys": [
+              "navigation.analytics",
+              "sidebar.analytics",
+              "admin.assignmentRules.analytics"
+            ]
+          },
+          {
+            "value": "Kennisbank",
+            "keys": [
+              "navigation.knowledge",
+              "sidebar.knowledgeBase",
+              "tickets.detail.knowledgeBase",
+              "tickets.knowledgeBase"
+            ]
+          },
+          {
+            "value": "Rapporten",
+            "keys": [
+              "navigation.reports",
+              "sidebar.reports"
+            ]
+          },
+          {
+            "value": "Integraties",
+            "keys": [
+              "navigation.integrations",
+              "sidebar.integrations"
+            ]
+          },
+          {
+            "value": "Beheer",
+            "keys": [
+              "navigation.admin",
+              "sidebar.administration"
+            ]
+          },
+          {
+            "value": "Meldingen",
+            "keys": [
+              "navigation.notifications",
+              "tickets.notifications",
+              "profile.notifications",
+              "notifications.title"
+            ]
+          },
+          {
+            "value": "Uitloggen",
+            "keys": [
+              "navigation.logout",
+              "auth.logout",
+              "auth.signOut"
+            ]
+          },
+          {
+            "value": "Agent Dashboard",
+            "keys": [
+              "navigation.agentDashboard",
+              "sidebar.agentDashboard",
+              "agentDashboard.title"
+            ]
+          },
+          {
+            "value": "Heropening Verzoeken",
+            "keys": [
+              "navigation.reopenRequests",
+              "sidebar.reopenRequests"
+            ]
+          },
+          {
+            "value": "Taken",
+            "keys": [
+              "navigation.todo",
+              "sidebar.todo",
+              "tickets.detail.tasks"
+            ]
+          },
+          {
+            "value": "Gebruikersbeheer",
+            "keys": [
+              "navigation.adminUsers",
+              "sidebar.userManagement",
+              "admin.userManagement.title"
+            ]
+          },
+          {
+            "value": "Categoriebeheer",
+            "keys": [
+              "navigation.adminCategories",
+              "admin.categoryManagement.title"
+            ]
+          },
+          {
+            "value": "SLA Configuratie",
+            "keys": [
+              "navigation.adminSla",
+              "sidebar.slaConfiguration"
+            ]
+          },
+          {
+            "value": "Hoofdmenu",
+            "keys": [
+              "navigation.mainMenu",
+              "sidebar.mainMenu"
+            ]
+          },
+          {
+            "value": "Categorieën",
+            "keys": [
+              "sidebar.categoryManagement",
+              "admin.workloadDashboard.categories"
+            ]
+          },
+          {
+            "value": "Beschikbaar",
+            "keys": [
+              "dashboard.available",
+              "admin.workloadDashboard.available"
+            ]
+          },
+          {
+            "value": "Beschrijving",
+            "keys": [
+              "tickets.description",
+              "tickets.detail.description",
+              "admin.assignmentRules.description",
+              "todo.descriptionLabel"
+            ]
+          },
+          {
+            "value": "Open",
+            "keys": [
+              "tickets.status.open",
+              "status.open"
+            ]
+          },
+          {
+            "value": "Pending",
+            "keys": [
+              "tickets.status.pending",
+              "reopen.pending",
+              "reopen.status.pending"
+            ]
+          },
+          {
+            "value": "In Progress",
+            "keys": [
+              "tickets.status.inProgress",
+              "sla.status.in_progress"
+            ]
+          },
+          {
+            "value": "Categorie",
+            "keys": [
+              "tickets.category",
+              "tickets.detail.category"
+            ]
+          },
+          {
+            "value": "Toegewezen Aan",
+            "keys": [
+              "tickets.assignedTo",
+              "todo.edit.assignedTo"
+            ]
+          },
+          {
+            "value": "Opmerkingen",
+            "keys": [
+              "tickets.comments",
+              "tickets.detail.comments"
+            ]
+          },
+          {
+            "value": "Resolve Ticket",
+            "keys": [
+              "tickets.resolve.title",
+              "tickets.resolve.resolveButton"
+            ]
+          },
+          {
+            "value": "Current Status",
+            "keys": [
+              "tickets.resolve.currentStatus",
+              "tickets.close.statusLabel",
+              "tickets.assign.currentStatus"
+            ]
+          },
+          {
+            "value": "Close Ticket",
+            "keys": [
+              "tickets.close.title",
+              "tickets.close.confirm"
+            ]
+          },
+          {
+            "value": "Ticket",
+            "keys": [
+              "tickets.reopen.ticketLabel",
+              "todo.linkedTicket"
+            ]
+          },
+          {
+            "value": "Sending...",
+            "keys": [
+              "tickets.reopen.sending",
+              "auth.sending"
+            ]
+          },
+          {
+            "value": "Assigned To",
+            "keys": [
+              "tickets.assigned_to",
+              "tickets.fields.assignedTo"
+            ]
+          },
+          {
+            "value": "Chat",
+            "keys": [
+              "tickets.detail.chat",
+              "chat.tab"
+            ]
+          },
+          {
+            "value": "Vervaldatum",
+            "keys": [
+              "tickets.detail.dueDate",
+              "todo.dueDateLabel",
+              "todo.edit.dueDate"
+            ]
+          },
+          {
+            "value": "Aan mij toewijzen",
+            "keys": [
+              "tickets.detail.assignToMe",
+              "todo.actions.assignToMe"
+            ]
+          },
+          {
+            "value": "Aangepaste Velden",
+            "keys": [
+              "tickets.detail.customFields",
+              "admin.categoryManagement.customFields"
+            ]
+          },
+          {
+            "value": "Tags",
+            "keys": [
+              "tickets.detail.tags",
+              "tickets.tags",
+              "todo.edit.tags",
+              "todo.tagsSection"
+            ]
+          },
+          {
+            "value": "Assign to Me",
+            "keys": [
+              "tickets.assign.assignToMe",
+              "tickets.actions.assignToMe"
+            ]
+          },
+          {
+            "value": "Ticket Assigned",
+            "keys": [
+              "tickets.assign.successTitle",
+              "agentDashboard.selfAssignedTitle"
+            ]
+          },
+          {
+            "value": "Priority",
+            "keys": [
+              "tickets.fields.priority",
+              "agentDashboard.priorityFilter",
+              "reports.priority"
+            ]
+          },
+          {
+            "value": "Category",
+            "keys": [
+              "tickets.fields.category",
+              "reports.category"
+            ]
+          },
+          {
+            "value": "Meldingen laden...",
+            "keys": [
+              "tickets.loadingNotifications",
+              "notifications.loading"
+            ]
+          },
+          {
+            "value": "Geen meldingen",
+            "keys": [
+              "tickets.noNotifications",
+              "notifications.empty",
+              "notifications.noNotifications"
+            ]
+          },
+          {
+            "value": "SLA Status",
+            "keys": [
+              "tickets.slaStatus",
+              "sla.status_label"
+            ]
+          },
+          {
+            "value": "Verplichte velden ontbreken",
+            "keys": [
+              "tickets.requiredFieldsMissing",
+              "tickets.requiredFieldsMissingDynamic"
+            ]
+          },
+          {
+            "value": "Persoonlijke Informatie",
+            "keys": [
+              "tickets.personalInformation",
+              "profile.personalInformation"
+            ]
+          },
+          {
+            "value": "Overdue",
+            "keys": [
+              "sla.overdue",
+              "sla.status.overdue"
+            ]
+          },
+          {
+            "value": "Wachtend",
+            "keys": [
+              "status.pending",
+              "todo.pendingLabel"
+            ]
+          },
+          {
+            "value": "Gemiddeld",
+            "keys": [
+              "priority.medium",
+              "admin.workloadDashboard.intermediate"
+            ]
+          },
+          {
+            "value": "Urgent",
+            "keys": [
+              "priority.urgent",
+              "agentDashboard.urgent"
+            ]
+          },
+          {
+            "value": "Nieuwe Gebruiker",
+            "keys": [
+              "admin.userManagement.newUser",
+              "admin.userForm.newUser"
+            ]
+          },
+          {
+            "value": "Gebruiker",
+            "keys": [
+              "admin.userManagement.user",
+              "admin.userListItem.user",
+              "auth.user"
+            ]
+          },
+          {
+            "value": "Gebruiker Bewerken",
+            "keys": [
+              "admin.userManagement.editUser",
+              "admin.userForm.editUser"
+            ]
+          },
+          {
+            "value": "Uitnodigingsemail versturen",
+            "keys": [
+              "admin.userManagement.sendInvitation",
+              "admin.userListItem.sendInvitation"
+            ]
+          },
+          {
+            "value": "Nieuw tijdelijk wachtwoord genereren",
+            "keys": [
+              "admin.userManagement.resetTempPassword",
+              "admin.userListItem.generateTempPassword"
+            ]
+          },
+          {
+            "value": "Email",
+            "keys": [
+              "admin.userForm.email",
+              "auth.email"
+            ]
+          },
+          {
+            "value": "Offline",
+            "keys": [
+              "admin.categoryManagement.offline",
+              "admin.workloadDashboard.offline"
+            ]
+          },
+          {
+            "value": "Actief",
+            "keys": [
+              "admin.categoryManagement.active",
+              "admin.assignmentRules.active"
+            ]
+          },
+          {
+            "value": "Inloggen",
+            "keys": [
+              "auth.login",
+              "auth.signIn",
+              "auth.signInLink"
+            ]
+          },
+          {
+            "value": "Registreren",
+            "keys": [
+              "auth.register",
+              "auth.signUp"
+            ]
+          },
+          {
+            "value": "Don't have an account?",
+            "keys": [
+              "auth.dontHaveAccount",
+              "auth.noAccount"
+            ]
+          },
+          {
+            "value": "Passwords do not match",
+            "keys": [
+              "auth.passwordsDontMatch",
+              "settings.security.errors.passwordsDontMatch"
+            ]
+          },
+          {
+            "value": "Error",
+            "keys": [
+              "auth.error",
+              "integrations.status.error"
+            ]
+          },
+          {
+            "value": "Enter your new password",
+            "keys": [
+              "auth.enterNewPassword",
+              "auth.enterNewPasswordPlaceholder",
+              "settings.security.enterNewPassword"
+            ]
+          },
+          {
+            "value": "New Password",
+            "keys": [
+              "auth.newPassword",
+              "settings.security.newPassword"
+            ]
+          },
+          {
+            "value": "Confirm New Password",
+            "keys": [
+              "auth.confirmNewPassword",
+              "settings.security.confirmPassword"
+            ]
+          },
+          {
+            "value": "Enter a tag...",
+            "keys": [
+              "todo.tagPlaceholder",
+              "placeholders.enterTag"
+            ]
+          },
+          {
+            "value": "Notifications",
+            "keys": [
+              "todo.notificationsSection",
+              "settings.tabs.notifications"
+            ]
+          },
+          {
+            "value": "Search tickets...",
+            "keys": [
+              "agentDashboard.searchPlaceholder",
+              "placeholders.searchTickets"
+            ]
+          },
+          {
+            "value": "Reopen Requests",
+            "keys": [
+              "reopen.title",
+              "reopen.pageTitle"
+            ]
+          },
+          {
+            "value": "Test message...",
+            "keys": [
+              "integrations.testMessagePlaceholder",
+              "placeholders.testMessage"
+            ]
+          },
+          {
+            "value": "Typ een bericht...",
+            "keys": [
+              "chat.typeMessage",
+              "chat.typePlaceholder"
+            ]
+          },
+          {
+            "value": "Change Password",
+            "keys": [
+              "settings.security.title",
+              "settings.security.changePassword"
+            ]
+          },
+          {
+            "value": "Add a comment...",
+            "keys": [
+              "comments.addPlaceholder",
+              "placeholders.addComment"
+            ]
+          }
+        ],
+        "emptyValues": [],
+        "untranslatedValues": [
+          "common.agent",
+          "header.agent",
+          "filter.status",
+          "navigation.dashboard",
+          "navigation.tickets",
+          "navigation.openTickets",
+          "navigation.analytics",
+          "navigation.agentDashboard",
+          "sidebar.dashboard",
+          "sidebar.analytics",
+          "sidebar.openTickets",
+          "sidebar.agentDashboard",
+          "sidebar.debug",
+          "dashboard.title",
+          "dashboard.openTickets",
+          "tickets.status.open",
+          "tickets.status.pending",
+          "tickets.status.inProgress",
+          "tickets.status.resolved",
+          "tickets.status.closed",
+          "tickets.resolve.title",
+          "tickets.resolve.currentStatus",
+          "tickets.resolve.resolutionNotes",
+          "tickets.resolve.resolutionNotesPlaceholder",
+          "tickets.resolve.resolutionNotesRequired",
+          "tickets.resolve.tip",
+          "tickets.resolve.tipText",
+          "tickets.resolve.resolving",
+          "tickets.resolve.resolveButton",
+          "tickets.resolve.successTitle",
+          "tickets.resolve.successDescription",
+          "tickets.resolve.error",
+          "tickets.resolve.errorDefault",
+          "tickets.close.title",
+          "tickets.close.infoTitle",
+          "tickets.close.infoDesc",
+          "tickets.close.statusLabel",
+          "tickets.close.closing",
+          "tickets.close.confirm",
+          "tickets.close.errors.title",
+          "tickets.close.errors.generic",
+          "tickets.close.errors.notResolved",
+          "tickets.close.errors.emptyResolution",
+          "tickets.close.errors.noResolvedDate",
+          "tickets.close.errors.cannotClose",
+          "tickets.close.errors.statusMustBeResolved",
+          "tickets.close.errors.resolutionRequired",
+          "tickets.close.errors.resolvedDateRequired",
+          "tickets.close.success.title",
+          "tickets.close.success.description",
+          "tickets.reopen.title",
+          "tickets.reopen.infoTitle",
+          "tickets.reopen.infoDesc",
+          "tickets.reopen.ticketLabel",
+          "tickets.reopen.statusLabel",
+          "tickets.reopen.previousResolutionLabel",
+          "tickets.reopen.closedOnly",
+          "tickets.reopen.creatorOnly",
+          "tickets.reopen.reasonLabel",
+          "tickets.reopen.reasonPlaceholder",
+          "tickets.reopen.reasonHelper",
+          "tickets.reopen.reasonRequired",
+          "tickets.reopen.noPermission",
+          "tickets.reopen.sending",
+          "tickets.reopen.sendButton",
+          "tickets.reopen.sentTitle",
+          "tickets.reopen.sentDesc",
+          "tickets.reopen.descriptionSr",
+          "tickets.transfer.title",
+          "tickets.transfer.descriptionSr",
+          "tickets.transfer.transferToLabel",
+          "tickets.transfer.loadingAgents",
+          "tickets.transfer.selectAgentPlaceholder",
+          "tickets.transfer.noAgents",
+          "tickets.transfer.reasonLabel",
+          "tickets.transfer.reasonPlaceholder",
+          "tickets.transfer.reasonRequired",
+          "tickets.transfer.selectAgentError",
+          "tickets.transfer.loadAgentsError",
+          "tickets.transfer.transferring",
+          "tickets.transfer.transferredTitle",
+          "tickets.transfer.transferredDesc",
+          "tickets.transfer.transferError",
+          "tickets.transfer.workloadTitle",
+          "tickets.transfer.workloadHint",
+          "tickets.requester",
+          "tickets.created_on",
+          "tickets.updated_on",
+          "tickets.created_by",
+          "tickets.assigned_to",
+          "tickets.attachments",
+          "tickets.resolved_on",
+          "tickets.customer_feedback",
+          "tickets.activity_log",
+          "tickets.tasks",
+          "tickets.account_information",
+          "tickets.username",
+          "tickets.license_type",
+          "tickets.mfa_setup",
+          "tickets.job_information",
+          "tickets.job_title",
+          "tickets.manager",
+          "tickets.start_date",
+          "tickets.company_information",
+          "tickets.company",
+          "tickets.department",
+          "tickets.office_location",
+          "tickets.contact_information",
+          "tickets.business_phone",
+          "tickets.mobile_phone",
+          "tickets.additional_information",
+          "tickets.signature_group",
+          "tickets.usage_location",
+          "tickets.distribution_list",
+          "tickets.attached_form",
+          "tickets.detail.chat",
+          "tickets.detail.feedback",
+          "tickets.detail.tags",
+          "tickets.assign.title",
+          "tickets.assign.currentStatus",
+          "tickets.assign.aboutToAssign",
+          "tickets.assign.responsibility1",
+          "tickets.assign.responsibility2",
+          "tickets.assign.responsibility3",
+          "tickets.assign.responsibility4",
+          "tickets.assign.assignToMe",
+          "tickets.assign.assignToAgent",
+          "tickets.assign.selectAgent",
+          "tickets.assign.selectAgentPlaceholder",
+          "tickets.assign.loadAgentsError",
+          "tickets.assign.successTitle",
+          "tickets.assign.successDescription",
+          "tickets.assign.error",
+          "tickets.assign.errorDefault",
+          "tickets.assign.assigning",
+          "tickets.assign.assignButton",
+          "tickets.assign.loading",
+          "tickets.actions.assign",
+          "tickets.actions.assignToMe",
+          "tickets.actions.reassign",
+          "tickets.actions.edit",
+          "tickets.actions.resolve",
+          "tickets.actions.close",
+          "tickets.actions.reopen",
+          "tickets.actions.delete",
+          "tickets.actions.viewDetails",
+          "tickets.actions.transfer",
+          "tickets.fields.title",
+          "tickets.fields.description",
+          "tickets.fields.priority",
+          "tickets.fields.category",
+          "tickets.fields.subcategory",
+          "tickets.fields.country",
+          "tickets.fields.status",
+          "tickets.fields.assignedTo",
+          "tickets.fields.createdAt",
+          "tickets.fields.updatedAt",
+          "tickets.fields.resolvedAt",
+          "tickets.fields.closedAt",
+          "tickets.placeholders.title",
+          "tickets.placeholders.description",
+          "tickets.placeholders.selectPriority",
+          "tickets.placeholders.selectCategory",
+          "tickets.placeholders.selectSubcategory",
+          "tickets.placeholders.selectCountry",
+          "tickets.placeholders.selectStatus",
+          "tickets.placeholders.selectAssignee",
+          "tickets.type",
+          "tickets.slaStatus",
+          "tickets.bug",
+          "tickets.slaMonitoring",
+          "tickets.tags",
+          "sla.monitor",
+          "sla.response_time",
+          "sla.resolution_time",
+          "sla.first_response_target",
+          "sla.resolution_target",
+          "sla.target_met",
+          "sla.overdue",
+          "sla.resolved_late",
+          "sla.responded_at",
+          "sla.resolved_at",
+          "sla.waiting_first_response",
+          "sla.in_progress",
+          "sla.time_elapsed",
+          "sla.total_time",
+          "sla.target",
+          "sla.elapsed",
+          "sla.remaining",
+          "sla.minutes_short",
+          "sla.hours_short",
+          "sla.days_short",
+          "sla.status.met",
+          "sla.status.overdue",
+          "sla.status.warning",
+          "sla.status.in_progress",
+          "sla.status.completed_late",
+          "sla.status.missed",
+          "sla.active",
+          "sla.completed",
+          "sla.stopped",
+          "sla.status_label",
+          "status.open",
+          "priority.urgent",
+          "profile.soundNotifications",
+          "profile.toastNotifications",
+          "profile.updateFrequency",
+          "profile.realtime",
+          "profile.every30s",
+          "profile.every1m",
+          "profile.every5m",
+          "profile.english",
+          "profile.keepAccountSecure",
+          "profile.lastLogin",
+          "profile.activeSessions",
+          "profile.twoFactorAuth",
+          "profile.comingSoon",
+          "profile.totalCreated",
+          "profile.totalAssigned",
+          "profile.avgResolutionTime",
+          "profile.statusBreakdown",
+          "profile.noRecentActivities",
+          "profile.createdTicket",
+          "profile.assignedTicket",
+          "profile.resolvedTicket",
+          "profile.categoryRequest",
+          "profile.user",
+          "profile.agent",
+          "profile.admin",
+          "admin.userManagement.agent",
+          "admin.userForm.email",
+          "admin.userForm.emailRequired",
+          "admin.userPasswordDialog.email",
+          "admin.userListItem.agent",
+          "admin.categoryManagement.online",
+          "admin.categoryManagement.offline",
+          "admin.workloadDashboard.tickets",
+          "admin.workloadDashboard.offline",
+          "admin.workloadDashboard.expert",
+          "admin.assignmentRules.analytics",
+          "auth.email",
+          "auth.dontHaveAccount",
+          "auth.loginError",
+          "auth.loginSuccess",
+          "auth.welcomeMessage",
+          "auth.unexpectedError",
+          "auth.cleanupError",
+          "auth.conflictsResolved",
+          "auth.tryLoginAgain",
+          "auth.unexpectedCleanupError",
+          "auth.resolvingConflicts",
+          "auth.resolveAuthConflicts",
+          "auth.noAccount",
+          "auth.nameRequired",
+          "auth.emailRequired",
+          "auth.passwordMinLength",
+          "auth.passwordsDontMatch",
+          "auth.registrationError",
+          "auth.accountCreated",
+          "auth.accountCreatedMessage",
+          "auth.fillDataToCreateAccount",
+          "auth.registration",
+          "auth.enterInfoToCreateAccount",
+          "auth.confirmPasswordPlaceholder",
+          "auth.iAgreeWith",
+          "auth.termsOfUse",
+          "auth.and",
+          "auth.privacyPolicy",
+          "auth.error",
+          "auth.emailSent",
+          "auth.checkInboxForReset",
+          "auth.resetLinkSentTo",
+          "auth.checkInboxAndSpam",
+          "auth.sendAgain",
+          "auth.backToLogin",
+          "auth.enterEmailForReset",
+          "auth.willSendResetLink",
+          "auth.sending",
+          "auth.sendResetLink",
+          "auth.invalidOrExpiredResetLink",
+          "auth.passwordReset",
+          "auth.passwordResetSuccess",
+          "auth.canLoginWithNewPassword",
+          "auth.goToLogin",
+          "auth.enterNewPassword",
+          "auth.newPassword",
+          "auth.chooseStrongPassword",
+          "auth.enterNewPasswordPlaceholder",
+          "auth.confirmNewPassword",
+          "auth.agent",
+          "todo.edit.status.label",
+          "todo.edit.tags",
+          "todo.linkedTicket",
+          "todo.linkingSection",
+          "todo.relatedTicketLabel",
+          "todo.noTicket",
+          "todo.relatedTicketDesc",
+          "todo.assignToLabel",
+          "todo.assignToDesc",
+          "todo.tagsSection",
+          "todo.tagPlaceholder",
+          "todo.tagsHelp",
+          "todo.notificationsSection",
+          "todo.emailReminderLabel",
+          "todo.emailReminderDesc",
+          "agentDashboard.title",
+          "agentDashboard.subtitle",
+          "agentDashboard.assignedTickets",
+          "agentDashboard.resolvedToday",
+          "agentDashboard.slaCompliance",
+          "agentDashboard.searchPlaceholder",
+          "agentDashboard.statusFilter",
+          "agentDashboard.statusAll",
+          "agentDashboard.priorityFilter",
+          "agentDashboard.priorityAll",
+          "agentDashboard.myTickets",
+          "agentDashboard.unassigned",
+          "agentDashboard.urgent",
+          "agentDashboard.noTicketsTitle",
+          "agentDashboard.noTicketsDesc",
+          "agentDashboard.createdBy",
+          "agentDashboard.assignedTo",
+          "agentDashboard.take",
+          "agentDashboard.reply",
+          "agentDashboard.selfAssignedTitle",
+          "agentDashboard.selfAssignedDesc",
+          "agentDashboard.selfAssignError",
+          "agentDashboard.loadError",
+          "agentDashboard.restricted",
+          "reopen.title",
+          "reopen.subtitle",
+          "reopen.pending",
+          "reopen.reviewed",
+          "reopen.emptyTitle",
+          "reopen.emptyDesc",
+          "reopen.reason",
+          "reopen.requestedBy",
+          "reopen.detailsHeading",
+          "reopen.approve",
+          "reopen.reject",
+          "reopen.request",
+          "reopen.commentLabel",
+          "reopen.commentApprovePlaceholder",
+          "reopen.commentRejectPlaceholder",
+          "reopen.approveNotice",
+          "reopen.rejectNotice",
+          "reopen.loadError",
+          "reopen.processError",
+          "reopen.noPermission",
+          "reopen.approvedToastTitle",
+          "reopen.approvedToastDesc",
+          "reopen.rejectedToastTitle",
+          "reopen.rejectedToastDesc",
+          "reopen.on",
+          "reopen.reviewedBy",
+          "reopen.reviewedOn",
+          "reopen.status.pending",
+          "reopen.status.approved",
+          "reopen.status.rejected",
+          "reopen.approvedComment",
+          "reopen.reviewerComment",
+          "reopen.pageTitle",
+          "reopen.pendingRequests",
+          "reopen.reviewedRequests",
+          "reopen.noPendingRequests",
+          "reopen.noReviewedRequests",
+          "reopen.commentPlaceholder",
+          "reopen.comment",
+          "reopen.approveRequest",
+          "reopen.rejectRequest",
+          "reports.title",
+          "reports.exportTitle",
+          "reports.typeLabel",
+          "reports.formatLabel",
+          "reports.periodLabel",
+          "reports.initialDate",
+          "reports.finalDate",
+          "reports.filtersLabel",
+          "reports.status",
+          "reports.priority",
+          "reports.category",
+          "reports.agent",
+          "reports.selectedFilters",
+          "reports.generate",
+          "reports.generating",
+          "integrations.title",
+          "integrations.listTitle",
+          "integrations.configure",
+          "integrations.configureTitle",
+          "integrations.status.connected",
+          "integrations.status.disconnected",
+          "integrations.status.error",
+          "integrations.lastSync",
+          "integrations.never",
+          "integrations.slackDescription",
+          "integrations.emailDescription",
+          "integrations.whatsappDescription",
+          "integrations.zapierDescription",
+          "integrations.webhookUrl",
+          "integrations.channel",
+          "integrations.channelPlaceholder",
+          "integrations.smtpServer",
+          "integrations.port",
+          "integrations.senderEmail",
+          "integrations.senderEmailPlaceholder",
+          "integrations.apiKey",
+          "integrations.apiKeyPlaceholder",
+          "integrations.phoneNumberId",
+          "integrations.phoneNumberIdPlaceholder",
+          "integrations.zapierHelp",
+          "integrations.testIntegration",
+          "integrations.testMessagePlaceholder",
+          "integrations.sendTest",
+          "integrations.saveConfig",
+          "chat.tab",
+          "notifications.fallback.noTitle",
+          "notifications.fallback.unknownUser",
+          "notifications.fallback.defaultAgent",
+          "notifications.actions.viewTicket",
+          "notifications.errors.ticketNotFound",
+          "notifications.errors.loadingTicketDetails",
+          "notifications.errors.cannotOpenTicket",
+          "notifications.errors.processingNotification",
+          "notifications.errors.markingAllAsRead",
+          "notifications.errors.deletingNotification",
+          "notifications.types.ticket_created.title",
+          "notifications.types.ticket_created.message",
+          "notifications.types.ticket_assigned.title",
+          "notifications.types.ticket_assigned.message",
+          "notifications.types.assignment_changed.assigned.title",
+          "notifications.types.assignment_changed.assigned.message",
+          "notifications.types.assignment_changed.selfAssigned.title",
+          "notifications.types.assignment_changed.selfAssigned.message",
+          "notifications.types.assignment_changed.removed.title",
+          "notifications.types.assignment_changed.removed.message",
+          "notifications.types.assignment_changed.fallback.title",
+          "notifications.types.assignment_changed.fallback.message",
+          "notifications.types.status_changed.title",
+          "notifications.types.status_changed.message",
+          "notifications.types.comment_added.title",
+          "notifications.types.comment_added.message",
+          "notifications.types.priority_changed.title",
+          "notifications.types.priority_changed.message",
+          "notifications.types.feedback_request.title",
+          "notifications.types.feedback_request.message",
+          "notifications.types.feedback_received.title",
+          "notifications.types.feedback_received.message",
+          "notifications.types.first_response.title",
+          "notifications.types.first_response.message",
+          "notifications.types.sla_warning.title",
+          "notifications.types.sla_warning.message",
+          "notifications.types.sla_breach.title",
+          "notifications.types.sla_breach.message",
+          "notifications.types.task_assigned.title",
+          "notifications.types.task_assigned.message",
+          "settings.title",
+          "settings.subtitle",
+          "settings.backToDashboard",
+          "settings.tabs.security",
+          "settings.tabs.notifications",
+          "settings.tabs.appearance",
+          "settings.tabs.about",
+          "settings.security.title",
+          "settings.security.description",
+          "settings.security.newPassword",
+          "settings.security.confirmPassword",
+          "settings.security.enterNewPassword",
+          "settings.security.confirmNewPassword",
+          "settings.security.changing",
+          "settings.security.changePassword",
+          "settings.security.errors.passwordsDontMatch",
+          "settings.security.errors.passwordTooShort",
+          "settings.security.errors.unexpectedError",
+          "settings.security.success.title",
+          "settings.security.success.description",
+          "settings.notifications.title",
+          "settings.notifications.description",
+          "settings.notifications.emailNotifications.title",
+          "settings.notifications.emailNotifications.description",
+          "settings.notifications.ticketUpdates.title",
+          "settings.notifications.ticketUpdates.description",
+          "settings.notifications.systemAlerts.title",
+          "settings.notifications.systemAlerts.description",
+          "settings.notifications.weeklyReports.title",
+          "settings.notifications.weeklyReports.description",
+          "settings.notifications.success.title",
+          "settings.notifications.success.description",
+          "settings.appearance.title",
+          "settings.appearance.description",
+          "settings.appearance.themes.light",
+          "settings.appearance.themes.dark",
+          "settings.appearance.themes.system",
+          "settings.about.title",
+          "settings.about.description",
+          "settings.about.version",
+          "settings.about.lastUpdated",
+          "settings.about.quickLinks",
+          "settings.about.viewChangelog",
+          "settings.about.helpDocs",
+          "settings.about.aboutTitle",
+          "settings.about.aboutDescription",
+          "settings.about.recentUpdates.title",
+          "settings.about.recentUpdates.description",
+          "comments.addPlaceholder",
+          "feedback.experiencePlaceholder",
+          "agent.internalNotePlaceholder",
+          "agent.responsePlaceholder",
+          "placeholders.searchTickets",
+          "placeholders.enterTaskTitle",
+          "placeholders.addComment",
+          "placeholders.selectAgent",
+          "placeholders.selectTicket",
+          "placeholders.enterTag",
+          "placeholders.helpImprove",
+          "placeholders.testMessage",
+          "aria.deleteNotification",
+          "aria.openTicket",
+          "aria.removeTag",
+          "aria.attachFile",
+          "aria.attachImage",
+          "titles.preview",
+          "titles.download",
+          "titles.generating",
+          "titles.removeFile",
+          "titles.formBuilder"
+        ]
+      }
+    },
+    "fr-FR": {
+      "name": "French (France)",
+      "issues": {
+        "missingKeys": 41,
+        "extraKeys": 13,
+        "emptyValues": 0,
+        "untranslatedValues": 445,
+        "duplicateValues": 113
+      },
+      "details": {
+        "missingKeys": [
+          "common.button",
+          "common.promise",
+          "common.retry",
+          "common.actions",
+          "common.avgResolution",
+          "common.chat",
+          "common.startTheConversation",
+          "common.sent",
+          "common.category",
+          "common.passed",
+          "common.featured",
+          "common.status",
+          "common.priority",
+          "common.apply",
+          "common.pending",
+          "common.conditions",
+          "common.maxConcurrentTicketsPerAgent",
+          "common.ticketNotFound",
+          "errors.errorLoadingAgents",
+          "errors.errorUploadingFile",
+          "errors.errorRemovingReaction",
+          "errors.errorSendingMessage",
+          "errors.errorAddingReaction",
+          "errors.errorSubmittingFeedback",
+          "errors.errorMarkingAllNotifications",
+          "errors.errorDeletingNotification",
+          "errors.errorCreatingTask",
+          "errors.failedUrl",
+          "errors.errorAssigningTicket",
+          "errors.errorLoadingSessionTimeout",
+          "errors.errorCreatingNotification",
+          "errors.errorMarkingNotificationAsRead",
+          "errors.errorGettingChatMessages",
+          "errors.errorSendingChatMessage",
+          "errors.errorUploadingChatFile",
+          "errors.errorMarkingChatAsRead",
+          "errors.errorGettingChatParticipants",
+          "errors.errorGettingUnreadCount",
+          "errors.validationError",
+          "errors.todoTasksFunctionalityRequired",
+          "errors.errorCreatingSignedUrl"
+        ],
+        "extraKeys": [
+          "profile.french",
+          "profile.dutch",
+          "profile.german",
+          "todo.actions.assign",
+          "todo.actions.assignToMe",
+          "todo.actions.reassign",
+          "todo.actions.resolve",
+          "todo.actions.close",
+          "todo.actions.reopen",
+          "todo.actions.viewDetails",
+          "todo.actions.transfer",
+          "chat.typePlaceholder",
+          "chat.searchPlaceholder"
+        ],
+        "duplicateValues": [
+          {
+            "value": "Enregistrer",
+            "keys": [
+              "common.save",
+              "admin.userForm.save",
+              "admin.slaConfiguration.save",
+              "todo.actions.save"
+            ]
+          },
+          {
+            "value": "Annuler",
+            "keys": [
+              "common.cancel",
+              "admin.userManagement.cancel",
+              "admin.userForm.cancel",
+              "admin.slaConfiguration.cancel",
+              "admin.assignmentRules.cancel",
+              "todo.actions.cancel",
+              "todo.edit.cancel",
+              "chat.cancel"
+            ]
+          },
+          {
+            "value": "Modifier",
+            "keys": [
+              "common.edit",
+              "tickets.detail.edit",
+              "admin.slaConfiguration.edit",
+              "todo.actions.edit"
+            ]
+          },
+          {
+            "value": "Supprimer",
+            "keys": [
+              "common.delete",
+              "common.remove",
+              "admin.userManagement.remove",
+              "todo.actions.delete"
+            ]
+          },
+          {
+            "value": "Fermer",
+            "keys": [
+              "common.close",
+              "tickets.detail.close",
+              "todo.actions.close"
+            ]
+          },
+          {
+            "value": "Chargement...",
+            "keys": [
+              "common.loading",
+              "admin.categoryManagement.loading"
+            ]
+          },
+          {
+            "value": "Erreur",
+            "keys": [
+              "common.error",
+              "tickets.error",
+              "admin.userPasswordDialog.copyError"
+            ]
+          },
+          {
+            "value": "Succès",
+            "keys": [
+              "common.success",
+              "tickets.success"
+            ]
+          },
+          {
+            "value": "Avertissement",
+            "keys": [
+              "common.warning",
+              "tickets.warningAttachments"
+            ]
+          },
+          {
+            "value": "Retour",
+            "keys": [
+              "common.back",
+              "tickets.detail.back"
+            ]
+          },
+          {
+            "value": "Envoyer",
+            "keys": [
+              "common.send",
+              "chat.send"
+            ]
+          },
+          {
+            "value": "Créer",
+            "keys": [
+              "common.create",
+              "admin.userForm.create"
+            ]
+          },
+          {
+            "value": "Aperçu",
+            "keys": [
+              "common.preview",
+              "admin.workloadDashboard.overview"
+            ]
+          },
+          {
+            "value": "Télécharger",
+            "keys": [
+              "common.download",
+              "header.download"
+            ]
+          },
+          {
+            "value": "Téléverser",
+            "keys": [
+              "common.upload",
+              "header.upload"
+            ]
+          },
+          {
+            "value": "Filtrer",
+            "keys": [
+              "common.filter",
+              "header.filter"
+            ]
+          },
+          {
+            "value": "Effacer",
+            "keys": [
+              "common.clear",
+              "header.clear"
+            ]
+          },
+          {
+            "value": "Actualiser",
+            "keys": [
+              "common.refresh",
+              "header.refresh",
+              "admin.workloadDashboard.refresh"
+            ]
+          },
+          {
+            "value": "Exporter",
+            "keys": [
+              "common.export",
+              "header.export"
+            ]
+          },
+          {
+            "value": "Importer",
+            "keys": [
+              "common.import",
+              "header.import"
+            ]
+          },
+          {
+            "value": "Partager",
+            "keys": [
+              "common.share",
+              "header.share",
+              "tickets.detail.share"
+            ]
+          },
+          {
+            "value": "Imprimer",
+            "keys": [
+              "common.print",
+              "header.print",
+              "tickets.detail.print"
+            ]
+          },
+          {
+            "value": "Total des Tickets",
+            "keys": [
+              "common.totalTickets",
+              "header.totalTickets",
+              "dashboard.totalTickets"
+            ]
+          },
+          {
+            "value": "Agent",
+            "keys": [
+              "common.agent",
+              "header.agent",
+              "profile.agent",
+              "admin.userManagement.agent",
+              "admin.userListItem.agent",
+              "auth.agent",
+              "reports.agent",
+              "notifications.fallback.defaultAgent"
+            ]
+          },
+          {
+            "value": "Utilisateur Inconnu",
+            "keys": [
+              "common.unknownUser",
+              "header.unknownUser"
+            ]
+          },
+          {
+            "value": "Tous",
+            "keys": [
+              "common.all",
+              "header.all"
+            ]
+          },
+          {
+            "value": "© 2024 AnalytiChem GmbH. Tous droits réservés.",
+            "keys": [
+              "common.copyright",
+              "header.copyright",
+              "auth.copyright"
+            ]
+          },
+          {
+            "value": "Oups ! Page non trouvée",
+            "keys": [
+              "common.pageNotFound",
+              "header.pageNotFound"
+            ]
+          },
+          {
+            "value": "Retour à l'accueil",
+            "keys": [
+              "common.returnToHome",
+              "header.returnToHome"
+            ]
+          },
+          {
+            "value": "Administrateur",
+            "keys": [
+              "common.admin",
+              "header.admin",
+              "admin.userManagement.administrator",
+              "admin.userListItem.administrator",
+              "auth.administrator"
+            ]
+          },
+          {
+            "value": "Bon retour",
+            "keys": [
+              "common.welcomeBack",
+              "header.welcomeBack",
+              "auth.welcomeBack"
+            ]
+          },
+          {
+            "value": "Statut",
+            "keys": [
+              "filter.status",
+              "tickets.reopen.statusLabel",
+              "todo.edit.status.label"
+            ]
+          },
+          {
+            "value": "Priorité",
+            "keys": [
+              "filter.priority",
+              "tickets.priority",
+              "todo.priorityLabel"
+            ]
+          },
+          {
+            "value": "Tous les Statuts",
+            "keys": [
+              "filter.allStatuses",
+              "tickets.allStatus"
+            ]
+          },
+          {
+            "value": "Toutes les Priorités",
+            "keys": [
+              "filter.allPriorities",
+              "tickets.allPriorities",
+              "todo.allPriorities"
+            ]
+          },
+          {
+            "value": "Mes Tickets",
+            "keys": [
+              "navigation.myTickets",
+              "sidebar.myTickets",
+              "dashboard.myTickets"
+            ]
+          },
+          {
+            "value": "Tickets Ouverts",
+            "keys": [
+              "navigation.openTickets",
+              "sidebar.openTickets",
+              "dashboard.openTickets"
+            ]
+          },
+          {
+            "value": "En Cours",
+            "keys": [
+              "navigation.inProgressTickets",
+              "sidebar.inProgressTickets",
+              "tickets.status.inProgress",
+              "status.inProgress",
+              "todo.inProgressLabel"
+            ]
+          },
+          {
+            "value": "Résolus",
+            "keys": [
+              "navigation.resolvedTickets",
+              "sidebar.resolvedTickets"
+            ]
+          },
+          {
+            "value": "Fermés",
+            "keys": [
+              "navigation.closedTickets",
+              "sidebar.closedTickets"
+            ]
+          },
+          {
+            "value": "Analyses",
+            "keys": [
+              "navigation.analytics",
+              "sidebar.analytics"
+            ]
+          },
+          {
+            "value": "Base de Connaissances",
+            "keys": [
+              "navigation.knowledge",
+              "sidebar.knowledgeBase",
+              "tickets.detail.knowledgeBase",
+              "tickets.knowledgeBase"
+            ]
+          },
+          {
+            "value": "Rapports",
+            "keys": [
+              "navigation.reports",
+              "sidebar.reports"
+            ]
+          },
+          {
+            "value": "Intégrations",
+            "keys": [
+              "navigation.integrations",
+              "sidebar.integrations"
+            ]
+          },
+          {
+            "value": "Administration",
+            "keys": [
+              "navigation.admin",
+              "sidebar.administration"
+            ]
+          },
+          {
+            "value": "Notifications",
+            "keys": [
+              "navigation.notifications",
+              "tickets.notifications",
+              "profile.notifications",
+              "todo.notificationsSection",
+              "notifications.title",
+              "settings.tabs.notifications"
+            ]
+          },
+          {
+            "value": "Déconnexion",
+            "keys": [
+              "navigation.logout",
+              "auth.logout"
+            ]
+          },
+          {
+            "value": "Tableau de Bord Agent",
+            "keys": [
+              "navigation.agentDashboard",
+              "sidebar.agentDashboard"
+            ]
+          },
+          {
+            "value": "Demandes de Réouverture",
+            "keys": [
+              "navigation.reopenRequests",
+              "sidebar.reopenRequests"
+            ]
+          },
+          {
+            "value": "Tâches",
+            "keys": [
+              "navigation.todo",
+              "sidebar.todo",
+              "tickets.detail.tasks"
+            ]
+          },
+          {
+            "value": "Gestion des Utilisateurs",
+            "keys": [
+              "navigation.adminUsers",
+              "sidebar.userManagement",
+              "admin.userManagement.title"
+            ]
+          },
+          {
+            "value": "Gestion des Catégories",
+            "keys": [
+              "navigation.adminCategories",
+              "admin.categoryManagement.title"
+            ]
+          },
+          {
+            "value": "Configuration SLA",
+            "keys": [
+              "navigation.adminSla",
+              "sidebar.slaConfiguration"
+            ]
+          },
+          {
+            "value": "Menu Principal",
+            "keys": [
+              "navigation.mainMenu",
+              "sidebar.mainMenu"
+            ]
+          },
+          {
+            "value": "Catégories",
+            "keys": [
+              "sidebar.categoryManagement",
+              "admin.workloadDashboard.categories"
+            ]
+          },
+          {
+            "value": "Description",
+            "keys": [
+              "tickets.description",
+              "tickets.detail.description",
+              "tickets.fields.description",
+              "admin.assignmentRules.description",
+              "todo.descriptionLabel"
+            ]
+          },
+          {
+            "value": "Ouvert",
+            "keys": [
+              "tickets.status.open",
+              "status.open"
+            ]
+          },
+          {
+            "value": "En Attente",
+            "keys": [
+              "tickets.status.pending",
+              "status.pending",
+              "todo.pendingLabel"
+            ]
+          },
+          {
+            "value": "Résolu",
+            "keys": [
+              "tickets.status.resolved",
+              "status.resolved"
+            ]
+          },
+          {
+            "value": "Fermé",
+            "keys": [
+              "tickets.status.closed",
+              "status.closed"
+            ]
+          },
+          {
+            "value": "Catégorie",
+            "keys": [
+              "tickets.category",
+              "tickets.detail.category"
+            ]
+          },
+          {
+            "value": "Assigné À",
+            "keys": [
+              "tickets.assignedTo",
+              "todo.edit.assignedTo"
+            ]
+          },
+          {
+            "value": "Commentaires",
+            "keys": [
+              "tickets.comments",
+              "tickets.detail.comments",
+              "tickets.detail.feedback"
+            ]
+          },
+          {
+            "value": "Résoudre le Ticket",
+            "keys": [
+              "tickets.resolve.title",
+              "tickets.resolve.resolveButton"
+            ]
+          },
+          {
+            "value": "Statut Actuel",
+            "keys": [
+              "tickets.resolve.currentStatus",
+              "tickets.close.statusLabel"
+            ]
+          },
+          {
+            "value": "Fermer le Ticket",
+            "keys": [
+              "tickets.close.title",
+              "tickets.close.confirm"
+            ]
+          },
+          {
+            "value": "Ticket",
+            "keys": [
+              "tickets.reopen.ticketLabel",
+              "todo.linkedTicket"
+            ]
+          },
+          {
+            "value": "Assigned To",
+            "keys": [
+              "tickets.assigned_to",
+              "tickets.fields.assignedTo"
+            ]
+          },
+          {
+            "value": "Chat",
+            "keys": [
+              "tickets.detail.chat",
+              "chat.tab"
+            ]
+          },
+          {
+            "value": "M'assigner",
+            "keys": [
+              "tickets.detail.assignToMe",
+              "todo.actions.assignToMe"
+            ]
+          },
+          {
+            "value": "Champs Personnalisés",
+            "keys": [
+              "tickets.detail.customFields",
+              "admin.categoryManagement.customFields"
+            ]
+          },
+          {
+            "value": "Surveillance SLA",
+            "keys": [
+              "tickets.detail.slaMonitoring",
+              "tickets.slaMonitoring"
+            ]
+          },
+          {
+            "value": "Étiquettes",
+            "keys": [
+              "tickets.detail.tags",
+              "tickets.tags",
+              "todo.edit.tags",
+              "todo.tagsSection"
+            ]
+          },
+          {
+            "value": "Assign to Me",
+            "keys": [
+              "tickets.assign.assignToMe",
+              "tickets.actions.assignToMe"
+            ]
+          },
+          {
+            "value": "Ticket Assigned",
+            "keys": [
+              "tickets.assign.successTitle",
+              "agentDashboard.selfAssignedTitle"
+            ]
+          },
+          {
+            "value": "Priority",
+            "keys": [
+              "tickets.fields.priority",
+              "agentDashboard.priorityFilter",
+              "reports.priority"
+            ]
+          },
+          {
+            "value": "Category",
+            "keys": [
+              "tickets.fields.category",
+              "reports.category"
+            ]
+          },
+          {
+            "value": "Status",
+            "keys": [
+              "tickets.fields.status",
+              "agentDashboard.statusFilter",
+              "reports.status"
+            ]
+          },
+          {
+            "value": "Chargement des notifications...",
+            "keys": [
+              "tickets.loadingNotifications",
+              "notifications.loading"
+            ]
+          },
+          {
+            "value": "Aucune notification",
+            "keys": [
+              "tickets.noNotifications",
+              "notifications.empty",
+              "notifications.noNotifications"
+            ]
+          },
+          {
+            "value": "Marquer toutes comme lues",
+            "keys": [
+              "tickets.markAllAsRead",
+              "notifications.markAllRead"
+            ]
+          },
+          {
+            "value": "Champs obligatoires manquants",
+            "keys": [
+              "tickets.requiredFieldsMissing",
+              "tickets.requiredFieldsMissingDynamic"
+            ]
+          },
+          {
+            "value": "Informations Personnelles",
+            "keys": [
+              "tickets.personalInformation",
+              "profile.personalInformation"
+            ]
+          },
+          {
+            "value": "Overdue",
+            "keys": [
+              "sla.overdue",
+              "sla.status.overdue"
+            ]
+          },
+          {
+            "value": "Urgent",
+            "keys": [
+              "priority.urgent",
+              "agentDashboard.urgent"
+            ]
+          },
+          {
+            "value": "Nouvel Utilisateur",
+            "keys": [
+              "admin.userManagement.newUser",
+              "admin.userForm.newUser"
+            ]
+          },
+          {
+            "value": "Utilisateur",
+            "keys": [
+              "admin.userManagement.user",
+              "admin.userListItem.user",
+              "auth.user"
+            ]
+          },
+          {
+            "value": "Modifier Utilisateur",
+            "keys": [
+              "admin.userManagement.editUser",
+              "admin.userForm.editUser"
+            ]
+          },
+          {
+            "value": "Envoyer email d'invitation",
+            "keys": [
+              "admin.userManagement.sendInvitation",
+              "admin.userListItem.sendInvitation"
+            ]
+          },
+          {
+            "value": "Générer nouveau mot de passe temporaire",
+            "keys": [
+              "admin.userManagement.resetTempPassword",
+              "admin.userListItem.generateTempPassword"
+            ]
+          },
+          {
+            "value": "Email",
+            "keys": [
+              "admin.userForm.email",
+              "auth.email"
+            ]
+          },
+          {
+            "value": "Hors ligne",
+            "keys": [
+              "admin.categoryManagement.offline",
+              "admin.workloadDashboard.offline"
+            ]
+          },
+          {
+            "value": "Actif",
+            "keys": [
+              "admin.categoryManagement.active",
+              "admin.assignmentRules.active"
+            ]
+          },
+          {
+            "value": "S'inscrire",
+            "keys": [
+              "auth.register",
+              "auth.signUp"
+            ]
+          },
+          {
+            "value": "Don't have an account?",
+            "keys": [
+              "auth.dontHaveAccount",
+              "auth.noAccount"
+            ]
+          },
+          {
+            "value": "Se connecter",
+            "keys": [
+              "auth.signIn",
+              "auth.signInLink"
+            ]
+          },
+          {
+            "value": "Passwords do not match",
+            "keys": [
+              "auth.passwordsDontMatch",
+              "settings.security.errors.passwordsDontMatch"
+            ]
+          },
+          {
+            "value": "Error",
+            "keys": [
+              "auth.error",
+              "integrations.status.error"
+            ]
+          },
+          {
+            "value": "Enter your new password",
+            "keys": [
+              "auth.enterNewPassword",
+              "auth.enterNewPasswordPlaceholder",
+              "settings.security.enterNewPassword"
+            ]
+          },
+          {
+            "value": "New Password",
+            "keys": [
+              "auth.newPassword",
+              "settings.security.newPassword"
+            ]
+          },
+          {
+            "value": "Confirm New Password",
+            "keys": [
+              "auth.confirmNewPassword",
+              "settings.security.confirmPassword"
+            ]
+          },
+          {
+            "value": "Date d'Échéance",
+            "keys": [
+              "todo.dueDateLabel",
+              "todo.edit.dueDate"
+            ]
+          },
+          {
+            "value": "Ticket Associé",
+            "keys": [
+              "todo.edit.relatedTicket",
+              "todo.relatedTicketLabel"
+            ]
+          },
+          {
+            "value": "Aucun ticket",
+            "keys": [
+              "todo.edit.noTicket",
+              "todo.noTicket"
+            ]
+          },
+          {
+            "value": "Enter a tag...",
+            "keys": [
+              "todo.tagPlaceholder",
+              "placeholders.enterTag"
+            ]
+          },
+          {
+            "value": "Search tickets...",
+            "keys": [
+              "agentDashboard.searchPlaceholder",
+              "placeholders.searchTickets"
+            ]
+          },
+          {
+            "value": "Reopen Requests",
+            "keys": [
+              "reopen.title",
+              "reopen.pageTitle"
+            ]
+          },
+          {
+            "value": "Pending",
+            "keys": [
+              "reopen.pending",
+              "reopen.status.pending"
+            ]
+          },
+          {
+            "value": "Test message...",
+            "keys": [
+              "integrations.testMessagePlaceholder",
+              "placeholders.testMessage"
+            ]
+          },
+          {
+            "value": "Tapez un message...",
+            "keys": [
+              "chat.typeMessage",
+              "chat.typePlaceholder"
+            ]
+          },
+          {
+            "value": "Rechercher des messages...",
+            "keys": [
+              "chat.searchMessages",
+              "chat.searchPlaceholder"
+            ]
+          },
+          {
+            "value": "Change Password",
+            "keys": [
+              "settings.security.title",
+              "settings.security.changePassword"
+            ]
+          },
+          {
+            "value": "Add a comment...",
+            "keys": [
+              "comments.addPlaceholder",
+              "placeholders.addComment"
+            ]
+          }
+        ],
+        "emptyValues": [],
+        "untranslatedValues": [
+          "common.info",
+          "common.agent",
+          "common.not_available",
+          "header.agent",
+          "header.not_available",
+          "navigation.tickets",
+          "navigation.admin",
+          "navigation.notifications",
+          "sidebar.administration",
+          "tickets.description",
+          "tickets.reopen.ticketLabel",
+          "tickets.requester",
+          "tickets.created_on",
+          "tickets.updated_on",
+          "tickets.created_by",
+          "tickets.assigned_to",
+          "tickets.attachments",
+          "tickets.resolved_on",
+          "tickets.customer_feedback",
+          "tickets.activity_log",
+          "tickets.tasks",
+          "tickets.account_information",
+          "tickets.username",
+          "tickets.license_type",
+          "tickets.mfa_setup",
+          "tickets.job_information",
+          "tickets.job_title",
+          "tickets.manager",
+          "tickets.start_date",
+          "tickets.company_information",
+          "tickets.company",
+          "tickets.department",
+          "tickets.office_location",
+          "tickets.contact_information",
+          "tickets.business_phone",
+          "tickets.mobile_phone",
+          "tickets.additional_information",
+          "tickets.signature_group",
+          "tickets.usage_location",
+          "tickets.distribution_list",
+          "tickets.attached_form",
+          "tickets.detail.description",
+          "tickets.detail.chat",
+          "tickets.assign.title",
+          "tickets.assign.currentStatus",
+          "tickets.assign.aboutToAssign",
+          "tickets.assign.responsibility1",
+          "tickets.assign.responsibility2",
+          "tickets.assign.responsibility3",
+          "tickets.assign.responsibility4",
+          "tickets.assign.assignToMe",
+          "tickets.assign.assignToAgent",
+          "tickets.assign.selectAgent",
+          "tickets.assign.selectAgentPlaceholder",
+          "tickets.assign.loadAgentsError",
+          "tickets.assign.successTitle",
+          "tickets.assign.successDescription",
+          "tickets.assign.error",
+          "tickets.assign.errorDefault",
+          "tickets.assign.assigning",
+          "tickets.assign.assignButton",
+          "tickets.assign.loading",
+          "tickets.actions.assign",
+          "tickets.actions.assignToMe",
+          "tickets.actions.reassign",
+          "tickets.actions.edit",
+          "tickets.actions.resolve",
+          "tickets.actions.close",
+          "tickets.actions.reopen",
+          "tickets.actions.delete",
+          "tickets.actions.viewDetails",
+          "tickets.actions.transfer",
+          "tickets.fields.title",
+          "tickets.fields.description",
+          "tickets.fields.priority",
+          "tickets.fields.category",
+          "tickets.fields.subcategory",
+          "tickets.fields.country",
+          "tickets.fields.status",
+          "tickets.fields.assignedTo",
+          "tickets.fields.createdAt",
+          "tickets.fields.updatedAt",
+          "tickets.fields.resolvedAt",
+          "tickets.fields.closedAt",
+          "tickets.placeholders.title",
+          "tickets.placeholders.description",
+          "tickets.placeholders.selectPriority",
+          "tickets.placeholders.selectCategory",
+          "tickets.placeholders.selectSubcategory",
+          "tickets.placeholders.selectCountry",
+          "tickets.placeholders.selectStatus",
+          "tickets.placeholders.selectAssignee",
+          "tickets.type",
+          "tickets.satisfaction",
+          "tickets.notifications",
+          "tickets.support",
+          "tickets.bug",
+          "sla.monitor",
+          "sla.response_time",
+          "sla.resolution_time",
+          "sla.first_response_target",
+          "sla.resolution_target",
+          "sla.target_met",
+          "sla.overdue",
+          "sla.resolved_late",
+          "sla.responded_at",
+          "sla.resolved_at",
+          "sla.waiting_first_response",
+          "sla.in_progress",
+          "sla.time_elapsed",
+          "sla.total_time",
+          "sla.target",
+          "sla.elapsed",
+          "sla.remaining",
+          "sla.minutes_short",
+          "sla.hours_short",
+          "sla.days_short",
+          "sla.status.met",
+          "sla.status.overdue",
+          "sla.status.warning",
+          "sla.status.in_progress",
+          "sla.status.completed_late",
+          "sla.status.missed",
+          "sla.active",
+          "sla.completed",
+          "sla.stopped",
+          "sla.status_label",
+          "priority.urgent",
+          "profile.notifications",
+          "profile.soundNotifications",
+          "profile.toastNotifications",
+          "profile.updateFrequency",
+          "profile.realtime",
+          "profile.every30s",
+          "profile.every1m",
+          "profile.every5m",
+          "profile.english",
+          "profile.keepAccountSecure",
+          "profile.lastLogin",
+          "profile.activeSessions",
+          "profile.twoFactorAuth",
+          "profile.comingSoon",
+          "profile.totalCreated",
+          "profile.totalAssigned",
+          "profile.avgResolutionTime",
+          "profile.statusBreakdown",
+          "profile.noRecentActivities",
+          "profile.createdTicket",
+          "profile.assignedTicket",
+          "profile.resolvedTicket",
+          "profile.categoryRequest",
+          "profile.user",
+          "profile.agent",
+          "profile.admin",
+          "admin.userManagement.agent",
+          "admin.userForm.email",
+          "admin.userForm.emailRequired",
+          "admin.userListItem.agent",
+          "admin.workloadDashboard.performance",
+          "admin.workloadDashboard.tickets",
+          "admin.workloadDashboard.satisfaction",
+          "admin.workloadDashboard.expert",
+          "admin.assignmentRules.description",
+          "admin.assignmentRules.configuration",
+          "admin.assignmentRules.conditions",
+          "admin.assignmentRules.actions",
+          "auth.email",
+          "auth.dontHaveAccount",
+          "auth.loginError",
+          "auth.loginSuccess",
+          "auth.welcomeMessage",
+          "auth.unexpectedError",
+          "auth.cleanupError",
+          "auth.conflictsResolved",
+          "auth.tryLoginAgain",
+          "auth.unexpectedCleanupError",
+          "auth.resolvingConflicts",
+          "auth.resolveAuthConflicts",
+          "auth.noAccount",
+          "auth.nameRequired",
+          "auth.emailRequired",
+          "auth.passwordMinLength",
+          "auth.passwordsDontMatch",
+          "auth.registrationError",
+          "auth.accountCreated",
+          "auth.accountCreatedMessage",
+          "auth.fillDataToCreateAccount",
+          "auth.registration",
+          "auth.enterInfoToCreateAccount",
+          "auth.confirmPasswordPlaceholder",
+          "auth.iAgreeWith",
+          "auth.termsOfUse",
+          "auth.and",
+          "auth.privacyPolicy",
+          "auth.error",
+          "auth.emailSent",
+          "auth.checkInboxForReset",
+          "auth.resetLinkSentTo",
+          "auth.checkInboxAndSpam",
+          "auth.sendAgain",
+          "auth.backToLogin",
+          "auth.enterEmailForReset",
+          "auth.willSendResetLink",
+          "auth.sending",
+          "auth.sendResetLink",
+          "auth.invalidOrExpiredResetLink",
+          "auth.passwordReset",
+          "auth.passwordResetSuccess",
+          "auth.canLoginWithNewPassword",
+          "auth.goToLogin",
+          "auth.enterNewPassword",
+          "auth.newPassword",
+          "auth.chooseStrongPassword",
+          "auth.enterNewPasswordPlaceholder",
+          "auth.confirmNewPassword",
+          "auth.agent",
+          "todo.descriptionLabel",
+          "todo.templates.documentation.name",
+          "todo.linkedTicket",
+          "todo.tagPlaceholder",
+          "todo.tagsHelp",
+          "todo.notificationsSection",
+          "todo.emailReminderLabel",
+          "todo.emailReminderDesc",
+          "agentDashboard.title",
+          "agentDashboard.subtitle",
+          "agentDashboard.assignedTickets",
+          "agentDashboard.resolvedToday",
+          "agentDashboard.slaCompliance",
+          "agentDashboard.searchPlaceholder",
+          "agentDashboard.statusFilter",
+          "agentDashboard.statusAll",
+          "agentDashboard.priorityFilter",
+          "agentDashboard.priorityAll",
+          "agentDashboard.myTickets",
+          "agentDashboard.unassigned",
+          "agentDashboard.urgent",
+          "agentDashboard.noTicketsTitle",
+          "agentDashboard.noTicketsDesc",
+          "agentDashboard.createdBy",
+          "agentDashboard.assignedTo",
+          "agentDashboard.take",
+          "agentDashboard.reply",
+          "agentDashboard.selfAssignedTitle",
+          "agentDashboard.selfAssignedDesc",
+          "agentDashboard.selfAssignError",
+          "agentDashboard.loadError",
+          "agentDashboard.restricted",
+          "reopen.title",
+          "reopen.subtitle",
+          "reopen.pending",
+          "reopen.reviewed",
+          "reopen.emptyTitle",
+          "reopen.emptyDesc",
+          "reopen.reason",
+          "reopen.requestedBy",
+          "reopen.detailsHeading",
+          "reopen.approve",
+          "reopen.reject",
+          "reopen.request",
+          "reopen.commentLabel",
+          "reopen.commentApprovePlaceholder",
+          "reopen.commentRejectPlaceholder",
+          "reopen.approveNotice",
+          "reopen.rejectNotice",
+          "reopen.loadError",
+          "reopen.processError",
+          "reopen.noPermission",
+          "reopen.approvedToastTitle",
+          "reopen.approvedToastDesc",
+          "reopen.rejectedToastTitle",
+          "reopen.rejectedToastDesc",
+          "reopen.on",
+          "reopen.reviewedBy",
+          "reopen.reviewedOn",
+          "reopen.status.pending",
+          "reopen.status.approved",
+          "reopen.status.rejected",
+          "reopen.approvedComment",
+          "reopen.reviewerComment",
+          "reopen.pageTitle",
+          "reopen.pendingRequests",
+          "reopen.reviewedRequests",
+          "reopen.noPendingRequests",
+          "reopen.noReviewedRequests",
+          "reopen.commentPlaceholder",
+          "reopen.comment",
+          "reopen.approveRequest",
+          "reopen.rejectRequest",
+          "reports.title",
+          "reports.exportTitle",
+          "reports.typeLabel",
+          "reports.formatLabel",
+          "reports.periodLabel",
+          "reports.initialDate",
+          "reports.finalDate",
+          "reports.filtersLabel",
+          "reports.status",
+          "reports.priority",
+          "reports.category",
+          "reports.agent",
+          "reports.selectedFilters",
+          "reports.generate",
+          "reports.generating",
+          "integrations.title",
+          "integrations.listTitle",
+          "integrations.configure",
+          "integrations.configureTitle",
+          "integrations.status.connected",
+          "integrations.status.disconnected",
+          "integrations.status.error",
+          "integrations.lastSync",
+          "integrations.never",
+          "integrations.slackDescription",
+          "integrations.emailDescription",
+          "integrations.whatsappDescription",
+          "integrations.zapierDescription",
+          "integrations.webhookUrl",
+          "integrations.channel",
+          "integrations.channelPlaceholder",
+          "integrations.smtpServer",
+          "integrations.port",
+          "integrations.senderEmail",
+          "integrations.senderEmailPlaceholder",
+          "integrations.apiKey",
+          "integrations.apiKeyPlaceholder",
+          "integrations.phoneNumberId",
+          "integrations.phoneNumberIdPlaceholder",
+          "integrations.zapierHelp",
+          "integrations.testIntegration",
+          "integrations.testMessagePlaceholder",
+          "integrations.sendTest",
+          "integrations.saveConfig",
+          "chat.tab",
+          "notifications.title",
+          "notifications.fallback.noTitle",
+          "notifications.fallback.unknownUser",
+          "notifications.fallback.defaultAgent",
+          "notifications.actions.viewTicket",
+          "notifications.errors.ticketNotFound",
+          "notifications.errors.loadingTicketDetails",
+          "notifications.errors.cannotOpenTicket",
+          "notifications.errors.processingNotification",
+          "notifications.errors.markingAllAsRead",
+          "notifications.errors.deletingNotification",
+          "notifications.types.ticket_created.title",
+          "notifications.types.ticket_created.message",
+          "notifications.types.ticket_assigned.title",
+          "notifications.types.ticket_assigned.message",
+          "notifications.types.assignment_changed.assigned.title",
+          "notifications.types.assignment_changed.assigned.message",
+          "notifications.types.assignment_changed.selfAssigned.title",
+          "notifications.types.assignment_changed.selfAssigned.message",
+          "notifications.types.assignment_changed.removed.title",
+          "notifications.types.assignment_changed.removed.message",
+          "notifications.types.assignment_changed.fallback.title",
+          "notifications.types.assignment_changed.fallback.message",
+          "notifications.types.status_changed.title",
+          "notifications.types.status_changed.message",
+          "notifications.types.comment_added.title",
+          "notifications.types.comment_added.message",
+          "notifications.types.priority_changed.title",
+          "notifications.types.priority_changed.message",
+          "notifications.types.feedback_request.title",
+          "notifications.types.feedback_request.message",
+          "notifications.types.feedback_received.title",
+          "notifications.types.feedback_received.message",
+          "notifications.types.first_response.title",
+          "notifications.types.first_response.message",
+          "notifications.types.sla_warning.title",
+          "notifications.types.sla_warning.message",
+          "notifications.types.sla_breach.title",
+          "notifications.types.sla_breach.message",
+          "notifications.types.task_assigned.title",
+          "notifications.types.task_assigned.message",
+          "settings.title",
+          "settings.subtitle",
+          "settings.backToDashboard",
+          "settings.tabs.security",
+          "settings.tabs.notifications",
+          "settings.tabs.appearance",
+          "settings.tabs.about",
+          "settings.security.title",
+          "settings.security.description",
+          "settings.security.newPassword",
+          "settings.security.confirmPassword",
+          "settings.security.enterNewPassword",
+          "settings.security.confirmNewPassword",
+          "settings.security.changing",
+          "settings.security.changePassword",
+          "settings.security.errors.passwordsDontMatch",
+          "settings.security.errors.passwordTooShort",
+          "settings.security.errors.unexpectedError",
+          "settings.security.success.title",
+          "settings.security.success.description",
+          "settings.notifications.title",
+          "settings.notifications.description",
+          "settings.notifications.emailNotifications.title",
+          "settings.notifications.emailNotifications.description",
+          "settings.notifications.ticketUpdates.title",
+          "settings.notifications.ticketUpdates.description",
+          "settings.notifications.systemAlerts.title",
+          "settings.notifications.systemAlerts.description",
+          "settings.notifications.weeklyReports.title",
+          "settings.notifications.weeklyReports.description",
+          "settings.notifications.success.title",
+          "settings.notifications.success.description",
+          "settings.appearance.title",
+          "settings.appearance.description",
+          "settings.appearance.themes.light",
+          "settings.appearance.themes.dark",
+          "settings.appearance.themes.system",
+          "settings.about.title",
+          "settings.about.description",
+          "settings.about.version",
+          "settings.about.lastUpdated",
+          "settings.about.quickLinks",
+          "settings.about.viewChangelog",
+          "settings.about.helpDocs",
+          "settings.about.aboutTitle",
+          "settings.about.aboutDescription",
+          "settings.about.recentUpdates.title",
+          "settings.about.recentUpdates.description",
+          "comments.addPlaceholder",
+          "feedback.experiencePlaceholder",
+          "agent.internalNotePlaceholder",
+          "agent.responsePlaceholder",
+          "placeholders.searchTickets",
+          "placeholders.enterTaskTitle",
+          "placeholders.addComment",
+          "placeholders.selectAgent",
+          "placeholders.selectTicket",
+          "placeholders.enterTag",
+          "placeholders.helpImprove",
+          "placeholders.testMessage",
+          "aria.deleteNotification",
+          "aria.openTicket",
+          "aria.removeTag",
+          "aria.attachFile",
+          "aria.attachImage",
+          "titles.preview",
+          "titles.download",
+          "titles.generating",
+          "titles.removeFile",
+          "titles.formBuilder"
+        ]
+      }
+    },
+    "pt-BR": {
+      "name": "Portuguese (Brazil)",
+      "issues": {
+        "missingKeys": 358,
+        "extraKeys": 10,
+        "emptyValues": 0,
+        "untranslatedValues": 29,
+        "duplicateValues": 80
+      },
+      "details": {
+        "missingKeys": [
+          "common.searchPlaceholder",
+          "common.remove",
+          "common.send",
+          "common.submit",
+          "common.create",
+          "common.update",
+          "common.preview",
+          "common.titlePlaceholder",
+          "common.descriptionPlaceholder",
+          "common.button",
+          "common.promise",
+          "common.retry",
+          "common.actions",
+          "common.avgResolution",
+          "common.chat",
+          "common.startTheConversation",
+          "common.sent",
+          "common.category",
+          "common.passed",
+          "common.featured",
+          "common.status",
+          "common.priority",
+          "common.apply",
+          "common.pending",
+          "common.conditions",
+          "common.maxConcurrentTicketsPerAgent",
+          "common.ticketNotFound",
+          "header.searchPlaceholder",
+          "header.filter",
+          "header.clear",
+          "header.refresh",
+          "header.export",
+          "header.import",
+          "header.download",
+          "header.upload",
+          "header.share",
+          "header.print",
+          "header.totalTickets",
+          "header.agent",
+          "header.unknownUser",
+          "header.not_available",
+          "header.all",
+          "header.copyright",
+          "header.pageNotFound",
+          "header.returnToHome",
+          "header.admin",
+          "tickets.newTicket",
+          "tickets.ticketNumber",
+          "tickets.title",
+          "tickets.description",
+          "tickets.status.open",
+          "tickets.status.pending",
+          "tickets.status.inProgress",
+          "tickets.status.resolved",
+          "tickets.status.closed",
+          "tickets.priority",
+          "tickets.category",
+          "tickets.assignedTo",
+          "tickets.createdBy",
+          "tickets.createdAt",
+          "tickets.updatedAt",
+          "tickets.resolvedAt",
+          "tickets.closedAt",
+          "tickets.resolution",
+          "tickets.comments",
+          "tickets.addComment",
+          "tickets.untitled",
+          "tickets.resolve.title",
+          "tickets.resolve.currentStatus",
+          "tickets.resolve.resolutionNotes",
+          "tickets.resolve.resolutionNotesPlaceholder",
+          "tickets.resolve.resolutionNotesRequired",
+          "tickets.resolve.tip",
+          "tickets.resolve.tipText",
+          "tickets.resolve.resolving",
+          "tickets.resolve.resolveButton",
+          "tickets.resolve.successTitle",
+          "tickets.resolve.successDescription",
+          "tickets.resolve.error",
+          "tickets.resolve.errorDefault",
+          "tickets.close.title",
+          "tickets.close.infoTitle",
+          "tickets.close.infoDesc",
+          "tickets.close.statusLabel",
+          "tickets.close.closing",
+          "tickets.close.confirm",
+          "tickets.close.errors.title",
+          "tickets.close.errors.generic",
+          "tickets.close.errors.notResolved",
+          "tickets.close.errors.emptyResolution",
+          "tickets.close.errors.noResolvedDate",
+          "tickets.close.errors.cannotClose",
+          "tickets.close.errors.statusMustBeResolved",
+          "tickets.close.errors.resolutionRequired",
+          "tickets.close.errors.resolvedDateRequired",
+          "tickets.close.success.title",
+          "tickets.close.success.description",
+          "tickets.reopen.title",
+          "tickets.reopen.infoTitle",
+          "tickets.reopen.infoDesc",
+          "tickets.reopen.ticketLabel",
+          "tickets.reopen.statusLabel",
+          "tickets.reopen.previousResolutionLabel",
+          "tickets.reopen.closedOnly",
+          "tickets.reopen.creatorOnly",
+          "tickets.reopen.reasonLabel",
+          "tickets.reopen.reasonPlaceholder",
+          "tickets.reopen.reasonHelper",
+          "tickets.reopen.reasonRequired",
+          "tickets.reopen.noPermission",
+          "tickets.reopen.sending",
+          "tickets.reopen.sendButton",
+          "tickets.reopen.sentTitle",
+          "tickets.reopen.sentDesc",
+          "tickets.reopen.descriptionSr",
+          "tickets.transfer.title",
+          "tickets.transfer.descriptionSr",
+          "tickets.transfer.transferToLabel",
+          "tickets.transfer.loadingAgents",
+          "tickets.transfer.selectAgentPlaceholder",
+          "tickets.transfer.noAgents",
+          "tickets.transfer.reasonLabel",
+          "tickets.transfer.reasonPlaceholder",
+          "tickets.transfer.reasonRequired",
+          "tickets.transfer.selectAgentError",
+          "tickets.transfer.loadAgentsError",
+          "tickets.transfer.transferring",
+          "tickets.transfer.transferredTitle",
+          "tickets.transfer.transferredDesc",
+          "tickets.transfer.transferError",
+          "tickets.transfer.workloadTitle",
+          "tickets.transfer.workloadHint",
+          "tickets.requester",
+          "tickets.created_on",
+          "tickets.updated_on",
+          "tickets.created_by",
+          "tickets.assigned_to",
+          "tickets.attachments",
+          "tickets.resolved_on",
+          "tickets.customer_feedback",
+          "tickets.activity_log",
+          "tickets.tasks",
+          "tickets.account_information",
+          "tickets.username",
+          "tickets.license_type",
+          "tickets.mfa_setup",
+          "tickets.job_information",
+          "tickets.job_title",
+          "tickets.manager",
+          "tickets.start_date",
+          "tickets.company_information",
+          "tickets.company",
+          "tickets.department",
+          "tickets.office_location",
+          "tickets.contact_information",
+          "tickets.business_phone",
+          "tickets.mobile_phone",
+          "tickets.additional_information",
+          "tickets.signature_group",
+          "tickets.usage_location",
+          "tickets.distribution_list",
+          "tickets.attached_form",
+          "tickets.by",
+          "tickets.assigned",
+          "tickets.feedbackReceived",
+          "tickets.userRatedService",
+          "tickets.clickToViewRating",
+          "tickets.assign.title",
+          "tickets.assign.currentStatus",
+          "tickets.assign.aboutToAssign",
+          "tickets.assign.responsibility1",
+          "tickets.assign.responsibility2",
+          "tickets.assign.responsibility3",
+          "tickets.assign.responsibility4",
+          "tickets.assign.assignToMe",
+          "tickets.assign.assignToAgent",
+          "tickets.assign.selectAgent",
+          "tickets.assign.selectAgentPlaceholder",
+          "tickets.assign.loadAgentsError",
+          "tickets.assign.successTitle",
+          "tickets.assign.successDescription",
+          "tickets.assign.error",
+          "tickets.assign.errorDefault",
+          "tickets.assign.assigning",
+          "tickets.assign.assignButton",
+          "tickets.assign.loading",
+          "tickets.actions.assign",
+          "tickets.actions.assignToMe",
+          "tickets.actions.reassign",
+          "tickets.actions.edit",
+          "tickets.actions.resolve",
+          "tickets.actions.close",
+          "tickets.actions.reopen",
+          "tickets.actions.delete",
+          "tickets.actions.viewDetails",
+          "tickets.actions.transfer",
+          "tickets.fields.title",
+          "tickets.fields.description",
+          "tickets.fields.priority",
+          "tickets.fields.category",
+          "tickets.fields.subcategory",
+          "tickets.fields.country",
+          "tickets.fields.status",
+          "tickets.fields.assignedTo",
+          "tickets.fields.createdAt",
+          "tickets.fields.updatedAt",
+          "tickets.fields.resolvedAt",
+          "tickets.fields.closedAt",
+          "tickets.placeholders.title",
+          "tickets.placeholders.description",
+          "tickets.placeholders.selectPriority",
+          "tickets.placeholders.selectCategory",
+          "tickets.placeholders.selectSubcategory",
+          "tickets.placeholders.selectCountry",
+          "tickets.placeholders.selectStatus",
+          "tickets.placeholders.selectAssignee",
+          "profile.user",
+          "profile.agent",
+          "profile.admin",
+          "admin.workloadDashboard.title",
+          "admin.workloadDashboard.description",
+          "admin.workloadDashboard.refresh",
+          "admin.workloadDashboard.rebalance",
+          "admin.workloadDashboard.totalActiveTickets",
+          "admin.workloadDashboard.acrossAllAgents",
+          "admin.workloadDashboard.teamUtilization",
+          "admin.workloadDashboard.availableAgents",
+          "admin.workloadDashboard.outOfTotal",
+          "admin.workloadDashboard.overview",
+          "admin.workloadDashboard.performance",
+          "admin.workloadDashboard.categories",
+          "admin.workloadDashboard.loadingAgentData",
+          "admin.workloadDashboard.noAgentsFound",
+          "admin.workloadDashboard.currentWorkload",
+          "admin.workloadDashboard.tickets",
+          "admin.workloadDashboard.avgResolution",
+          "admin.workloadDashboard.resolutionRate",
+          "admin.workloadDashboard.satisfaction",
+          "admin.workloadDashboard.overloaded",
+          "admin.workloadDashboard.busy",
+          "admin.workloadDashboard.moderate",
+          "admin.workloadDashboard.light",
+          "admin.workloadDashboard.available",
+          "admin.workloadDashboard.away",
+          "admin.workloadDashboard.offline",
+          "admin.workloadDashboard.subcategories",
+          "admin.workloadDashboard.expertLevel",
+          "admin.workloadDashboard.categoryExpertise",
+          "admin.workloadDashboard.expert",
+          "admin.workloadDashboard.advanced",
+          "admin.workloadDashboard.intermediate",
+          "admin.workloadDashboard.basic",
+          "admin.workloadDashboard.specializations",
+          "admin.workloadDashboard.more",
+          "admin.workloadDashboard.customersServed",
+          "admin.workloadDashboard.repeatRate",
+          "admin.workloadDashboard.avgSatisfaction",
+          "admin.workloadDashboard.lastUpdated",
+          "admin.workloadDashboard.accessDenied",
+          "admin.workloadDashboard.workloadRebalanced",
+          "admin.workloadDashboard.rebalancingFailed",
+          "admin.workloadDashboard.rebalancingError",
+          "admin.assignmentRules.title",
+          "admin.assignmentRules.description",
+          "admin.assignmentRules.configuration",
+          "admin.assignmentRules.addRule",
+          "admin.assignmentRules.assignmentRules",
+          "admin.assignmentRules.systemConfiguration",
+          "admin.assignmentRules.analytics",
+          "admin.assignmentRules.noAssignmentRules",
+          "admin.assignmentRules.createFirstRule",
+          "admin.assignmentRules.createRule",
+          "admin.assignmentRules.active",
+          "admin.assignmentRules.disabled",
+          "admin.assignmentRules.conditions",
+          "admin.assignmentRules.actions",
+          "admin.assignmentRules.notifyManager",
+          "admin.assignmentRules.algorithmConfiguration",
+          "admin.assignmentRules.maxConcurrentTickets",
+          "admin.assignmentRules.enableAutoRebalancing",
+          "admin.assignmentRules.saveConfiguration",
+          "admin.assignmentRules.activeRules",
+          "admin.assignmentRules.autoAssignments",
+          "admin.assignmentRules.ofTicketsAssigned",
+          "admin.assignmentRules.avgAssignmentTime",
+          "admin.assignmentRules.averageTimeToAssign",
+          "admin.assignmentRules.ruleName",
+          "admin.assignmentRules.enableRule",
+          "admin.assignmentRules.ticketPriorities",
+          "admin.assignmentRules.assignToSpecificAgent",
+          "admin.assignmentRules.noSpecificAgent",
+          "admin.assignmentRules.notifyManagerWhenTriggered",
+          "admin.assignmentRules.cancel",
+          "admin.assignmentRules.systemConfigurationTitle",
+          "admin.assignmentRules.scoringWeights",
+          "admin.assignmentRules.workloadWeight",
+          "admin.assignmentRules.performanceWeight",
+          "admin.assignmentRules.availabilityWeight",
+          "admin.assignmentRules.capacitySettings",
+          "admin.assignmentRules.maxTicketsPerAgent",
+          "admin.assignmentRules.rebalancingThreshold",
+          "admin.assignmentRules.businessHours",
+          "admin.assignmentRules.startTime",
+          "admin.assignmentRules.endTime",
+          "admin.assignmentRules.timezone",
+          "admin.assignmentRules.easternTime",
+          "admin.assignmentRules.centralTime",
+          "auth.login",
+          "auth.register",
+          "auth.logout",
+          "auth.confirmPassword",
+          "auth.dontHaveAccount",
+          "auth.signUp",
+          "auth.signOut",
+          "todo.actions.complete",
+          "todo.actions.start",
+          "todo.actions.pause",
+          "todo.actions.save",
+          "todo.actions.cancel",
+          "chat.attachFile",
+          "chat.attachImage",
+          "chat.searchMessages",
+          "chat.addReaction",
+          "chat.replyingTo",
+          "chat.fileTooLarge",
+          "chat.fileTypeNotAllowed",
+          "chat.fileUploaded",
+          "chat.uploadFailed",
+          "chat.failedToSend",
+          "chat.imagePreview",
+          "chat.cancel",
+          "chat.sendImage",
+          "chat.isTyping",
+          "chat.areTyping",
+          "chat.internal",
+          "errors.errorLoadingAgents",
+          "errors.errorUploadingFile",
+          "errors.errorRemovingReaction",
+          "errors.errorSendingMessage",
+          "errors.errorAddingReaction",
+          "errors.errorSubmittingFeedback",
+          "errors.errorMarkingAllNotifications",
+          "errors.errorDeletingNotification",
+          "errors.errorCreatingTask",
+          "errors.failedUrl",
+          "errors.errorAssigningTicket",
+          "errors.errorLoadingSessionTimeout",
+          "errors.errorCreatingNotification",
+          "errors.errorMarkingNotificationAsRead",
+          "errors.errorGettingChatMessages",
+          "errors.errorSendingChatMessage",
+          "errors.errorUploadingChatFile",
+          "errors.errorMarkingChatAsRead",
+          "errors.errorGettingChatParticipants",
+          "errors.errorGettingUnreadCount",
+          "errors.validationError",
+          "errors.todoTasksFunctionalityRequired",
+          "errors.errorCreatingSignedUrl"
+        ],
+        "extraKeys": [
+          "todo.actions.assign",
+          "todo.actions.assignToMe",
+          "todo.actions.reassign",
+          "todo.actions.resolve",
+          "todo.actions.close",
+          "todo.actions.reopen",
+          "todo.actions.viewDetails",
+          "todo.actions.transfer",
+          "chat.typePlaceholder",
+          "chat.searchPlaceholder"
+        ],
+        "duplicateValues": [
+          {
+            "value": "Salvar",
+            "keys": [
+              "common.save",
+              "admin.userForm.save",
+              "admin.slaConfiguration.save"
+            ]
+          },
+          {
+            "value": "Cancelar",
+            "keys": [
+              "common.cancel",
+              "admin.userManagement.cancel",
+              "admin.userForm.cancel",
+              "admin.slaConfiguration.cancel",
+              "todo.edit.cancel"
+            ]
+          },
+          {
+            "value": "Editar",
+            "keys": [
+              "common.edit",
+              "tickets.detail.edit",
+              "admin.slaConfiguration.edit",
+              "todo.actions.edit"
+            ]
+          },
+          {
+            "value": "Excluir",
+            "keys": [
+              "common.delete",
+              "todo.actions.delete"
+            ]
+          },
+          {
+            "value": "Fechar",
+            "keys": [
+              "common.close",
+              "tickets.detail.close",
+              "todo.actions.close"
+            ]
+          },
+          {
+            "value": "Carregando...",
+            "keys": [
+              "common.loading",
+              "admin.categoryManagement.loading"
+            ]
+          },
+          {
+            "value": "Erro",
+            "keys": [
+              "common.error",
+              "tickets.error",
+              "admin.userPasswordDialog.copyError",
+              "auth.error",
+              "integrations.status.error"
+            ]
+          },
+          {
+            "value": "Sucesso",
+            "keys": [
+              "common.success",
+              "tickets.success"
+            ]
+          },
+          {
+            "value": "Aviso",
+            "keys": [
+              "common.warning",
+              "tickets.warningAttachments"
+            ]
+          },
+          {
+            "value": "Voltar",
+            "keys": [
+              "common.back",
+              "tickets.detail.back"
+            ]
+          },
+          {
+            "value": "Baixar",
+            "keys": [
+              "common.download",
+              "titles.download"
+            ]
+          },
+          {
+            "value": "Enviar",
+            "keys": [
+              "common.upload",
+              "chat.send"
+            ]
+          },
+          {
+            "value": "Compartilhar",
+            "keys": [
+              "common.share",
+              "tickets.detail.share"
+            ]
+          },
+          {
+            "value": "Imprimir",
+            "keys": [
+              "common.print",
+              "tickets.detail.print"
+            ]
+          },
+          {
+            "value": "Total de Chamados",
+            "keys": [
+              "common.totalTickets",
+              "dashboard.totalTickets"
+            ]
+          },
+          {
+            "value": "Agente",
+            "keys": [
+              "common.agent",
+              "admin.userManagement.agent",
+              "admin.userListItem.agent",
+              "auth.agent",
+              "reports.agent",
+              "notifications.fallback.defaultAgent"
+            ]
+          },
+          {
+            "value": "© 2024 AnalytiChem GmbH. Todos os direitos reservados.",
+            "keys": [
+              "common.copyright",
+              "auth.copyright"
+            ]
+          },
+          {
+            "value": "Administrador",
+            "keys": [
+              "common.admin",
+              "admin.userManagement.administrator",
+              "admin.userListItem.administrator",
+              "auth.administrator"
+            ]
+          },
+          {
+            "value": "Bem-vindo de volta",
+            "keys": [
+              "common.welcomeBack",
+              "header.welcomeBack",
+              "auth.welcomeBack"
+            ]
+          },
+          {
+            "value": "Status",
+            "keys": [
+              "filter.status",
+              "todo.edit.status.label",
+              "agentDashboard.statusFilter",
+              "reports.status"
+            ]
+          },
+          {
+            "value": "Prioridade",
+            "keys": [
+              "filter.priority",
+              "todo.priorityLabel",
+              "agentDashboard.priorityFilter",
+              "reports.priority"
+            ]
+          },
+          {
+            "value": "Todos os Status",
+            "keys": [
+              "filter.allStatuses",
+              "tickets.allStatus"
+            ]
+          },
+          {
+            "value": "Todas as Prioridades",
+            "keys": [
+              "filter.allPriorities",
+              "tickets.allPriorities",
+              "todo.allPriorities"
+            ]
+          },
+          {
+            "value": "Painel",
+            "keys": [
+              "navigation.dashboard",
+              "sidebar.dashboard"
+            ]
+          },
+          {
+            "value": "Meus Tickets",
+            "keys": [
+              "navigation.myTickets",
+              "sidebar.myTickets",
+              "agentDashboard.myTickets"
+            ]
+          },
+          {
+            "value": "Tickets Abertos",
+            "keys": [
+              "navigation.openTickets",
+              "sidebar.openTickets"
+            ]
+          },
+          {
+            "value": "Em Andamento",
+            "keys": [
+              "navigation.inProgressTickets",
+              "sidebar.inProgressTickets",
+              "sla.status.in_progress",
+              "status.inProgress",
+              "todo.inProgressLabel"
+            ]
+          },
+          {
+            "value": "Resolvidos",
+            "keys": [
+              "navigation.resolvedTickets",
+              "sidebar.resolvedTickets"
+            ]
+          },
+          {
+            "value": "Fechados",
+            "keys": [
+              "navigation.closedTickets",
+              "sidebar.closedTickets"
+            ]
+          },
+          {
+            "value": "Análises",
+            "keys": [
+              "navigation.analytics",
+              "sidebar.analytics"
+            ]
+          },
+          {
+            "value": "Base de Conhecimento",
+            "keys": [
+              "navigation.knowledge",
+              "sidebar.knowledgeBase",
+              "tickets.knowledgeBase",
+              "tickets.detail.knowledgeBase"
+            ]
+          },
+          {
+            "value": "Relatórios",
+            "keys": [
+              "navigation.reports",
+              "sidebar.reports",
+              "reports.title"
+            ]
+          },
+          {
+            "value": "Integrações",
+            "keys": [
+              "navigation.integrations",
+              "sidebar.integrations",
+              "integrations.title"
+            ]
+          },
+          {
+            "value": "Administração",
+            "keys": [
+              "navigation.admin",
+              "sidebar.administration"
+            ]
+          },
+          {
+            "value": "Configurações",
+            "keys": [
+              "navigation.settings",
+              "settings.title"
+            ]
+          },
+          {
+            "value": "Notificações",
+            "keys": [
+              "navigation.notifications",
+              "tickets.notifications",
+              "profile.notifications",
+              "todo.notificationsSection",
+              "notifications.title",
+              "settings.tabs.notifications"
+            ]
+          },
+          {
+            "value": "Painel do Agente",
+            "keys": [
+              "navigation.agentDashboard",
+              "sidebar.agentDashboard"
+            ]
+          },
+          {
+            "value": "Solicitações de Reabertura",
+            "keys": [
+              "navigation.reopenRequests",
+              "reopen.title",
+              "reopen.pageTitle"
+            ]
+          },
+          {
+            "value": "Tarefas",
+            "keys": [
+              "navigation.todo",
+              "sidebar.todo",
+              "tickets.detail.tasks"
+            ]
+          },
+          {
+            "value": "Gerenciamento de Usuários",
+            "keys": [
+              "navigation.adminUsers",
+              "admin.userManagement.title"
+            ]
+          },
+          {
+            "value": "Gerenciamento de Categorias",
+            "keys": [
+              "navigation.adminCategories",
+              "admin.categoryManagement.title"
+            ]
+          },
+          {
+            "value": "Menu Principal",
+            "keys": [
+              "navigation.mainMenu",
+              "sidebar.mainMenu"
+            ]
+          },
+          {
+            "value": "Tempo Médio de Resolução",
+            "keys": [
+              "dashboard.avgResolutionTime",
+              "profile.avgResolutionTime"
+            ]
+          },
+          {
+            "value": "Resolvidos Hoje",
+            "keys": [
+              "dashboard.resolvedToday",
+              "agentDashboard.resolvedToday"
+            ]
+          },
+          {
+            "value": "Meta",
+            "keys": [
+              "dashboard.goal",
+              "sla.target"
+            ]
+          },
+          {
+            "value": "Nenhum ticket encontrado",
+            "keys": [
+              "tickets.noTicketsFound",
+              "agentDashboard.noTicketsTitle"
+            ]
+          },
+          {
+            "value": "Carregando notificações...",
+            "keys": [
+              "tickets.loadingNotifications",
+              "notifications.loading"
+            ]
+          },
+          {
+            "value": "Nenhuma notificação",
+            "keys": [
+              "tickets.noNotifications",
+              "notifications.empty",
+              "notifications.noNotifications"
+            ]
+          },
+          {
+            "value": "Marcar todas como lidas",
+            "keys": [
+              "tickets.markAllAsRead",
+              "notifications.markAllRead"
+            ]
+          },
+          {
+            "value": "Status SLA",
+            "keys": [
+              "tickets.slaStatus",
+              "sla.status_label"
+            ]
+          },
+          {
+            "value": "Monitoramento SLA",
+            "keys": [
+              "tickets.slaMonitoring",
+              "tickets.detail.slaMonitoring"
+            ]
+          },
+          {
+            "value": "Tags",
+            "keys": [
+              "tickets.tags",
+              "tickets.detail.tags",
+              "todo.edit.tags"
+            ]
+          },
+          {
+            "value": "Campos obrigatórios faltando",
+            "keys": [
+              "tickets.requiredFieldsMissing",
+              "tickets.requiredFieldsMissingDynamic"
+            ]
+          },
+          {
+            "value": "Ticket atribuído",
+            "keys": [
+              "tickets.ticketAssigned",
+              "profile.assignedTicket"
+            ]
+          },
+          {
+            "value": "Informações Pessoais",
+            "keys": [
+              "tickets.personalInformation",
+              "profile.personalInformation"
+            ]
+          },
+          {
+            "value": "Descrição",
+            "keys": [
+              "tickets.detail.description",
+              "todo.descriptionLabel"
+            ]
+          },
+          {
+            "value": "Chat",
+            "keys": [
+              "tickets.detail.chat",
+              "chat.tab"
+            ]
+          },
+          {
+            "value": "Categoria",
+            "keys": [
+              "tickets.detail.category",
+              "reports.category"
+            ]
+          },
+          {
+            "value": "Data de Vencimento",
+            "keys": [
+              "tickets.detail.dueDate",
+              "todo.dueDateLabel",
+              "todo.edit.dueDate"
+            ]
+          },
+          {
+            "value": "Campos Personalizados",
+            "keys": [
+              "tickets.detail.customFields",
+              "admin.categoryManagement.customFields"
+            ]
+          },
+          {
+            "value": "Ativo",
+            "keys": [
+              "sla.active",
+              "admin.categoryManagement.active"
+            ]
+          },
+          {
+            "value": "Pendente",
+            "keys": [
+              "status.pending",
+              "reopen.status.pending"
+            ]
+          },
+          {
+            "value": "Segurança",
+            "keys": [
+              "profile.security",
+              "settings.tabs.security"
+            ]
+          },
+          {
+            "value": "Alterar Senha",
+            "keys": [
+              "profile.changePassword",
+              "settings.security.title",
+              "settings.security.changePassword"
+            ]
+          },
+          {
+            "value": "Novo Usuário",
+            "keys": [
+              "admin.userManagement.newUser",
+              "admin.userForm.newUser"
+            ]
+          },
+          {
+            "value": "Usuário",
+            "keys": [
+              "admin.userManagement.user",
+              "admin.userListItem.user",
+              "auth.user"
+            ]
+          },
+          {
+            "value": "Editar Usuário",
+            "keys": [
+              "admin.userManagement.editUser",
+              "admin.userForm.editUser"
+            ]
+          },
+          {
+            "value": "Enviar email de convite",
+            "keys": [
+              "admin.userManagement.sendInvitation",
+              "admin.userListItem.sendInvitation"
+            ]
+          },
+          {
+            "value": "Gerar nova senha temporária",
+            "keys": [
+              "admin.userManagement.resetTempPassword",
+              "admin.userListItem.generateTempPassword"
+            ]
+          },
+          {
+            "value": "Email",
+            "keys": [
+              "admin.userForm.email",
+              "auth.email"
+            ]
+          },
+          {
+            "value": "As senhas não coincidem",
+            "keys": [
+              "auth.passwordsDontMatch",
+              "messages.passwordsDoNotMatch",
+              "settings.security.errors.passwordsDontMatch"
+            ]
+          },
+          {
+            "value": "Digite sua nova senha",
+            "keys": [
+              "auth.enterNewPassword",
+              "auth.enterNewPasswordPlaceholder",
+              "settings.security.enterNewPassword"
+            ]
+          },
+          {
+            "value": "Nova Senha",
+            "keys": [
+              "auth.newPassword",
+              "settings.security.newPassword"
+            ]
+          },
+          {
+            "value": "Confirmar Nova Senha",
+            "keys": [
+              "auth.confirmNewPassword",
+              "settings.security.confirmPassword"
+            ]
+          },
+          {
+            "value": "Confirme sua nova senha",
+            "keys": [
+              "auth.confirmNewPasswordPlaceholder",
+              "settings.security.confirmNewPassword"
+            ]
+          },
+          {
+            "value": "A nova senha deve ter pelo menos 6 caracteres",
+            "keys": [
+              "messages.passwordTooShort",
+              "settings.security.errors.passwordTooShort"
+            ]
+          },
+          {
+            "value": "Pendentes",
+            "keys": [
+              "todo.pendingLabel",
+              "reopen.pending"
+            ]
+          },
+          {
+            "value": "Atribuído para",
+            "keys": [
+              "todo.edit.assignedTo",
+              "agentDashboard.assignedTo"
+            ]
+          },
+          {
+            "value": "Buscar tickets...",
+            "keys": [
+              "agentDashboard.searchPlaceholder",
+              "placeholders.searchTickets"
+            ]
+          },
+          {
+            "value": "Mensagem de teste...",
+            "keys": [
+              "integrations.testMessagePlaceholder",
+              "placeholders.testMessage"
+            ]
+          }
+        ],
+        "emptyValues": [],
+        "untranslatedValues": [
+          "common.not_available",
+          "filter.status",
+          "navigation.tickets",
+          "sidebar.debug",
+          "tickets.bug",
+          "tickets.tags",
+          "tickets.detail.chat",
+          "tickets.detail.feedback",
+          "tickets.detail.tags",
+          "sla.minutes_short",
+          "sla.hours_short",
+          "sla.days_short",
+          "profile.english",
+          "admin.userForm.email",
+          "admin.userForm.emailRequired",
+          "admin.userPasswordDialog.email",
+          "admin.categoryManagement.online",
+          "admin.categoryManagement.offline",
+          "auth.email",
+          "todo.edit.status.label",
+          "todo.edit.estimatedHoursPlaceholder",
+          "todo.edit.tags",
+          "agentDashboard.slaCompliance",
+          "agentDashboard.statusFilter",
+          "reports.status",
+          "integrations.webhookUrl",
+          "integrations.apiKey",
+          "integrations.phoneNumberId",
+          "chat.tab"
+        ]
+      }
+    },
+    "es-ES": {
+      "name": "Spanish (Spain)",
+      "issues": {
+        "missingKeys": 350,
+        "extraKeys": 0,
+        "emptyValues": 0,
+        "untranslatedValues": 18,
+        "duplicateValues": 99
+      },
+      "details": {
+        "missingKeys": [
+          "common.button",
+          "common.promise",
+          "common.retry",
+          "common.actions",
+          "common.avgResolution",
+          "common.chat",
+          "common.startTheConversation",
+          "common.sent",
+          "common.category",
+          "common.passed",
+          "common.featured",
+          "common.status",
+          "common.priority",
+          "common.apply",
+          "common.pending",
+          "common.conditions",
+          "common.maxConcurrentTicketsPerAgent",
+          "common.ticketNotFound",
+          "header.share",
+          "header.print",
+          "header.not_available",
+          "header.all",
+          "header.copyright",
+          "tickets.newTicket",
+          "tickets.ticketNumber",
+          "tickets.title",
+          "tickets.description",
+          "tickets.status.open",
+          "tickets.status.pending",
+          "tickets.status.inProgress",
+          "tickets.status.resolved",
+          "tickets.status.closed",
+          "tickets.priority",
+          "tickets.category",
+          "tickets.assignedTo",
+          "tickets.createdBy",
+          "tickets.createdAt",
+          "tickets.updatedAt",
+          "tickets.resolvedAt",
+          "tickets.closedAt",
+          "tickets.resolution",
+          "tickets.comments",
+          "tickets.addComment",
+          "tickets.untitled",
+          "tickets.resolve.title",
+          "tickets.resolve.currentStatus",
+          "tickets.resolve.resolutionNotes",
+          "tickets.resolve.resolutionNotesPlaceholder",
+          "tickets.resolve.resolutionNotesRequired",
+          "tickets.resolve.tip",
+          "tickets.resolve.tipText",
+          "tickets.resolve.resolving",
+          "tickets.resolve.resolveButton",
+          "tickets.resolve.successTitle",
+          "tickets.resolve.successDescription",
+          "tickets.resolve.error",
+          "tickets.resolve.errorDefault",
+          "tickets.close.title",
+          "tickets.close.infoTitle",
+          "tickets.close.infoDesc",
+          "tickets.close.statusLabel",
+          "tickets.close.closing",
+          "tickets.close.confirm",
+          "tickets.close.errors.title",
+          "tickets.close.errors.generic",
+          "tickets.close.errors.notResolved",
+          "tickets.close.errors.emptyResolution",
+          "tickets.close.errors.noResolvedDate",
+          "tickets.close.errors.cannotClose",
+          "tickets.close.errors.statusMustBeResolved",
+          "tickets.close.errors.resolutionRequired",
+          "tickets.close.errors.resolvedDateRequired",
+          "tickets.close.success.title",
+          "tickets.close.success.description",
+          "tickets.reopen.title",
+          "tickets.reopen.infoTitle",
+          "tickets.reopen.infoDesc",
+          "tickets.reopen.ticketLabel",
+          "tickets.reopen.statusLabel",
+          "tickets.reopen.previousResolutionLabel",
+          "tickets.reopen.closedOnly",
+          "tickets.reopen.creatorOnly",
+          "tickets.reopen.reasonLabel",
+          "tickets.reopen.reasonPlaceholder",
+          "tickets.reopen.reasonHelper",
+          "tickets.reopen.reasonRequired",
+          "tickets.reopen.noPermission",
+          "tickets.reopen.sending",
+          "tickets.reopen.sendButton",
+          "tickets.reopen.sentTitle",
+          "tickets.reopen.sentDesc",
+          "tickets.reopen.descriptionSr",
+          "tickets.transfer.title",
+          "tickets.transfer.descriptionSr",
+          "tickets.transfer.transferToLabel",
+          "tickets.transfer.loadingAgents",
+          "tickets.transfer.selectAgentPlaceholder",
+          "tickets.transfer.noAgents",
+          "tickets.transfer.reasonLabel",
+          "tickets.transfer.reasonPlaceholder",
+          "tickets.transfer.reasonRequired",
+          "tickets.transfer.selectAgentError",
+          "tickets.transfer.loadAgentsError",
+          "tickets.transfer.transferring",
+          "tickets.transfer.transferredTitle",
+          "tickets.transfer.transferredDesc",
+          "tickets.transfer.transferError",
+          "tickets.transfer.workloadTitle",
+          "tickets.transfer.workloadHint",
+          "tickets.requester",
+          "tickets.created_on",
+          "tickets.updated_on",
+          "tickets.created_by",
+          "tickets.assigned_to",
+          "tickets.attachments",
+          "tickets.resolved_on",
+          "tickets.customer_feedback",
+          "tickets.activity_log",
+          "tickets.tasks",
+          "tickets.account_information",
+          "tickets.username",
+          "tickets.license_type",
+          "tickets.mfa_setup",
+          "tickets.job_information",
+          "tickets.job_title",
+          "tickets.manager",
+          "tickets.start_date",
+          "tickets.company_information",
+          "tickets.company",
+          "tickets.department",
+          "tickets.office_location",
+          "tickets.contact_information",
+          "tickets.business_phone",
+          "tickets.mobile_phone",
+          "tickets.additional_information",
+          "tickets.signature_group",
+          "tickets.usage_location",
+          "tickets.distribution_list",
+          "tickets.attached_form",
+          "tickets.by",
+          "tickets.assigned",
+          "tickets.feedbackReceived",
+          "tickets.userRatedService",
+          "tickets.clickToViewRating",
+          "tickets.assign.title",
+          "tickets.assign.currentStatus",
+          "tickets.assign.aboutToAssign",
+          "tickets.assign.responsibility1",
+          "tickets.assign.responsibility2",
+          "tickets.assign.responsibility3",
+          "tickets.assign.responsibility4",
+          "tickets.assign.assignToMe",
+          "tickets.assign.assignToAgent",
+          "tickets.assign.selectAgent",
+          "tickets.assign.selectAgentPlaceholder",
+          "tickets.assign.loadAgentsError",
+          "tickets.assign.successTitle",
+          "tickets.assign.successDescription",
+          "tickets.assign.error",
+          "tickets.assign.errorDefault",
+          "tickets.assign.assigning",
+          "tickets.assign.assignButton",
+          "tickets.assign.loading",
+          "tickets.actions.assign",
+          "tickets.actions.assignToMe",
+          "tickets.actions.reassign",
+          "tickets.actions.edit",
+          "tickets.actions.resolve",
+          "tickets.actions.close",
+          "tickets.actions.reopen",
+          "tickets.actions.delete",
+          "tickets.actions.viewDetails",
+          "tickets.actions.transfer",
+          "tickets.fields.title",
+          "tickets.fields.description",
+          "tickets.fields.priority",
+          "tickets.fields.category",
+          "tickets.fields.subcategory",
+          "tickets.fields.country",
+          "tickets.fields.status",
+          "tickets.fields.assignedTo",
+          "tickets.fields.createdAt",
+          "tickets.fields.updatedAt",
+          "tickets.fields.resolvedAt",
+          "tickets.fields.closedAt",
+          "tickets.placeholders.title",
+          "tickets.placeholders.description",
+          "tickets.placeholders.selectPriority",
+          "tickets.placeholders.selectCategory",
+          "tickets.placeholders.selectSubcategory",
+          "tickets.placeholders.selectCountry",
+          "tickets.placeholders.selectStatus",
+          "tickets.placeholders.selectAssignee",
+          "sla.monitor",
+          "sla.response_time",
+          "sla.resolution_time",
+          "sla.first_response_target",
+          "sla.resolution_target",
+          "sla.target_met",
+          "sla.overdue",
+          "sla.resolved_late",
+          "sla.responded_at",
+          "sla.resolved_at",
+          "sla.waiting_first_response",
+          "sla.in_progress",
+          "sla.time_elapsed",
+          "sla.total_time",
+          "sla.target",
+          "sla.elapsed",
+          "sla.remaining",
+          "sla.minutes_short",
+          "sla.hours_short",
+          "sla.days_short",
+          "sla.status.met",
+          "sla.status.overdue",
+          "sla.status.warning",
+          "sla.status.in_progress",
+          "sla.status.completed_late",
+          "sla.status.missed",
+          "sla.active",
+          "sla.completed",
+          "sla.stopped",
+          "sla.status_label",
+          "admin.workloadDashboard.title",
+          "admin.workloadDashboard.description",
+          "admin.workloadDashboard.refresh",
+          "admin.workloadDashboard.rebalance",
+          "admin.workloadDashboard.totalActiveTickets",
+          "admin.workloadDashboard.acrossAllAgents",
+          "admin.workloadDashboard.teamUtilization",
+          "admin.workloadDashboard.availableAgents",
+          "admin.workloadDashboard.outOfTotal",
+          "admin.workloadDashboard.overview",
+          "admin.workloadDashboard.performance",
+          "admin.workloadDashboard.categories",
+          "admin.workloadDashboard.loadingAgentData",
+          "admin.workloadDashboard.noAgentsFound",
+          "admin.workloadDashboard.currentWorkload",
+          "admin.workloadDashboard.tickets",
+          "admin.workloadDashboard.avgResolution",
+          "admin.workloadDashboard.resolutionRate",
+          "admin.workloadDashboard.satisfaction",
+          "admin.workloadDashboard.overloaded",
+          "admin.workloadDashboard.busy",
+          "admin.workloadDashboard.moderate",
+          "admin.workloadDashboard.light",
+          "admin.workloadDashboard.available",
+          "admin.workloadDashboard.away",
+          "admin.workloadDashboard.offline",
+          "admin.workloadDashboard.subcategories",
+          "admin.workloadDashboard.expertLevel",
+          "admin.workloadDashboard.categoryExpertise",
+          "admin.workloadDashboard.expert",
+          "admin.workloadDashboard.advanced",
+          "admin.workloadDashboard.intermediate",
+          "admin.workloadDashboard.basic",
+          "admin.workloadDashboard.specializations",
+          "admin.workloadDashboard.more",
+          "admin.workloadDashboard.customersServed",
+          "admin.workloadDashboard.repeatRate",
+          "admin.workloadDashboard.avgSatisfaction",
+          "admin.workloadDashboard.lastUpdated",
+          "admin.workloadDashboard.accessDenied",
+          "admin.workloadDashboard.workloadRebalanced",
+          "admin.workloadDashboard.rebalancingFailed",
+          "admin.workloadDashboard.rebalancingError",
+          "admin.assignmentRules.title",
+          "admin.assignmentRules.description",
+          "admin.assignmentRules.configuration",
+          "admin.assignmentRules.addRule",
+          "admin.assignmentRules.assignmentRules",
+          "admin.assignmentRules.systemConfiguration",
+          "admin.assignmentRules.analytics",
+          "admin.assignmentRules.noAssignmentRules",
+          "admin.assignmentRules.createFirstRule",
+          "admin.assignmentRules.createRule",
+          "admin.assignmentRules.active",
+          "admin.assignmentRules.disabled",
+          "admin.assignmentRules.conditions",
+          "admin.assignmentRules.actions",
+          "admin.assignmentRules.notifyManager",
+          "admin.assignmentRules.algorithmConfiguration",
+          "admin.assignmentRules.maxConcurrentTickets",
+          "admin.assignmentRules.enableAutoRebalancing",
+          "admin.assignmentRules.saveConfiguration",
+          "admin.assignmentRules.activeRules",
+          "admin.assignmentRules.autoAssignments",
+          "admin.assignmentRules.ofTicketsAssigned",
+          "admin.assignmentRules.avgAssignmentTime",
+          "admin.assignmentRules.averageTimeToAssign",
+          "admin.assignmentRules.ruleName",
+          "admin.assignmentRules.enableRule",
+          "admin.assignmentRules.ticketPriorities",
+          "admin.assignmentRules.assignToSpecificAgent",
+          "admin.assignmentRules.noSpecificAgent",
+          "admin.assignmentRules.notifyManagerWhenTriggered",
+          "admin.assignmentRules.cancel",
+          "admin.assignmentRules.systemConfigurationTitle",
+          "admin.assignmentRules.scoringWeights",
+          "admin.assignmentRules.workloadWeight",
+          "admin.assignmentRules.performanceWeight",
+          "admin.assignmentRules.availabilityWeight",
+          "admin.assignmentRules.capacitySettings",
+          "admin.assignmentRules.maxTicketsPerAgent",
+          "admin.assignmentRules.rebalancingThreshold",
+          "admin.assignmentRules.businessHours",
+          "admin.assignmentRules.startTime",
+          "admin.assignmentRules.endTime",
+          "admin.assignmentRules.timezone",
+          "admin.assignmentRules.easternTime",
+          "admin.assignmentRules.centralTime",
+          "chat.attachFile",
+          "chat.attachImage",
+          "chat.searchMessages",
+          "chat.addReaction",
+          "chat.replyingTo",
+          "chat.fileTooLarge",
+          "chat.fileTypeNotAllowed",
+          "chat.fileUploaded",
+          "chat.uploadFailed",
+          "chat.failedToSend",
+          "chat.imagePreview",
+          "chat.cancel",
+          "chat.sendImage",
+          "chat.isTyping",
+          "chat.areTyping",
+          "chat.internal",
+          "errors.errorLoadingAgents",
+          "errors.errorUploadingFile",
+          "errors.errorRemovingReaction",
+          "errors.errorSendingMessage",
+          "errors.errorAddingReaction",
+          "errors.errorSubmittingFeedback",
+          "errors.errorMarkingAllNotifications",
+          "errors.errorDeletingNotification",
+          "errors.errorCreatingTask",
+          "errors.failedUrl",
+          "errors.errorAssigningTicket",
+          "errors.errorLoadingSessionTimeout",
+          "errors.errorCreatingNotification",
+          "errors.errorMarkingNotificationAsRead",
+          "errors.errorGettingChatMessages",
+          "errors.errorSendingChatMessage",
+          "errors.errorUploadingChatFile",
+          "errors.errorMarkingChatAsRead",
+          "errors.errorGettingChatParticipants",
+          "errors.errorGettingUnreadCount",
+          "errors.validationError",
+          "errors.todoTasksFunctionalityRequired",
+          "errors.errorCreatingSignedUrl"
+        ],
+        "duplicateValues": [
+          {
+            "value": "Guardar",
+            "keys": [
+              "common.save",
+              "admin.userForm.save",
+              "admin.slaConfiguration.save",
+              "todo.actions.save"
+            ]
+          },
+          {
+            "value": "Cancelar",
+            "keys": [
+              "common.cancel",
+              "admin.userManagement.cancel",
+              "admin.userForm.cancel",
+              "admin.slaConfiguration.cancel",
+              "todo.actions.cancel",
+              "todo.edit.cancel"
+            ]
+          },
+          {
+            "value": "Editar",
+            "keys": [
+              "common.edit",
+              "tickets.detail.edit",
+              "admin.slaConfiguration.edit",
+              "todo.actions.edit"
+            ]
+          },
+          {
+            "value": "Eliminar",
+            "keys": [
+              "common.delete",
+              "admin.userManagement.remove",
+              "todo.actions.delete"
+            ]
+          },
+          {
+            "value": "Cerrar",
+            "keys": [
+              "common.close",
+              "tickets.detail.close"
+            ]
+          },
+          {
+            "value": "Cargando...",
+            "keys": [
+              "common.loading",
+              "admin.categoryManagement.loading"
+            ]
+          },
+          {
+            "value": "Error",
+            "keys": [
+              "common.error",
+              "tickets.error",
+              "tickets.bug",
+              "admin.userPasswordDialog.copyError",
+              "auth.error",
+              "integrations.status.error"
+            ]
+          },
+          {
+            "value": "Éxito",
+            "keys": [
+              "common.success",
+              "tickets.success"
+            ]
+          },
+          {
+            "value": "Advertencia",
+            "keys": [
+              "common.warning",
+              "tickets.warningAttachments"
+            ]
+          },
+          {
+            "value": "Atrás",
+            "keys": [
+              "common.back",
+              "tickets.detail.back"
+            ]
+          },
+          {
+            "value": "Enviar",
+            "keys": [
+              "common.send",
+              "common.submit",
+              "chat.send"
+            ]
+          },
+          {
+            "value": "Crear",
+            "keys": [
+              "common.create",
+              "admin.userForm.create"
+            ]
+          },
+          {
+            "value": "Actualizar",
+            "keys": [
+              "common.update",
+              "common.refresh",
+              "header.refresh"
+            ]
+          },
+          {
+            "value": "Vista previa",
+            "keys": [
+              "common.preview",
+              "titles.preview"
+            ]
+          },
+          {
+            "value": "Descargar",
+            "keys": [
+              "common.download",
+              "header.download",
+              "titles.download"
+            ]
+          },
+          {
+            "value": "Subir",
+            "keys": [
+              "common.upload",
+              "header.upload"
+            ]
+          },
+          {
+            "value": "Filtrar",
+            "keys": [
+              "common.filter",
+              "header.filter"
+            ]
+          },
+          {
+            "value": "Limpiar",
+            "keys": [
+              "common.clear",
+              "header.clear"
+            ]
+          },
+          {
+            "value": "Exportar",
+            "keys": [
+              "common.export",
+              "header.export"
+            ]
+          },
+          {
+            "value": "Importar",
+            "keys": [
+              "common.import",
+              "header.import"
+            ]
+          },
+          {
+            "value": "Compartir",
+            "keys": [
+              "common.share",
+              "tickets.detail.share"
+            ]
+          },
+          {
+            "value": "Imprimir",
+            "keys": [
+              "common.print",
+              "tickets.detail.print"
+            ]
+          },
+          {
+            "value": "Total de Tickets",
+            "keys": [
+              "common.totalTickets",
+              "header.totalTickets",
+              "dashboard.totalTickets"
+            ]
+          },
+          {
+            "value": "Agente",
+            "keys": [
+              "common.agent",
+              "header.agent",
+              "profile.agent",
+              "admin.userManagement.agent",
+              "admin.userListItem.agent",
+              "auth.agent",
+              "reports.agent",
+              "notifications.fallback.defaultAgent"
+            ]
+          },
+          {
+            "value": "Usuario Desconocido",
+            "keys": [
+              "common.unknownUser",
+              "header.unknownUser"
+            ]
+          },
+          {
+            "value": "© 2024 AnalytiChem GmbH. Todos los derechos reservados.",
+            "keys": [
+              "common.copyright",
+              "auth.copyright"
+            ]
+          },
+          {
+            "value": "¡Ups! Página no encontrada",
+            "keys": [
+              "common.pageNotFound",
+              "header.pageNotFound"
+            ]
+          },
+          {
+            "value": "Volver al Inicio",
+            "keys": [
+              "common.returnToHome",
+              "header.returnToHome"
+            ]
+          },
+          {
+            "value": "Administrador",
+            "keys": [
+              "common.admin",
+              "header.admin",
+              "profile.admin",
+              "admin.userManagement.administrator",
+              "admin.userListItem.administrator",
+              "auth.administrator"
+            ]
+          },
+          {
+            "value": "Bienvenido de vuelta",
+            "keys": [
+              "common.welcomeBack",
+              "header.welcomeBack",
+              "auth.welcomeBack"
+            ]
+          },
+          {
+            "value": "Buscar tickets...",
+            "keys": [
+              "search.placeholder",
+              "agentDashboard.searchPlaceholder",
+              "placeholders.searchTickets"
+            ]
+          },
+          {
+            "value": "Estado",
+            "keys": [
+              "filter.status",
+              "todo.edit.status.label",
+              "agentDashboard.statusFilter",
+              "reports.status"
+            ]
+          },
+          {
+            "value": "Prioridad",
+            "keys": [
+              "filter.priority",
+              "todo.priorityLabel",
+              "agentDashboard.priorityFilter",
+              "reports.priority"
+            ]
+          },
+          {
+            "value": "Todos los Estados",
+            "keys": [
+              "filter.allStatuses",
+              "tickets.allStatus"
+            ]
+          },
+          {
+            "value": "Todas las Prioridades",
+            "keys": [
+              "filter.allPriorities",
+              "tickets.allPriorities",
+              "todo.allPriorities"
+            ]
+          },
+          {
+            "value": "Panel",
+            "keys": [
+              "navigation.dashboard",
+              "sidebar.dashboard"
+            ]
+          },
+          {
+            "value": "Mis Tickets",
+            "keys": [
+              "navigation.myTickets",
+              "sidebar.myTickets",
+              "dashboard.myTickets",
+              "agentDashboard.myTickets"
+            ]
+          },
+          {
+            "value": "Tickets Abiertos",
+            "keys": [
+              "navigation.openTickets",
+              "sidebar.openTickets",
+              "dashboard.openTickets"
+            ]
+          },
+          {
+            "value": "En Progreso",
+            "keys": [
+              "navigation.inProgressTickets",
+              "sidebar.inProgressTickets",
+              "status.inProgress",
+              "todo.inProgressLabel"
+            ]
+          },
+          {
+            "value": "Resueltos",
+            "keys": [
+              "navigation.resolvedTickets",
+              "sidebar.resolvedTickets"
+            ]
+          },
+          {
+            "value": "Cerrados",
+            "keys": [
+              "navigation.closedTickets",
+              "sidebar.closedTickets"
+            ]
+          },
+          {
+            "value": "Base de Conocimiento",
+            "keys": [
+              "navigation.knowledge",
+              "sidebar.knowledgeBase",
+              "tickets.knowledgeBase"
+            ]
+          },
+          {
+            "value": "Informes",
+            "keys": [
+              "navigation.reports",
+              "sidebar.reports",
+              "reports.title"
+            ]
+          },
+          {
+            "value": "Integraciones",
+            "keys": [
+              "navigation.integrations",
+              "sidebar.integrations",
+              "integrations.title"
+            ]
+          },
+          {
+            "value": "Administración",
+            "keys": [
+              "navigation.admin",
+              "sidebar.administration"
+            ]
+          },
+          {
+            "value": "Configuración",
+            "keys": [
+              "navigation.settings",
+              "settings.title"
+            ]
+          },
+          {
+            "value": "Notificaciones",
+            "keys": [
+              "navigation.notifications",
+              "tickets.notifications",
+              "profile.notifications",
+              "todo.notificationsSection",
+              "notifications.title",
+              "settings.tabs.notifications"
+            ]
+          },
+          {
+            "value": "Panel del Agente",
+            "keys": [
+              "navigation.agentDashboard",
+              "sidebar.agentDashboard",
+              "agentDashboard.title"
+            ]
+          },
+          {
+            "value": "Solicitudes de Reapertura",
+            "keys": [
+              "navigation.reopenRequests",
+              "reopen.title",
+              "reopen.pageTitle"
+            ]
+          },
+          {
+            "value": "Tareas",
+            "keys": [
+              "navigation.todo",
+              "sidebar.todo",
+              "tickets.detail.tasks"
+            ]
+          },
+          {
+            "value": "Gestión de Usuarios",
+            "keys": [
+              "navigation.adminUsers",
+              "admin.userManagement.title"
+            ]
+          },
+          {
+            "value": "Gestión de Categorías",
+            "keys": [
+              "navigation.adminCategories",
+              "admin.categoryManagement.title"
+            ]
+          },
+          {
+            "value": "Menú Principal",
+            "keys": [
+              "navigation.mainMenu",
+              "sidebar.mainMenu"
+            ]
+          },
+          {
+            "value": "Tiempo Promedio de Resolución",
+            "keys": [
+              "dashboard.avgResolutionTime",
+              "profile.avgResolutionTime"
+            ]
+          },
+          {
+            "value": "Cumplimiento SLA",
+            "keys": [
+              "dashboard.slaCompliance",
+              "agentDashboard.slaCompliance"
+            ]
+          },
+          {
+            "value": "Resueltos Hoy",
+            "keys": [
+              "dashboard.resolvedToday",
+              "agentDashboard.resolvedToday"
+            ]
+          },
+          {
+            "value": "No se encontraron tickets",
+            "keys": [
+              "tickets.noTicketsFound",
+              "agentDashboard.noTicketsTitle"
+            ]
+          },
+          {
+            "value": "Cargando notificaciones...",
+            "keys": [
+              "tickets.loadingNotifications",
+              "notifications.loading"
+            ]
+          },
+          {
+            "value": "Sin notificaciones",
+            "keys": [
+              "tickets.noNotifications",
+              "notifications.empty",
+              "notifications.noNotifications"
+            ]
+          },
+          {
+            "value": "Marcar todas como leídas",
+            "keys": [
+              "tickets.markAllAsRead",
+              "notifications.markAllRead"
+            ]
+          },
+          {
+            "value": "Monitoreo SLA",
+            "keys": [
+              "tickets.slaMonitoring",
+              "tickets.detail.slaMonitoring"
+            ]
+          },
+          {
+            "value": "Etiquetas",
+            "keys": [
+              "tickets.tags",
+              "tickets.detail.tags",
+              "todo.edit.tags",
+              "todo.tagsSection"
+            ]
+          },
+          {
+            "value": "Faltan campos obligatorios",
+            "keys": [
+              "tickets.requiredFieldsMissing",
+              "tickets.requiredFieldsMissingDynamic"
+            ]
+          },
+          {
+            "value": "Ticket asignado",
+            "keys": [
+              "tickets.ticketAssigned",
+              "profile.assignedTicket"
+            ]
+          },
+          {
+            "value": "Información Personal",
+            "keys": [
+              "tickets.personalInformation",
+              "profile.personalInformation"
+            ]
+          },
+          {
+            "value": "Descripción",
+            "keys": [
+              "tickets.detail.description",
+              "todo.descriptionLabel"
+            ]
+          },
+          {
+            "value": "Chat",
+            "keys": [
+              "tickets.detail.chat",
+              "chat.tab"
+            ]
+          },
+          {
+            "value": "Comentarios",
+            "keys": [
+              "tickets.detail.comments",
+              "tickets.detail.feedback"
+            ]
+          },
+          {
+            "value": "Categoría",
+            "keys": [
+              "tickets.detail.category",
+              "reports.category"
+            ]
+          },
+          {
+            "value": "Fecha de Vencimiento",
+            "keys": [
+              "tickets.detail.dueDate",
+              "todo.dueDateLabel",
+              "todo.edit.dueDate"
+            ]
+          },
+          {
+            "value": "Asignado a",
+            "keys": [
+              "tickets.detail.assignee",
+              "todo.edit.assignedTo",
+              "agentDashboard.assignedTo"
+            ]
+          },
+          {
+            "value": "Campos Personalizados",
+            "keys": [
+              "tickets.detail.customFields",
+              "admin.categoryManagement.customFields"
+            ]
+          },
+          {
+            "value": "Pendiente",
+            "keys": [
+              "status.pending",
+              "reopen.status.pending"
+            ]
+          },
+          {
+            "value": "Volver al Panel",
+            "keys": [
+              "profile.backToDashboard",
+              "settings.backToDashboard"
+            ]
+          },
+          {
+            "value": "Seguridad",
+            "keys": [
+              "profile.security",
+              "settings.tabs.security"
+            ]
+          },
+          {
+            "value": "Cambiar Contraseña",
+            "keys": [
+              "profile.changePassword",
+              "settings.security.title",
+              "settings.security.changePassword"
+            ]
+          },
+          {
+            "value": "Usuario",
+            "keys": [
+              "profile.user",
+              "admin.userManagement.user",
+              "admin.userListItem.user",
+              "auth.user"
+            ]
+          },
+          {
+            "value": "Nuevo Usuario",
+            "keys": [
+              "admin.userManagement.newUser",
+              "admin.userForm.newUser"
+            ]
+          },
+          {
+            "value": "Editar Usuario",
+            "keys": [
+              "admin.userManagement.editUser",
+              "admin.userForm.editUser"
+            ]
+          },
+          {
+            "value": "Enviar email de invitación",
+            "keys": [
+              "admin.userManagement.sendInvitation",
+              "admin.userListItem.sendInvitation"
+            ]
+          },
+          {
+            "value": "Generar nueva contraseña temporal",
+            "keys": [
+              "admin.userManagement.resetTempPassword",
+              "admin.userListItem.generateTempPassword"
+            ]
+          },
+          {
+            "value": "Email",
+            "keys": [
+              "admin.userForm.email",
+              "auth.email"
+            ]
+          },
+          {
+            "value": "Iniciar Sesión",
+            "keys": [
+              "auth.login",
+              "auth.signIn"
+            ]
+          },
+          {
+            "value": "Registrarse",
+            "keys": [
+              "auth.register",
+              "auth.signUp"
+            ]
+          },
+          {
+            "value": "Cerrar Sesión",
+            "keys": [
+              "auth.logout",
+              "auth.signOut"
+            ]
+          },
+          {
+            "value": "¿No tienes una cuenta?",
+            "keys": [
+              "auth.dontHaveAccount",
+              "auth.noAccount"
+            ]
+          },
+          {
+            "value": "Ingresa tu nueva contraseña",
+            "keys": [
+              "auth.enterNewPassword",
+              "auth.enterNewPasswordPlaceholder",
+              "settings.security.enterNewPassword"
+            ]
+          },
+          {
+            "value": "Nueva Contraseña",
+            "keys": [
+              "auth.newPassword",
+              "settings.security.newPassword"
+            ]
+          },
+          {
+            "value": "Confirmar Nueva Contraseña",
+            "keys": [
+              "auth.confirmNewPassword",
+              "settings.security.confirmPassword"
+            ]
+          },
+          {
+            "value": "Confirma tu nueva contraseña",
+            "keys": [
+              "auth.confirmNewPasswordPlaceholder",
+              "settings.security.confirmNewPassword"
+            ]
+          },
+          {
+            "value": "Las contraseñas no coinciden",
+            "keys": [
+              "auth.passwordsDontMatch",
+              "messages.passwordsDoNotMatch",
+              "settings.security.errors.passwordsDontMatch"
+            ]
+          },
+          {
+            "value": "La nueva contraseña debe tener al menos 6 caracteres",
+            "keys": [
+              "messages.passwordTooShort",
+              "settings.security.errors.passwordTooShort"
+            ]
+          },
+          {
+            "value": "Pendientes",
+            "keys": [
+              "todo.pendingLabel",
+              "reopen.pending"
+            ]
+          },
+          {
+            "value": "Ticket Relacionado",
+            "keys": [
+              "todo.edit.relatedTicket",
+              "todo.relatedTicketLabel"
+            ]
+          },
+          {
+            "value": "Sin ticket",
+            "keys": [
+              "todo.edit.noTicket",
+              "todo.noTicket"
+            ]
+          },
+          {
+            "value": "Ingrese una etiqueta...",
+            "keys": [
+              "todo.tagPlaceholder",
+              "placeholders.enterTag"
+            ]
+          },
+          {
+            "value": "ID del número de teléfono",
+            "keys": [
+              "integrations.phoneNumberId",
+              "integrations.phoneNumberIdPlaceholder"
+            ]
+          },
+          {
+            "value": "Mensaje de prueba...",
+            "keys": [
+              "integrations.testMessagePlaceholder",
+              "placeholders.testMessage"
+            ]
+          },
+          {
+            "value": "Agregar un comentario...",
+            "keys": [
+              "comments.addPlaceholder",
+              "placeholders.addComment"
+            ]
+          }
+        ],
+        "emptyValues": [],
+        "untranslatedValues": [
+          "common.error",
+          "common.no",
+          "common.not_available",
+          "navigation.tickets",
+          "sidebar.debug",
+          "tickets.error",
+          "tickets.detail.chat",
+          "profile.english",
+          "admin.userForm.email",
+          "admin.userForm.emailRequired",
+          "admin.userPasswordDialog.email",
+          "admin.userPasswordDialog.copyError",
+          "auth.email",
+          "auth.error",
+          "todo.linkedTicket",
+          "integrations.status.error",
+          "integrations.apiKey",
+          "chat.tab"
+        ]
+      }
+    }
+  },
+  "recommendations": [
+    {
+      "type": "missing_keys",
+      "priority": "high",
+      "message": "Found 831 missing translation keys across all languages",
+      "action": "Add missing translation keys to ensure complete localization"
+    }
+  ]
+}

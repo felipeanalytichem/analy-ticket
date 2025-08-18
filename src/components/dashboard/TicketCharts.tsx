@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import DatabaseService from '@/lib/database';
 import { useAuth } from "@/contexts/AuthContext";
 import { Download, RefreshCw } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export const TicketCharts = () => {
   const [statusData, setStatusData] = useState([]);
@@ -14,6 +15,7 @@ export const TicketCharts = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { userProfile } = useAuth();
+  const { t } = useTranslation();
 
   const loadChartData = async () => {
     if (!userProfile?.id) {
@@ -39,10 +41,10 @@ export const TicketCharts = () => {
       };
 
       const statusChartData = [
-        { name: "Open", value: statusCounts.open, color: "#6b7280" },
-        { name: "In Progress", value: statusCounts.in_progress, color: "#3b82f6" },
-        { name: "Resolved", value: statusCounts.resolved, color: "#10b981" },
-        { name: "Closed", value: statusCounts.closed, color: "#6b7280" }
+        { name: t('status.open'), value: statusCounts.open, color: "#6b7280" },
+        { name: t('status.inProgress'), value: statusCounts.in_progress, color: "#3b82f6" },
+        { name: t('status.resolved'), value: statusCounts.resolved, color: "#10b981" },
+        { name: t('status.closed'), value: statusCounts.closed, color: "#6b7280" }
       ].filter(item => item.value > 0); // Only show statuses with tickets
 
       setStatusData(statusChartData);
@@ -91,7 +93,7 @@ export const TicketCharts = () => {
 
     } catch (error) {
       console.error('Error loading chart data:', error);
-      setError('Failed to load chart data. Please try again.');
+      setError(t('common.error'));
     } finally {
       setLoading(false);
     }
@@ -115,7 +117,7 @@ export const TicketCharts = () => {
       role="region"
     >
       <h2 id="ticket-charts-title" className="sr-only">
-        Ticket Analytics Charts
+        {t('dashboard.ticketAnalyticsCharts')}
       </h2>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Status Distribution */}
@@ -129,8 +131,8 @@ export const TicketCharts = () => {
             Pie chart showing ticket status distribution: {statusData.map(item => `${item.name}: ${item.value} tickets`).join(', ')}
           </div>
           <CustomChartContainer
-            title="Status Distribution"
-            description="Current ticket status breakdown"
+            title={t('dashboard.statusDistribution')}
+            description={t('dashboard.statusDistributionDescription')}
             loading={loading}
             error={error}
             onRetry={loadChartData}
@@ -142,7 +144,7 @@ export const TicketCharts = () => {
                 aria-label="Export status distribution chart data"
               >
                 <Download className="h-4 w-4 mr-2" aria-hidden="true" />
-                Export
+                {t('dashboard.exportData')}
               </Button>
             }
           >
@@ -170,7 +172,7 @@ export const TicketCharts = () => {
                 role="status"
                 aria-label="No status distribution data available"
               >
-                No data available
+                {t('dashboard.noDataAvailable')}
               </div>
             )}
           </CustomChartContainer>
@@ -187,8 +189,8 @@ export const TicketCharts = () => {
             Bar chart showing agent performance: {agentData.map(item => `${item.name}: ${item.tickets} tickets`).join(', ')}
           </div>
           <CustomChartContainer
-            title="Agent Performance"
-            description="Tickets handled by each agent"
+            title={t('dashboard.agentPerformance')}
+            description={t('dashboard.agentPerformanceDescription')}
             loading={loading}
             error={error}
             onRetry={loadChartData}
@@ -201,7 +203,7 @@ export const TicketCharts = () => {
                   aria-label="Refresh agent performance data"
                 >
                   <RefreshCw className="h-4 w-4 mr-2" aria-hidden="true" />
-                  Refresh
+                  {t('dashboard.refreshData')}
                 </Button>
                 <Button 
                   variant="outline" 
@@ -209,7 +211,7 @@ export const TicketCharts = () => {
                   aria-label="Export agent performance chart data"
                 >
                   <Download className="h-4 w-4 mr-2" aria-hidden="true" />
-                  Export
+                  {t('dashboard.exportData')}
                 </Button>
               </div>
             }
@@ -229,7 +231,7 @@ export const TicketCharts = () => {
                 role="status"
                 aria-label="No agent performance data available"
               >
-                No agents with assigned tickets
+                {t('dashboard.noAgentsWithTickets')}
               </div>
             )}
           </CustomChartContainer>
@@ -247,8 +249,8 @@ export const TicketCharts = () => {
             Line chart showing ticket timeline over the last 7 days. Shows trends for tickets created and resolved each day. Created tickets are shown in blue, resolved tickets in green.
           </div>
           <CustomChartContainer
-            title="Ticket Timeline"
-            description="Created vs resolved tickets over the last 7 days"
+            title={t('dashboard.ticketTimeline')}
+            description={t('dashboard.ticketTimelineDescription')}
             loading={loading}
             error={error}
             onRetry={loadChartData}
@@ -260,14 +262,14 @@ export const TicketCharts = () => {
                   size="sm"
                   aria-label="Show data for last 7 days"
                 >
-                  Last 7 days
+                  {t('dashboard.last7Days')}
                 </Button>
                 <Button 
                   variant="outline" 
                   size="sm"
                   aria-label="Show data for last 30 days"
                 >
-                  Last 30 days
+                  {t('dashboard.last30Days')}
                 </Button>
                 <Button 
                   variant="outline" 
@@ -275,7 +277,7 @@ export const TicketCharts = () => {
                   aria-label="Export ticket timeline chart data"
                 >
                   <Download className="h-4 w-4 mr-2" aria-hidden="true" />
-                  Export
+                  {t('dashboard.exportData')}
                 </Button>
               </div>
             }
@@ -308,7 +310,7 @@ export const TicketCharts = () => {
                 role="status"
                 aria-label="No ticket timeline data available"
               >
-                No timeline data available
+                {t('dashboard.noTimelineData')}
               </div>
             )}
           </CustomChartContainer>

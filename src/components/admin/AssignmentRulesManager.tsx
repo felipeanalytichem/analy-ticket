@@ -34,6 +34,8 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import type { Database } from '@/integrations/supabase/types';
+import { SafeTranslation } from '@/components/ui/SafeTranslation';
+import { useTranslation } from 'react-i18next';
 
 type TicketPriority = Database['public']['Enums']['ticket_priority'];
 type UserRole = Database['public']['Enums']['user_role'];
@@ -81,6 +83,7 @@ export interface AssignmentConfig {
 }
 
 export const AssignmentRulesManager = () => {
+  const { t } = useTranslation();
   const [rules, setRules] = useState<AssignmentRule[]>([]);
   const [config, setConfig] = useState<AssignmentConfig>({
     workloadWeight: 40,
@@ -172,8 +175,8 @@ export const AssignmentRulesManager = () => {
     } catch (error) {
       console.error('Error loading rules:', error);
       toast({
-        title: "Error loading rules",
-        description: "Failed to load assignment rules",
+        title: t('common.error'),
+        description: t('admin.assignmentRules.errorLoadingRules', 'Failed to load assignment rules'),
         variant: "destructive",
       });
     } finally {
@@ -204,8 +207,8 @@ export const AssignmentRulesManager = () => {
     } catch (error) {
       console.error('Error loading config:', error);
       toast({
-        title: "Error",
-        description: "Failed to load configuration settings",
+        title: t('common.error'),
+        description: t('admin.assignmentRules.errorLoadingConfig', 'Failed to load configuration settings'),
         variant: "destructive",
       });
     }
@@ -231,8 +234,8 @@ export const AssignmentRulesManager = () => {
     } catch (error) {
       console.error('Error loading agents:', error);
       toast({
-        title: "Error loading agents",
-        description: "Failed to load available agents",
+        title: t('common.error'),
+        description: t('admin.assignmentRules.errorLoadingAgents', 'Failed to load available agents'),
         variant: "destructive",
       });
     }
@@ -479,9 +482,11 @@ export const AssignmentRulesManager = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Assignment Rules Manager</h1>
+          <h1 className="text-2xl font-bold">
+            <SafeTranslation i18nKey="admin.assignmentRules.title" fallback="Assignment Rules Manager" />
+          </h1>
           <p className="text-muted-foreground">
-            Configure intelligent ticket assignment rules and system settings
+            <SafeTranslation i18nKey="admin.assignmentRules.description" fallback="Configure intelligent ticket assignment rules and system settings" />
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -490,7 +495,7 @@ export const AssignmentRulesManager = () => {
             onClick={() => setIsConfigDialogOpen(true)}
           >
             <Settings className="h-4 w-4 mr-2" />
-            Configuration
+            <SafeTranslation i18nKey="admin.assignmentRules.configuration" fallback="Configuration" />
           </Button>
           <Button
             onClick={() => {
@@ -499,16 +504,22 @@ export const AssignmentRulesManager = () => {
             }}
           >
             <Plus className="h-4 w-4 mr-2" />
-            Add Rule
+            <SafeTranslation i18nKey="admin.assignmentRules.addRule" fallback="Add Rule" />
           </Button>
         </div>
       </div>
 
       <Tabs defaultValue="rules" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="rules">Assignment Rules</TabsTrigger>
-          <TabsTrigger value="config">System Configuration</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsTrigger value="rules">
+            <SafeTranslation i18nKey="admin.assignmentRules.assignmentRules" fallback="Assignment Rules" />
+          </TabsTrigger>
+          <TabsTrigger value="config">
+            <SafeTranslation i18nKey="admin.assignmentRules.systemConfiguration" fallback="System Configuration" />
+          </TabsTrigger>
+          <TabsTrigger value="analytics">
+            <SafeTranslation i18nKey="admin.assignmentRules.analytics" fallback="Analytics" />
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="rules" className="space-y-4">

@@ -213,16 +213,16 @@ export const TicketDetailsDialog = ({
       // Create notification for self-assignment
       await DatabaseService.createTicketNotification(currentTicket.id, 'assignment_changed', userProfile.id);
 
-      toast.success("Ticket atribuído", {
-        description: "O ticket foi atribuído a você com sucesso."
+      toast.success(t('tickets.ticketAssigned'), {
+        description: t('tickets.ticketAssignedSuccessfully')
       });
 
       refreshTicketData();
       triggerRefresh();
     } catch (error) {
       console.error('Error assigning ticket:', error);
-      toast.error("Erro ao atribuir ticket", {
-        description: "Ocorreu um erro ao atribuir o ticket. Por favor, tente novamente."
+      toast.error(t('tickets.errorAssigningTicket'), {
+        description: t('tickets.errorAssigningTicketMessage')
       });
     } finally {
       setIsAssigning(false);

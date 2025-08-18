@@ -1,0 +1,836 @@
+{
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "close": "Cerrar",
+    "confirm": "Confirmar",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "warning": "Advertencia",
+    "info": "Información",
+    "yes": "Sí",
+    "no": "No",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "search": "Buscar",
+    "searchPlaceholder": "Buscar...",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "save": "Guardar", 
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "remove": "Quitar",
+    "close": "Cerrar",
+    "send": "Enviar",
+    "submit": "Enviar",
+    "create": "Crear",
+    "update": "Actualizar",
+    "preview": "Vista previa",
+    "download": "Descargar",
+    "upload": "Subir",
+    "titlePlaceholder": "Ingrese título...",
+    "descriptionPlaceholder": "Ingrese descripción..."
+  },
+  "header": {
+    "searchPlaceholder": "Buscar tickets, usuarios...",
+    "filter": "Filtrar",
+    "clear": "Limpiar",
+    "refresh": "Actualizar",
+    "export": "Exportar",
+    "import": "Importar",
+    "download": "Descargar",
+    "upload": "Subir",
+    "totalTickets": "Total de Tickets",
+    "agent": "Agente",
+    "unknownUser": "Usuario Desconocido",
+    "pageNotFound": "¡Ups! Página no encontrada",
+    "returnToHome": "Volver al Inicio",
+    "admin": "Administrador",
+    "welcomeBack": "Bienvenido de vuelta"
+  },
+  "search": {
+    "placeholder": "Buscar tickets..."
+  },
+  "filter": {
+    "status": "Estado",
+    "priority": "Prioridad",
+    "allStatuses": "Todos los Estados",
+    "allPriorities": "Todas las Prioridades"
+  },
+  "navigation": {
+    "dashboard": "Panel",
+    "tickets": "Tickets",
+    "myTickets": "Mis Tickets",
+    "allTickets": "Todos los Tickets",
+    "openTickets": "Tickets Abiertos",
+    "inProgressTickets": "En Progreso",
+    "resolvedTickets": "Resueltos",
+    "closedTickets": "Cerrados",
+    "analytics": "Análisis",
+    "knowledge": "Base de Conocimiento",
+    "reports": "Informes",
+    "integrations": "Integraciones",
+    "admin": "Administración",
+    "profile": "Perfil",
+    "settings": "Configuración",
+    "notifications": "Notificaciones",
+    "logout": "Cerrar sesión",
+    "agentDashboard": "Panel del Agente",
+    "reopenRequests": "Solicitudes de Reapertura",
+    "todo": "Tareas",
+    "adminUsers": "Gestión de Usuarios",
+    "adminCategories": "Gestión de Categorías",
+    "adminSla": "Configuración SLA",
+    "knowledgeAdmin": "Admin Conocimiento",
+    "mainMenu": "Menú Principal"
+  },
+  "theme": {
+    "toggle": "Alternar tema",
+    "switchToDark": "Cambiar a tema oscuro",
+    "switchToLight": "Cambiar a tema claro",
+    "switchToSystem": "Cambiar a tema del sistema"
+  },
+  "sidebar": {
+    "dashboard": "Panel",
+    "analytics": "Analíticas",
+    "createTicket": "Crear Ticket",
+    "myTickets": "Mis Tickets",
+    "openTickets": "Tickets Abiertos",
+    "agentDashboard": "Panel del Agente",
+    "inProgressTickets": "En Progreso",
+    "unassignedTickets": "Tickets Sin Asignar",
+    "allAgentTickets": "Todos los Tickets de Agentes",
+    "resolvedTickets": "Resueltos",
+    "closedTickets": "Cerrados",
+    "reopenRequests": "Reapertura",
+    "todo": "Tareas",
+    "knowledgeBase": "Base de Conocimiento",
+    "reports": "Informes",
+    "integrations": "Integraciones",
+    "userManagement": "Usuarios",
+    "categoryManagement": "Categorías",
+    "slaConfiguration": "Config SLA",
+    "knowledgeAdmin": "Admin BC",
+    "debug": "Debug",
+    "helpDeskSystem": "Sistema de Help Desk",
+    "mainMenu": "Menú Principal",
+    "administration": "Administración"
+  },
+  "dashboard": {
+    "welcome": "Bienvenido",
+    "totalTickets": "Total de Tickets",
+    "avgResponseTime": "Tiempo Promedio de Respuesta",
+    "avgResolutionTime": "Tiempo Promedio de Resolución",
+    "slaCompliance": "Cumplimiento SLA",
+    "customerSatisfaction": "Satisfacción del Cliente",
+    "firstContactResolution": "Resolución en Primer Contacto",
+    "avgResponseTime": "Tiempo Medio de Respuesta",
+    "slaCompliance": "Cumplimiento SLA",
+    "activeAgents": "Agentes Activos",
+    "resolvedToday": "Resueltos Hoy",
+    "criticalPending": "Críticos Pendientes",
+    "goal": "Meta",
+    "thisMonth": "este mes",
+    "available": "Disponibles",
+    "dailyGoal": "Meta diaria",
+    "urgentAttention": "Atención urgente",
+    "allGood": "Todo bien",
+    "openTickets": "Tickets Abiertos",
+    "resolvedTickets": "Tickets Resueltos",
+    "closedTickets": "Tickets Cerrados",
+    "myTickets": "Mis Tickets",
+    "assignedToMe": "Asignados a Mí",
+    "overdueTickets": "Tickets Vencidos",
+    "recentTickets": "Tickets Recientes",
+    "lastTicketsCreated": "Últimos tickets creados"
+  },
+  "tickets": {
+    "newTicket": "Nuevo Ticket",
+    "ticketNumber": "Número de Ticket",
+    "title": "Título",
+    "description": "Descripción",
+    "status": {
+      "open": "Abierto",
+      "pending": "Pendiente",
+      "inProgress": "En Progreso",
+      "resolved": "Resuelto",
+      "closed": "Cerrado"
+    },
+    "priority": "Prioridad",
+    "category": "Categoría",
+    "assignedTo": "Asignado A",
+    "createdBy": "Creado Por",
+    "createdAt": "Creado En",
+    "updatedAt": "Actualizado En",
+    "resolvedAt": "Resuelto En",
+    "closedAt": "Cerrado En",
+    "resolution": "Resolución",
+    "comments": "Comentarios",
+    "addComment": "Añadir Comentario",
+    "untitled": "Sin título",
+    "resolve": {
+      "title": "Resolver Ticket",
+      "currentStatus": "Estado actual",
+      "resolutionNotes": "Notas de Resolución",
+      "resolutionNotesPlaceholder": "Describe detalladamente la solución implementada, pasos realizados, herramientas utilizadas, etc...",
+      "resolutionNotesRequired": "Por favor, añade notas de resolución.",
+      "tip": "Consejo",
+      "tipText": "Explica cómo se resolvió el problema para referencia futura. Incluye pasos específicos, soluciones aplicadas y cualquier información relevante.",
+      "resolving": "Resolviendo...",
+      "resolveButton": "Resolver Ticket",
+      "successTitle": "Ticket Resuelto",
+      "successDescription": "El ticket ha sido marcado como resuelto.",
+      "error": "Error al resolver el ticket",
+      "errorDefault": "Error al resolver el ticket. Por favor, inténtalo de nuevo."
+    },
+    "close": {
+      "title": "Cerrar Ticket",
+      "infoTitle": "Confirmación de Cierre",
+      "infoDesc": "Por favor, confirme que desea cerrar este ticket. Esta acción no se puede deshacer.",
+      "statusLabel": "Estado Actual",
+      "closing": "Cerrando...",
+      "confirm": "Cerrar Ticket",
+      "errors": {
+        "title": "Error al Cerrar Ticket",
+        "generic": "Ocurrió un error al cerrar el ticket. Por favor, intente nuevamente.",
+        "notResolved": "Solo los tickets resueltos pueden ser cerrados. Estado actual: {{status}}",
+        "emptyResolution": "El campo de resolución debe estar completo para cerrar el ticket.",
+        "noResolvedDate": "La fecha de resolución debe estar definida para cerrar el ticket.",
+        "cannotClose": "Este ticket no puede ser cerrado:",
+        "statusMustBeResolved": "El estado debe ser \"Resuelto\" (actual: {{status}})",
+        "resolutionRequired": "El campo de resolución debe estar completo",
+        "resolvedDateRequired": "La fecha de resolución debe estar definida"
+      },
+      "success": {
+        "title": "Ticket Cerrado",
+        "description": "El ticket ha sido cerrado exitosamente."
+      }
+    },
+    "by": "por",
+    "assigned": "asignado:",
+    "feedbackReceived": "Feedback Recibido",
+    "userRatedService": "El usuario ha evaluado este servicio",
+    "clickToViewRating": "Haga clic para ver los detalles de la evaluación",
+    "assign": {
+      "title": "Asignar Ticket",
+      "currentStatus": "Estado Actual",
+      "aboutToAssign": "Está a punto de asignar este ticket. Por favor, tenga en cuenta:",
+      "responsibility1": "El agente asignado será el punto principal de contacto",
+      "responsibility2": "Recibirá notificaciones de actualizaciones",
+      "responsibility3": "Debe responder dentro de los objetivos de SLA",
+      "responsibility4": "El ticket puede ser transferido más tarde si es necesario",
+      "assignToMe": "Asignar a Mí",
+      "assignToAgent": "Asignar a Agente",
+      "selectAgent": "Seleccionar Agente",
+      "selectAgentPlaceholder": "Seleccione un agente para asignar...",
+      "loadAgentsError": "Error al cargar la lista de agentes",
+      "successTitle": "Ticket Asignado",
+      "successDescription": "El ticket ha sido asignado exitosamente",
+      "error": "Error al asignar ticket",
+      "errorDefault": "Ocurrió un error al asignar el ticket",
+      "assigning": "Asignando...",
+      "assignButton": "Asignar Agente",
+      "loading": "Cargando..."
+    },
+    "actions": {
+      "assign": "Asignar",
+      "assignToMe": "Asignar a Mí",
+      "reassign": "Reasignar",
+      "edit": "Editar",
+      "resolve": "Resolver",
+      "close": "Cerrar",
+      "reopen": "Reabrir",
+      "delete": "Eliminar",
+      "viewDetails": "Ver Detalles",
+      "transfer": "Transferir"
+    },
+    "fields": {
+      "title": "Título",
+      "description": "Descripción",
+      "priority": "Prioridad",
+      "category": "Categoría",
+      "subcategory": "Subcategoría",
+      "country": "País",
+      "status": "Estado",
+      "assignedTo": "Asignado a",
+      "createdAt": "Creado el",
+      "updatedAt": "Actualizado el",
+      "resolvedAt": "Resuelto el",
+      "closedAt": "Cerrado el"
+    },
+    "placeholders": {
+      "title": "Ingrese el título del ticket",
+      "description": "Ingrese la descripción del ticket",
+      "selectPriority": "Seleccione la prioridad",
+      "selectCategory": "Seleccione la categoría",
+      "selectSubcategory": "Seleccione la subcategoría",
+      "selectCountry": "Seleccione el país",
+      "selectStatus": "Seleccione el estado",
+      "selectAssignee": "Seleccione el asignado"
+    }
+  },
+  "status": {
+    "open": "Abierto",
+    "pending": "Pendiente",
+    "inProgress": "En Progreso",
+    "resolved": "Resuelto",
+    "closed": "Cerrado"
+  },
+  "priority": {
+    "low": "Baja",
+    "medium": "Media",
+    "high": "Alta",
+    "urgent": "Urgente"
+  },
+  "profile": {
+    "userProfile": "Perfil de Usuario",
+    "backToDashboard": "Volver al Panel",
+    "personalInformation": "Información Personal",
+    "preferences": "Preferencias",
+    "personalStatistics": "Estadísticas Personales",
+    "recentActivities": "Actividades Recientes",
+    "security": "Seguridad",
+    "editProfile": "Editar Perfil",
+    "changePassword": "Cambiar Contraseña",
+    "savePreferences": "Guardar Preferencias",
+    "interfaceTheme": "Tema de la Interfaz",
+    "language": "Idioma",
+    "notifications": "Notificaciones",
+    "soundNotifications": "Notificaciones de sonido",
+    "toastNotifications": "Notificaciones toast",
+    "updateFrequency": "Frecuencia de actualización",
+    "realtime": "Tiempo real",
+    "every30s": "Cada 30 segundos",
+    "every1m": "Cada minuto",
+    "every5m": "Cada 5 minutos",
+    "light": "☀️ Claro",
+    "dark": "🌙 Oscuro",
+    "system": "🖥️ Sistema",
+    "english": "🇺🇸 English",
+    "portuguese": "🇧🇷 Português",
+    "spanish": "🇪🇸 Español",
+    "keepAccountSecure": "Mantén tu cuenta segura",
+    "lastLogin": "Último inicio de sesión",
+    "activeSessions": "Sesiones activas",
+    "twoFactorAuth": "Autenticación de dos factores",
+    "comingSoon": "Próximamente",
+    "totalCreated": "Total Creados",
+    "totalAssigned": "Total Asignados",
+    "avgResolutionTime": "Tiempo Promedio de Resolución",
+    "statusBreakdown": "Desglose por Estado",
+    "noRecentActivities": "No hay actividades recientes",
+    "createdTicket": "Creó ticket",
+    "assignedTicket": "Ticket asignado",
+    "resolvedTicket": "Ticket resuelto",
+    "categoryRequest": "Solicitud de cambio de categoría",
+    "user": "Usuario",
+    "agent": "Agente",
+    "admin": "Administrador"
+  },
+  "auth": {
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "logout": "Cerrar Sesión",
+    "email": "Email",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar Contraseña",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "resetPassword": "Restablecer Contraseña",
+    "rememberMe": "Recordarme",
+    "dontHaveAccount": "¿No tienes una cuenta?",
+    "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+    "signIn": "Iniciar Sesión",
+    "signUp": "Registrarse",
+    "signOut": "Cerrar Sesión",
+    "invalidOrExpiredResetLink": "Enlace de restablecimiento inválido o expirado.",
+    "passwordReset": "¡Contraseña restablecida!",
+    "passwordResetSuccess": "Tu contraseña ha sido restablecida exitosamente.",
+    "canLoginWithNewPassword": "Ahora puedes iniciar sesión con tu nueva contraseña.",
+    "goToLogin": "Ir a Iniciar Sesión",
+    "enterNewPassword": "Ingresa tu nueva contraseña",
+    "newPassword": "Nueva Contraseña",
+    "chooseStrongPassword": "Elige una contraseña fuerte para tu cuenta",
+    "enterNewPasswordPlaceholder": "Ingresa tu nueva contraseña",
+    "confirmNewPassword": "Confirmar Nueva Contraseña",
+    "confirmNewPasswordPlaceholder": "Confirma tu nueva contraseña",
+    "resetting": "Restableciendo..."
+  },
+  "messages": {
+    "profileUpdated": "¡Perfil actualizado con éxito!",
+    "passwordChanged": "¡Contraseña cambiada con éxito!",
+    "preferencesUpdated": "¡Preferencias guardadas con éxito!",
+    "errorUpdatingProfile": "Error al actualizar el perfil",
+    "errorChangingPassword": "Error al cambiar la contraseña",
+    "errorSavingPreferences": "Error al guardar las preferencias",
+    "passwordsDoNotMatch": "Las contraseñas no coinciden",
+    "passwordTooShort": "La nueva contraseña debe tener al menos 6 caracteres",
+    "errorLoadingProfile": "Error al cargar los datos del perfil"
+  },
+  "todo": {
+    "allTab": "Todas las Tareas",
+    "manageTitle": "Lista de Tareas",
+    "manageDesc": "Gestiona tus tareas relacionadas con los tickets",
+    "totalLabel": "Total de Tareas",
+    "pendingLabel": "Pendientes",
+    "inProgressLabel": "En Progreso",
+    "completedLabel": "Completadas",
+    "completionRateLabel": "Tasa de Finalización",
+    "newTask": "Nueva Tarea",
+    "createNewTask": "Crear Nueva Tarea",
+    "createNewTaskDesc": "Añade una nueva tarea a tu lista",
+    "createTask": "Crear Tarea",
+    "quickTemplates": "Plantillas Rápidas",
+    "taskInfoSection": "Información de la Tarea",
+    "priorityTimeSection": "Prioridad y Gestión del Tiempo",
+    "taskTitleLabel": "Título de la Tarea",
+    "taskTitlePlaceholder": "Ingresa un título descriptivo para la tarea...",
+    "descriptionLabel": "Descripción",
+    "descriptionPlaceholder": "Describe detalles, objetivos o instrucciones específicas para esta tarea...",
+    "priorityLabel": "Prioridad",
+    "dueDateLabel": "Fecha de Vencimiento",
+    "estimatedHoursLabel": "Horas Estimadas",
+    "estimatedHoursPlaceholder": "Ingresa las horas estimadas...",
+    "searchPlaceholder": "Buscar tareas...",
+    "allPriorities": "Todas las Prioridades",
+    "noTasksTitle": "No se encontraron tareas",
+    "noTasksDesc": "Ninguna tarea coincide con tus filtros actuales",
+    "validation": {
+      "titleRequired": "El título es obligatorio",
+      "titleMinLength": "El título debe tener al menos 3 caracteres",
+      "estimatedHoursInvalid": "Las horas estimadas deben ser un número positivo",
+      "dueDatePast": "La fecha de vencimiento no puede estar en el pasado"
+    },
+    "templates": {
+      "ticketReview": {
+        "name": "📋 Revisión de Ticket",
+        "title": "Revisar ticket y definir próximos pasos",
+        "description": "Analizar ticket, identificar requisitos y definir plan de acción"
+      },
+      "followUp": {
+        "name": "📞 Seguimiento al Cliente",
+        "title": "Hacer seguimiento del estado con el cliente",
+        "description": "Contactar al cliente para proporcionar actualización del progreso"
+      },
+      "documentation": {
+        "name": "📚 Documentación",
+        "title": "Crear/actualizar documentación",
+        "description": "Documentar proceso o solución para referencia futura"
+      },
+      "testing": {
+        "name": "🧪 Prueba de Solución",
+        "title": "Probar solución implementada",
+        "description": "Validar si la solución resuelve el problema reportado"
+      }
+    },
+    "actions": {
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "complete": "Completar",
+      "start": "Iniciar",
+      "pause": "Pausar",
+      "save": "Guardar",
+      "cancel": "Cancelar"
+    },
+    "toast": {
+      "created": "Tarea creada con éxito",
+      "updated": "Tarea actualizada con éxito",
+      "deleted": "Tarea eliminada con éxito",
+      "bulkSuccess": "{{count}} tarea(s) procesada(s) con éxito",
+      "error": {
+        "create": "Error al crear la tarea",
+        "update": "Error al actualizar la tarea",
+        "delete": "Error al eliminar la tarea",
+        "bulk": "Error al procesar tareas en lote"
+      }
+    },
+    "edit": {
+      "title": "Editar Tarea",
+      "description": "Modifica la información de la tarea",
+      "basicInfo": "Información Básica",
+      "statusAndPriority": "Estado y Prioridad",
+      "timeAndAssignment": "Tiempo y Asignación",
+      "ticketAndTags": "Ticket y Etiquetas",
+      "status": {
+        "label": "Estado",
+        "pending": "⏳ Pendiente",
+        "inProgress": "🔄 En Progreso",
+        "completed": "✅ Completada"
+      },
+      "dueDate": "Fecha de Vencimiento",
+      "estimatedHours": "Horas Estimadas (horas)",
+      "estimatedHoursPlaceholder": "Ej: 2.5",
+      "assignedTo": "Asignado a",
+      "assignedToPlaceholder": "Selecciona un usuario",
+      "relatedTicket": "Ticket Relacionado",
+      "relatedTicketPlaceholder": "Selecciona un ticket",
+      "noTicket": "Sin ticket",
+      "tags": "Etiquetas",
+      "addTag": "Agregar etiqueta...",
+      "cancel": "Cancelar",
+      "save": "Guardar Cambios"
+    },
+    "linkedTicket": "Ticket",
+    "linkingSection": "Vinculación de Ticket",
+    "relatedTicketLabel": "Ticket Relacionado",
+    "noTicket": "Sin ticket",
+    "relatedTicketDesc": "Vincular esta tarea a un ticket específico",
+    "assignToLabel": "Asignar A",
+    "assignToDesc": "Seleccione quién será responsable de esta tarea",
+    "tagsSection": "Etiquetas",
+    "tagPlaceholder": "Ingrese una etiqueta...",
+    "tagsHelp": "Presione Enter o haga clic en + para agregar",
+    "notificationsSection": "Notificaciones",
+    "emailReminderLabel": "Recordatorios por Email",
+    "emailReminderDesc": "Recibir notificaciones por email sobre esta tarea"
+  },
+  "agentDashboard": {
+    "title": "Panel del Agente",
+    "subtitle": "Gestiona tus tickets y responde a los usuarios",
+    "assignedTickets": "Tickets Asignados",
+    "resolvedToday": "Resueltos Hoy",
+    "slaCompliance": "Cumplimiento SLA",
+    "searchPlaceholder": "Buscar tickets...",
+    "statusFilter": "Estado",
+    "statusAll": "Todos los estados",
+    "priorityFilter": "Prioridad",
+    "priorityAll": "Todas",
+    "myTickets": "Mis Tickets",
+    "unassigned": "No Asignados",
+    "urgent": "Urgentes",
+    "noTicketsTitle": "No se encontraron tickets",
+    "noTicketsDesc": "No hay tickets que coincidan con los filtros seleccionados.",
+    "createdBy": "Creado por",
+    "assignedTo": "Asignado a",
+    "take": "Tomar",
+    "reply": "Responder",
+    "selfAssignedTitle": "Ticket Asignado",
+    "selfAssignedDesc": "El ticket {{ticket}} fue asignado a ti.",
+    "selfAssignError": "No se pudo asignar el ticket. Por favor, inténtalo de nuevo.",
+    "loadError": "No se pudieron cargar los datos. Por favor, inténtalo de nuevo.",
+    "restricted": "Acceso restringido a agentes."
+  },
+  "reopen": {
+    "title": "Solicitudes de Reapertura",
+    "subtitle": "Gestiona las solicitudes de reapertura de tickets",
+    "pending": "Pendientes",
+    "reviewed": "Revisadas",
+    "emptyTitle": "No hay solicitudes pendientes",
+    "emptyDesc": "Todas las solicitudes han sido revisadas.",
+    "reason": "Motivo",
+    "requestedBy": "Solicitado por",
+    "on": "En",
+    "reviewedBy": "Revisado por",
+    "reviewedOn": "En",
+    "status": {
+      "rejected": "Rechazada",
+      "approved": "Aprobada",
+      "pending": "Pendiente"
+    },
+    "detailsHeading": "Detalles de la Solicitud",
+    "approve": "Aprobar",
+    "reject": "Rechazar",
+    "request": "Solicitud",
+    "commentLabel": "Comentario {{required, select, true{(obligatorio)} other{(opcional)}}",
+    "commentApprovePlaceholder": "Añade un comentario sobre la aprobación (opcional)...",
+    "commentRejectPlaceholder": "Explica el motivo del rechazo...",
+    "approveNotice": "Al aprobar, el ticket se reabrirá automáticamente y se notificará al solicitante.",
+    "rejectNotice": "Al rechazar, se notificará al solicitante la decisión.",
+    "loadError": "No se pudieron cargar las solicitudes de reapertura.",
+    "processError": "No se pudo procesar la solicitud.",
+    "noPermission": "No tienes permiso para acceder a esta página.",
+    "approvedToastTitle": "Solicitud Aprobada",
+    "approvedToastDesc": "El ticket se ha reabierto correctamente.",
+    "rejectedToastTitle": "Solicitud Rechazada",
+    "rejectedToastDesc": "La solicitud ha sido rechazada.",
+    "approvedComment": "Ticket reabierto después de la aprobación de la solicitud. Motivo original: \"{{reason}}\"{{comment}}",
+    "reviewerComment": "Comentario del revisor",
+    "pageTitle": "Solicitudes de Reapertura",
+    "pendingRequests": "Solicitudes Pendientes",
+    "reviewedRequests": "Solicitudes Revisadas",
+    "noPendingRequests": "No hay solicitudes de reapertura pendientes",
+    "noReviewedRequests": "No hay solicitudes revisadas",
+    "commentPlaceholder": "Añada un comentario sobre esta decisión...",
+    "comment": "Comentario de Revisión",
+    "approveRequest": "Aprobar Solicitud de Reapertura",
+    "rejectRequest": "Rechazar Solicitud de Reapertura",
+    "approvedToastTitle": "Solicitud Aprobada",
+    "approvedToastDesc": "El ticket ha sido reabierto",
+    "rejectedToastTitle": "Solicitud Rechazada",
+    "rejectedToastDesc": "La solicitud de reapertura ha sido rechazada",
+    "processError": "Error al procesar la solicitud",
+    "loadError": "Error al cargar las solicitudes de reapertura",
+    "noPermission": "No tienes permiso para ver las solicitudes de reapertura",
+    "status": {
+      "pending": "Pendiente",
+      "approved": "Aprobado",
+      "rejected": "Rechazado"
+    }
+  },
+  "reports": {
+    "title": "Informes",
+    "exportTitle": "Exportar Informes",
+    "typeLabel": "Tipo de Informe",
+    "formatLabel": "Formato",
+    "periodLabel": "Período",
+    "initialDate": "Fecha inicial",
+    "finalDate": "Fecha final",
+    "filtersLabel": "Filtros",
+    "status": "Estado",
+    "priority": "Prioridad",
+    "category": "Categoría",
+    "agent": "Agente",
+    "selectedFilters": "{{count}} filtro(s) activo(s)",
+    "generate": "Exportar Informe",
+    "generating": "Generando..."
+  },
+  "integrations": {
+    "title": "Integraciones",
+    "listTitle": "Integraciones Externas",
+    "configure": "Configurar",
+    "configureTitle": "Configurar {{name}}",
+    "status": {
+      "connected": "Conectado",
+      "disconnected": "Desconectado",
+      "error": "Error"
+    },
+    "lastSync": "Última sincronización",
+    "never": "Nunca",
+    "slackDescription": "Notificaciones automáticas en Slack",
+    "emailDescription": "Notificaciones por correo electrónico",
+    "whatsappDescription": "Mensajes vía WhatsApp Business API",
+    "zapierDescription": "Automatizaciones con Zapier",
+    "webhookUrl": "URL del Webhook",
+    "channel": "Canal",
+    "channelPlaceholder": "#soporte",
+    "smtpServer": "Servidor SMTP",
+    "port": "Puerto",
+    "senderEmail": "Correo remitente",
+    "senderEmailPlaceholder": "soporte@empresa.com",
+    "apiKey": "API Key",
+    "apiKeyPlaceholder": "Tu API Key de WhatsApp Business",
+    "phoneNumberId": "ID del número de teléfono",
+    "phoneNumberIdPlaceholder": "ID del número de teléfono",
+    "zapierHelp": "Configura un Zap accionado por webhook para recibir notificaciones de tickets.",
+    "testIntegration": "Probar Integración",
+    "testMessagePlaceholder": "Mensaje de prueba...",
+    "sendTest": "Enviar Prueba",
+    "saveConfig": "Guardar Configuraciones"
+  },
+  "chat": {
+    "tab": "Chat",
+    "loading": "Cargando mensajes...",
+    "noMessages": "Aún no hay mensajes",
+    "typeMessage": "Escribe un mensaje...",
+    "send": "Enviar"
+  },
+  "comments": {
+    "addPlaceholder": "Agregar un comentario..."
+  },
+  "feedback": {
+    "experiencePlaceholder": "Cuéntanos más sobre tu experiencia..."
+  },
+  "agent": {
+    "internalNotePlaceholder": "Agregar una nota interna para otros agentes...",
+    "responsePlaceholder": "Escriba su respuesta al usuario..."
+  },
+  "tickets": {
+    "createdOn": "Creado el {{date}}",
+    "updatedOn": "Actualizado el {{date}}"
+  },
+  "placeholders": {
+    "searchTickets": "Buscar tickets...",
+    "enterTaskTitle": "Ingrese el título de la tarea...",
+    "addComment": "Agregar un comentario...",
+    "selectAgent": "Seleccionar agente...",
+    "selectTicket": "Seleccionar ticket...",
+    "enterTag": "Ingrese una etiqueta...",
+    "helpImprove": "¡Ayúdanos a mejorar! ¿Qué información buscabas que no pudiste encontrar?",
+    "testMessage": "Mensaje de prueba..."
+  },
+  "aria": {
+    "deleteNotification": "Eliminar notificación",
+    "openTicket": "Abrir ticket",
+    "removeTag": "Quitar etiqueta", 
+    "attachFile": "Adjuntar archivo",
+    "attachImage": "Adjuntar imagen"
+  },
+  "titles": {
+    "preview": "Vista previa",
+    "download": "Descargar",
+    "generating": "Generando vista previa...",
+    "removeFile": "Quitar archivo",
+    "formBuilder": "Constructor de formularios"
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "markAllRead": "Marcar todas como leídas",
+    "loading": "Cargando notificaciones...",
+    "empty": "Sin notificaciones",
+    "unread": "No leída",
+    "noNotifications": "Sin notificaciones",
+    "fallback": {
+      "noTitle": "Sin título",
+      "unknownUser": "Usuario desconocido",
+      "defaultAgent": "Agente"
+    },
+    "actions": {
+      "viewTicket": "Ver Ticket"
+    },
+    "errors": {
+      "ticketNotFound": "Ticket no encontrado",
+      "loadingTicketDetails": "Error al cargar detalles del ticket",
+      "cannotOpenTicket": "No se pudo abrir el ticket - ID no encontrado",
+      "processingNotification": "Error al procesar notificación",
+      "markingAllAsRead": "Error al marcar todas las notificaciones como leídas",
+      "deletingNotification": "Error al eliminar notificación"
+    },
+    "types": {
+      "ticket_created": {
+        "title": "🎫 Nuevo Ticket: {{ticketNumber}}",
+        "message": "Nuevo ticket creado: \"{{ticketTitle}}\" por {{userName}}"
+      },
+      "ticket_assigned": {
+        "title": "👤 Ticket Asignado: {{ticketNumber}}",
+        "message": "Se le ha asignado el ticket \"{{ticketTitle}}\""
+      },
+      "assignment_changed": {
+        "assigned": {
+          "title": "🔄 Ticket Asignado: {{ticketNumber}}",
+          "message": "El ticket \"{{ticketTitle}}\" ha sido asignado a {{assigneeName}}"
+        },
+        "selfAssigned": {
+          "title": "👤 Usted tomó el ticket: {{ticketNumber}}",
+          "message": "Usted ha tomado el ticket \"{{ticketTitle}}\""
+        },
+        "removed": {
+          "title": "🔄 Asignación eliminada: {{ticketNumber}}",
+          "message": "La asignación del ticket \"{{ticketTitle}}\" ha sido eliminada"
+        },
+        "fallback": {
+          "title": "🔄 Asignación cambiada: {{ticketNumber}}",
+          "message": "La asignación del ticket \"{{ticketTitle}}\" ha cambiado"
+        }
+      },
+      "status_changed": {
+        "title": "🔄 Estado Cambiado: {{ticketNumber}}",
+        "message": "El estado del ticket \"{{ticketTitle}}\" ha cambiado a {{status}}"
+      },
+      "comment_added": {
+        "title": "💬 Nuevo Comentario: {{ticketNumber}}",
+        "message": "Nuevo comentario agregado al ticket \"{{ticketTitle}}\""
+      },
+      "priority_changed": {
+        "title": "⚡ Prioridad Cambiada: {{ticketNumber}}",
+        "message": "Prioridad del ticket \"{{ticketTitle}}\" cambiada a {{priority}}"
+      },
+      "feedback_request": {
+        "title": "⭐ Evalúe su servicio",
+        "message": "¡Su ticket ha sido resuelto! ¿Qué tal si evalúa el servicio que recibió? Su opinión es muy importante para nosotros."
+      },
+      "feedback_received": {
+        "title": "⭐ Comentario Recibido",
+        "message": "Ha recibido comentarios para el ticket {{ticketNumber}}. Haga clic para ver detalles."
+      },
+      "first_response": {
+        "title": "💬 Primera Respuesta Registrada",
+        "message": "La primera respuesta al ticket {{ticketNumber}} ha sido registrada."
+      },
+      "sla_warning": {
+        "title": "⚠️ Advertencia de SLA",
+        "message": "El ticket {{ticketNumber}} se está acercando al plazo límite del SLA. Se requiere acción para cumplir el compromiso de servicio."
+      },
+      "sla_breach": {
+        "title": "🚨 Alerta de Violación de SLA",
+        "message": "URGENTE: El ticket {{ticketNumber}} ha excedido el plazo límite del SLA. Se requiere acción inmediata."
+      },
+      "task_assigned": {
+        "title": "📋 Nueva Tarea Asignada",
+        "message": "Se le ha asignado una nueva tarea: \"{{taskTitle}}\" en el ticket {{ticketNumber}}"
+      }
+    }
+  },
+  "settings": {
+    "title": "Configuración",
+    "subtitle": "Administra tus preferencias y configuración de cuenta",
+    "backToDashboard": "Volver al Panel",
+    "tabs": {
+      "security": "Seguridad",
+      "notifications": "Notificaciones",
+      "appearance": "Apariencia",
+      "about": "Acerca de"
+    },
+    "security": {
+      "title": "Cambiar Contraseña",
+      "description": "Mantén tu cuenta segura con una contraseña fuerte",
+      "newPassword": "Nueva Contraseña",
+      "confirmPassword": "Confirmar Nueva Contraseña",
+      "enterNewPassword": "Ingresa tu nueva contraseña",
+      "confirmNewPassword": "Confirma tu nueva contraseña",
+      "changing": "Cambiando...",
+      "changePassword": "Cambiar Contraseña",
+      "errors": {
+        "passwordsDontMatch": "Las contraseñas no coinciden",
+        "passwordTooShort": "La nueva contraseña debe tener al menos 6 caracteres",
+        "unexpectedError": "Ocurrió un error al cambiar la contraseña"
+      },
+      "success": {
+        "title": "¡Contraseña cambiada!",
+        "description": "Tu contraseña ha sido cambiada exitosamente"
+      }
+    },
+    "notifications": {
+      "title": "Preferencias de Notificación",
+      "description": "Elige cómo y cuándo quieres recibir notificaciones",
+      "emailNotifications": {
+        "title": "Notificaciones por Correo",
+        "description": "Recibe notificaciones importantes por correo electrónico"
+      },
+      "ticketUpdates": {
+        "title": "Actualizaciones de Tickets",
+        "description": "Notificaciones cuando tus tickets son actualizados"
+      },
+      "systemAlerts": {
+        "title": "Alertas del Sistema",
+        "description": "Notificaciones sobre mantenimiento y actualizaciones del sistema"
+      },
+      "weeklyReports": {
+        "title": "Informes Semanales",
+        "description": "Resumen semanal de tu actividad"
+      },
+      "success": {
+        "title": "Configuración actualizada",
+        "description": "Tus preferencias de notificación han sido guardadas"
+      }
+    },
+    "appearance": {
+      "title": "Tema",
+      "description": "Personaliza la apariencia de la interfaz",
+      "themes": {
+        "light": "Claro",
+        "dark": "Oscuro",
+        "system": "Sistema"
+      }
+    },
+    "about": {
+      "title": "Información del Sistema",
+      "description": "Información sobre Analy-Ticket y actualizaciones recientes",
+      "version": "Versión",
+      "lastUpdated": "Última Actualización",
+      "quickLinks": "Enlaces Rápidos",
+      "viewChangelog": "Ver Registro de Cambios",
+      "helpDocs": "Ayuda y Documentación",
+      "aboutTitle": "Acerca de Analy-Ticket",
+      "aboutDescription": "Analy-Ticket es un sistema integral de gestión de tickets empresariales diseñado para optimizar las operaciones de soporte y mejorar la entrega de servicio al cliente. Construido con tecnologías web modernas para escalabilidad y rendimiento.",
+      "recentUpdates": {
+        "title": "Actualizaciones Recientes",
+        "description": "La versión 2.1.0 incluye nuevo sistema de registro de cambios y navegación mejorada en la configuración. Consulta el registro de cambios para detalles completos."
+      }
+    }
+  }
+} 

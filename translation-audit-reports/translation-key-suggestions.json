@@ -1,0 +1,366 @@
+{
+  "timestamp": "2025-07-31T14:19:06.420Z",
+  "summary": {
+    "totalCategories": 8,
+    "totalKeys": 50
+  },
+  "suggestions": {
+    "common": {
+      "button": {
+        "text": "Button",
+        "frequency": 157,
+        "suggestedKey": "common.button",
+        "priority": "high",
+        "files": [
+          "components\\admin\\CategoryManagement.tsx",
+          "components\\admin\\knowledge\\ArticleEditor.tsx",
+          "components\\admin\\knowledge\\ArticleList.tsx",
+          "components\\admin\\knowledge\\CategoryManager.tsx",
+          "components\\admin\\knowledge\\KnowledgeBaseAdmin.tsx",
+          "components\\admin\\SubcategoriesSection.tsx",
+          "components\\admin\\UserDataErrorState.tsx",
+          "components\\admin\\UserManagement.tsx",
+          "components\\admin\\UserManagementErrorBoundary.tsx",
+          "components\\admin\\UserManagementLoadingIndicator.tsx",
+          "components\\admin\\WorkloadDashboard.tsx",
+          "components\\auth\\ConnectionMonitor.tsx",
+          "components\\auth\\SessionTimeoutAdminDebug.tsx",
+          "components\\auth\\SessionTimeoutConfig.tsx",
+          "components\\auth\\SessionTimeoutWarning.tsx",
+          "components\\chat\\EnhancedTicketChat.tsx",
+          "components\\chat\\ModernTicketChat.backup.tsx",
+          "components\\chat\\ModernTicketChat.tsx",
+          "components\\chat\\TicketChat.tsx",
+          "components\\dashboard\\ChartContainer.tsx",
+          "components\\dashboard\\ChartContainerUsageExample.tsx",
+          "components\\dashboard\\DetailedAnalytics.tsx",
+          "components\\dashboard\\TicketCharts.tsx",
+          "components\\debug\\NotificationDebugger.tsx",
+          "components\\debug\\SubscriptionDebugger.tsx",
+          "components\\debug\\TestRunner.tsx",
+          "components\\examples\\ConsolidatedLoadingExample.tsx",
+          "components\\knowledge\\KnowledgeArticleView.tsx"
+        ]
+      },
+      "promise": {
+        "text": "Promise",
+        "frequency": 30,
+        "suggestedKey": "common.promise",
+        "priority": "high",
+        "files": [
+          "hooks\\useConsolidatedLoading.ts",
+          "hooks\\useErrorRecovery.ts",
+          "hooks\\useRetryableAction.ts",
+          "hooks\\useRetryableQuery.ts",
+          "hooks\\useSessionAwareQuery.ts",
+          "hooks\\useUserManagementLoading.ts",
+          "lib\\networkErrorHandler.ts",
+          "lib\\queryUtils.ts",
+          "services\\gracefulDegradationService.ts"
+        ]
+      },
+      "cancel": {
+        "text": "Cancel",
+        "frequency": 15,
+        "suggestedKey": "common.cancel",
+        "priority": "high",
+        "files": [
+          "components\\tickets\\dialogs\\TicketDialog.tsx",
+          "components\\tickets\\TaskManagement.tsx",
+          "components\\ui\\LoadingFallback.tsx"
+        ]
+      },
+      "error_loading_agents": {
+        "text": "Error loading agents:",
+        "frequency": 14,
+        "suggestedKey": "common.error_loading_agents",
+        "priority": "high"
+      },
+      "error_uploading_file": {
+        "text": "Error uploading file:",
+        "frequency": 12,
+        "suggestedKey": "common.error_uploading_file",
+        "priority": "high"
+      },
+      "error_removing_reaction": {
+        "text": "Error removing reaction:",
+        "frequency": 12,
+        "suggestedKey": "common.error_removing_reaction",
+        "priority": "high"
+      },
+      "sent": {
+        "text": "sent",
+        "frequency": 11,
+        "suggestedKey": "common.sent",
+        "priority": "high"
+      },
+      "category": {
+        "text": "Category",
+        "frequency": 10,
+        "suggestedKey": "common.category",
+        "priority": "high"
+      },
+      "error_sending_message": {
+        "text": "Error sending message:",
+        "frequency": 10,
+        "suggestedKey": "common.error_sending_message",
+        "priority": "high"
+      },
+      "error_adding_reaction": {
+        "text": "Error adding reaction:",
+        "frequency": 10,
+        "suggestedKey": "common.error_adding_reaction",
+        "priority": "high"
+      },
+      "error_submitting_feedback": {
+        "text": "Error submitting feedback:",
+        "frequency": 10,
+        "suggestedKey": "common.error_submitting_feedback",
+        "priority": "high"
+      },
+      "passed": {
+        "text": "passed",
+        "frequency": 8,
+        "suggestedKey": "common.passed",
+        "priority": "high"
+      },
+      "error_marking_all_notification": {
+        "text": "Error marking all notifications as read:",
+        "frequency": 8,
+        "suggestedKey": "common.error_marking_all_notification",
+        "priority": "high"
+      },
+      "error_deleting_notification": {
+        "text": "Error deleting notification:",
+        "frequency": 8,
+        "suggestedKey": "common.error_deleting_notification",
+        "priority": "high"
+      },
+      "error_creating_task": {
+        "text": "Error creating task:",
+        "frequency": 8,
+        "suggestedKey": "common.error_creating_task",
+        "priority": "high"
+      },
+      "_failed_url": {
+        "text": "🔗 Failed URL:",
+        "frequency": 8,
+        "suggestedKey": "common._failed_url",
+        "priority": "high"
+      },
+      "error_assigning_ticket": {
+        "text": "Error assigning ticket:",
+        "frequency": 8,
+        "suggestedKey": "common.error_assigning_ticket",
+        "priority": "high"
+      },
+      "retry": {
+        "text": "Retry",
+        "frequency": 7,
+        "suggestedKey": "common.retry",
+        "priority": "high"
+      },
+      "actions": {
+        "text": "Actions",
+        "frequency": 6,
+        "suggestedKey": "common.actions",
+        "priority": "high"
+      },
+      "refresh": {
+        "text": "Refresh",
+        "frequency": 6,
+        "suggestedKey": "common.refresh",
+        "priority": "high"
+      },
+      "avg_resolution": {
+        "text": "Avg Resolution",
+        "frequency": 6,
+        "suggestedKey": "common.avg_resolution",
+        "priority": "high"
+      },
+      "error_loading_session_timeout": {
+        "text": "Error loading session timeout settings:",
+        "frequency": 6,
+        "suggestedKey": "common.error_loading_session_timeout",
+        "priority": "high"
+      },
+      "chat": {
+        "text": "Chat",
+        "frequency": 6,
+        "suggestedKey": "common.chat",
+        "priority": "high"
+      },
+      "start_the_conversation": {
+        "text": "Start the conversation",
+        "frequency": 6,
+        "suggestedKey": "common.start_the_conversation",
+        "priority": "high"
+      },
+      "export": {
+        "text": "Export",
+        "frequency": 6,
+        "suggestedKey": "common.export",
+        "priority": "high"
+      },
+      "close": {
+        "text": "Close",
+        "frequency": 6,
+        "suggestedKey": "common.close",
+        "priority": "high"
+      },
+      "error_creating_notification": {
+        "text": "Error creating notification:",
+        "frequency": 6,
+        "suggestedKey": "common.error_creating_notification",
+        "priority": "high"
+      },
+      "error_marking_notification_as": {
+        "text": "Error marking notification as read:",
+        "frequency": 6,
+        "suggestedKey": "common.error_marking_notification_as",
+        "priority": "high"
+      },
+      "ticket_no_encontrado": {
+        "text": "Ticket não encontrado",
+        "frequency": 6,
+        "suggestedKey": "common.ticket_no_encontrado",
+        "priority": "high"
+      },
+      "error_getting_chat_messages": {
+        "text": "Error getting chat messages:",
+        "frequency": 6,
+        "suggestedKey": "common.error_getting_chat_messages",
+        "priority": "high"
+      },
+      "error_sending_chat_message": {
+        "text": "Error sending chat message:",
+        "frequency": 6,
+        "suggestedKey": "common.error_sending_chat_message",
+        "priority": "high"
+      },
+      "error_uploading_chat_file": {
+        "text": "Error uploading chat file:",
+        "frequency": 6,
+        "suggestedKey": "common.error_uploading_chat_file",
+        "priority": "high"
+      },
+      "error_marking_chat_as_read": {
+        "text": "Error marking chat as read:",
+        "frequency": 6,
+        "suggestedKey": "common.error_marking_chat_as_read",
+        "priority": "high"
+      },
+      "error_getting_chat_participant": {
+        "text": "Error getting chat participants:",
+        "frequency": 6,
+        "suggestedKey": "common.error_getting_chat_participant",
+        "priority": "high"
+      },
+      "error_getting_unread_count": {
+        "text": "Error getting unread count:",
+        "frequency": 6,
+        "suggestedKey": "common.error_getting_unread_count",
+        "priority": "high"
+      },
+      "_validation_error": {
+        "text": "🔧 Validation error:",
+        "frequency": 6,
+        "suggestedKey": "common._validation_error",
+        "priority": "high"
+      },
+      "todo_tasks_functionality_requi": {
+        "text": "Todo tasks functionality requires database migration to be applied",
+        "frequency": 6,
+        "suggestedKey": "common.todo_tasks_functionality_requi",
+        "priority": "high"
+      },
+      "error_creating_signed_url": {
+        "text": "Error creating signed URL:",
+        "frequency": 6,
+        "suggestedKey": "common.error_creating_signed_url",
+        "priority": "high"
+      },
+      "agent": {
+        "text": "Agent",
+        "frequency": 5,
+        "suggestedKey": "common.agent",
+        "priority": "high"
+      },
+      "featured": {
+        "text": "Featured",
+        "frequency": 5,
+        "suggestedKey": "common.featured",
+        "priority": "high"
+      },
+      "back": {
+        "text": "Back",
+        "frequency": 5,
+        "suggestedKey": "common.back",
+        "priority": "high"
+      },
+      "status": {
+        "text": "Status",
+        "frequency": 5,
+        "suggestedKey": "common.status",
+        "priority": "high"
+      },
+      "priority": {
+        "text": "Priority",
+        "frequency": 5,
+        "suggestedKey": "common.priority",
+        "priority": "high"
+      },
+      "apply": {
+        "text": "Apply",
+        "frequency": 5,
+        "suggestedKey": "common.apply",
+        "priority": "high"
+      },
+      "pending": {
+        "text": "pending",
+        "frequency": 5,
+        "suggestedKey": "common.pending",
+        "priority": "high"
+      },
+      "conditions": {
+        "text": "Conditions",
+        "frequency": 4,
+        "suggestedKey": "common.conditions",
+        "priority": "high"
+      },
+      "max_concurrent_tickets_per_age": {
+        "text": "Max Concurrent Tickets per Agent",
+        "frequency": 4,
+        "suggestedKey": "common.max_concurrent_tickets_per_age",
+        "priority": "high"
+      }
+    },
+    "forms": {
+      "description": {
+        "text": "Description",
+        "frequency": 9,
+        "suggestedKey": "forms.description",
+        "priority": "high"
+      },
+      "email": {
+        "text": "Email",
+        "frequency": 6,
+        "suggestedKey": "forms.email",
+        "priority": "high"
+      }
+    },
+    "dialogs": {},
+    "admin": {},
+    "tickets": {},
+    "dashboard": {},
+    "auth": {},
+    "accessibility": {
+      "open": {
+        "text": "open",
+        "frequency": 7,
+        "suggestedKey": "accessibility.open",
+        "priority": "high"
+      }
+    }
+  }
+}

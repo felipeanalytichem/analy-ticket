@@ -1580,5 +1580,149 @@
     "validationError": "🔧 Validation error:",
     "todoTasksFunctionalityRequired": "Todo tasks functionality requires database migration to be applied",
     "errorCreatingSignedUrl": "Error creating signed URL:"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "systemTitle": "Notification System",
+    "markAsRead": "Mark as read",
+    "markAllAsRead": "Mark all as read",
+    "deleteNotification": "Delete notification",
+    "viewTicket": "View ticket",
+    "empty": "No notifications",
+    "unread": "Unread",
+    "noNotifications": "No notifications",
+    "loadingNotifications": "Loading notifications...",
+    "errorLoadingNotifications": "Error loading notifications",
+    "fallback": {
+      "noTitle": "No title",
+      "unknownUser": "Unknown user",
+      "unknownAgent": "Unknown agent",
+      "unknownTicket": "Unknown ticket",
+      "noTicketTitle": "Untitled ticket",
+      "genericError": "An error occurred",
+      "networkError": "Network connection error",
+      "permissionError": "Permission denied",
+      "validationError": "Invalid data",
+      "loadingTicketDetails": "Error loading ticket details",
+      "cannotOpenTicket": "Cannot open ticket - ID not found",
+      "processingNotification": "Error processing notification",
+      "markingAsRead": "Error marking notification as read",
+      "markingAllAsRead": "Error marking all notifications as read",
+      "deletingNotification": "Error deleting notification"
+    },
+    "types": {
+      "ticket_created": {
+        "title": "New Ticket {{ticketNumber}}",
+        "message": "New ticket \"{{ticketTitle}}\" created by {{userName}}"
+      },
+      "ticket_assigned": {
+        "title": "Ticket {{ticketNumber}} Assigned",
+        "message": "Ticket \"{{ticketTitle}}\" has been assigned to you"
+      },
+      "ticket_updated": {
+        "title": "Ticket {{ticketNumber}} Updated",
+        "message": "Ticket \"{{ticketTitle}}\" has been updated"
+      },
+      "comment_added": {
+        "title": "New Comment on {{ticketNumber}}",
+        "message": "New comment added to ticket \"{{ticketTitle}}\""
+      },
+      "status_changed": {
+        "title": "Status Changed - {{ticketNumber}}",
+        "message": "Ticket \"{{ticketTitle}}\" status changed to {{status}}"
+      },
+      "priority_changed": {
+        "title": "Priority Changed - {{ticketNumber}}",
+        "message": "Ticket \"{{ticketTitle}}\" priority changed from {{oldPriority}} to {{newPriority}}"
+      },
+      "assignment_changed": {
+        "title": "Assignment Changed - {{ticketNumber}}",
+        "message": "Ticket \"{{ticketTitle}}\" has been reassigned to {{assigneeName}}"
+      },
+      "sla_warning": {
+        "title": "SLA Warning",
+        "message": "Ticket {{ticketNumber}} is approaching SLA deadline"
+      },
+      "sla_breach": {
+        "title": "SLA Breach Alert",
+        "message": "Ticket {{ticketNumber}} has exceeded SLA deadline"
+      },
+      "first_response": {
+        "title": "First Response - {{ticketNumber}}",
+        "message": "First response provided for ticket {{ticketNumber}}"
+      },
+      "feedback_request": {
+        "title": "Rate Your Service",
+        "message": "Your ticket {{ticketNumber}} has been resolved! Please rate the service you received."
+      }
+    },
+    "preferences": {
+      "title": "Notification Preferences",
+      "description": "Choose how and when you want to receive notifications",
+      "emailNotifications": {
+        "title": "Email Notifications",
+        "description": "Receive important notifications via email"
+      },
+      "toastNotifications": {
+        "title": "Toast Notifications",
+        "description": "Show popup notifications in the browser"
+      },
+      "soundNotifications": {
+        "title": "Sound Notifications",
+        "description": "Play sound when receiving notifications"
+      },
+      "quietHours": {
+        "title": "Quiet Hours",
+        "description": "Suppress notifications during specified hours",
+        "enabled": "Enable quiet hours",
+        "startTime": "Start time",
+        "endTime": "End time"
+      },
+      "typePreferences": {
+        "title": "Notification Types",
+        "description": "Configure preferences for each notification type",
+        "enabled": "Enabled",
+        "priority": "Priority",
+        "delivery": "Delivery method",
+        "instant": "Instant",
+        "batched": "Batched",
+        "digest": "Daily digest"
+      },
+      "language": {
+        "title": "Language",
+        "description": "Choose your preferred language for notifications"
+      },
+      "timezone": {
+        "title": "Timezone",
+        "description": "Set your timezone for accurate notification timing"
+      },
+      "save": "Save Preferences",
+      "reset": "Reset to Defaults",
+      "saved": "Preferences saved successfully",
+      "error": "Error saving preferences"
+    },
+    "errors": {
+      "loadingFailed": "Failed to load notifications",
+      "markingAsReadFailed": "Failed to mark notification as read",
+      "markingAllAsReadFailed": "Failed to mark all notifications as read",
+      "deletingFailed": "Failed to delete notification",
+      "connectionLost": "Connection lost - notifications may be delayed",
+      "reconnecting": "Reconnecting...",
+      "reconnected": "Connection restored",
+      "permissionDenied": "Permission denied",
+      "invalidNotification": "Invalid notification data",
+      "templateError": "Error processing notification template",
+      "translationMissing": "Translation missing for notification",
+      "languageNotSupported": "Language not supported"
+    },
+    "actions": {
+      "markAsRead": "Mark as read",
+      "markAllAsRead": "Mark all as read",
+      "delete": "Delete",
+      "viewTicket": "View ticket",
+      "dismiss": "Dismiss",
+      "retry": "Retry",
+      "refresh": "Refresh"
+    }
   }
 }

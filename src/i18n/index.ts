@@ -7,11 +7,17 @@ import enUS from './locales/en-US.json';
 import ptBR from './locales/pt-BR.json';
 import esES from './locales/es-ES.json';
 
+import frFR from './locales/fr-FR.json';
+import nlNL from './locales/nl-NL.json';
+import deDE from './locales/de-DE.json';
 // Translation resources
 const resources = {
   'en-US': { translation: enUS },
   'pt-BR': { translation: ptBR },
-  'es-ES': { translation: esES }
+  'es-ES': { translation: esES },
+  'fr-FR': { translation: frFR },
+  'nl-NL': { translation: nlNL },
+  'de-DE': { translation: deDE }
 };
 
 i18n

@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { DatabaseService, type TicketWithDetails } from '@/lib/database';
+import { useAuth } from '@/contexts/AuthContext';
 
 export interface Ticket {
   id: string;
@@ -18,30 +19,65 @@ export interface Ticket {
 }
 
 /**
- * Fetch a single ticket by id.
- * Uses React Query for caching and loading states.
+ * Enhanced ticket fetching hook with proper access validation.
+ * Uses the DatabaseService.getTicketById method which includes:
+ * - User permission validation
+ * - Time-based filtering for closed tickets (7-day window)
+ * - Security audit logging for unauthorized access attempts
+ * - Proper error handling with 403 Forbidden responses
  */
 export function useTicket(id?: string) {
-  return useQuery<Ticket | null, Error>({
-    queryKey: ['ticket', id],
-    enabled: Boolean(id),
+  const { userProfile } = useAuth();
+  
+  return useQuery<TicketWithDetails | null, Error>({
+    queryKey: ['ticket', id, userProfile?.id],
+    enabled: Boolean(id && userProfile?.id),
     staleTime: 1000 * 60, // 1 min
     queryFn: async () => {
-      if (!id) return null;
+      if (!id || !userProfile?.id) return null;
 
-      const { data, error } = await supabase
-        .from('tickets_new')
-        .select(
-          `id, ticket_number, title, description, status, priority, category_id, user_id, assigned_to, created_at, updated_at, resolved_at, closed_at`
-        )
-        .eq('id', id)
-        .single();
+      try {
+        // Use the enhanced getTicketById method with user context for access validation
+        const ticket = await DatabaseService.getTicketById(id, {
+          userId: userProfile.id,
+          userRole: (userProfile.role as 'user' | 'agent' | 'admin') || 'user',
+          // Note: IP address and user agent would typically be available in a real browser environment
+          // For now, we'll omit these optional parameters
+        });
 
-      if (error) {
+        return ticket;
+      } catch (error) {
+        // Enhanced error handling for different error types
+        if (error instanceof Error) {
+          // Handle specific error types from DatabaseService
+          if (error.name === 'UnauthorizedAccess') {
+            // Create a proper 403 error for unauthorized access
+            const forbiddenError = new Error('Access denied: You can only view your own tickets');
+            forbiddenError.name = 'ForbiddenError';
+            (forbiddenError as any).status = 403;
+            throw forbiddenError;
+          }
+          
+          if (error.name === 'NotFound') {
+            // Create a proper 404 error for not found tickets
+            const notFoundError = new Error('Ticket not found');
+            notFoundError.name = 'NotFoundError';
+            (notFoundError as any).status = 404;
+            throw notFoundError;
+          }
+          
+          if (error.name === 'InvalidInput') {
+            // Handle invalid input errors
+            const badRequestError = new Error('Invalid ticket ID provided');
+            badRequestError.name = 'BadRequestError';
+            (badRequestError as any).status = 400;
+            throw badRequestError;
+          }
+        }
+        
+        // Re-throw other errors as-is
         throw error;
       }
-
-      return data as unknown as Ticket;
     },
   });
 } 

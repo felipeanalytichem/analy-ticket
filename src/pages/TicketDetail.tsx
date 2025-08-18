@@ -132,13 +132,85 @@ export const TicketDetail = () => {
   }
 
   if (isError || !ticket) {
+    // Enhanced error handling for different error types
+    const getErrorContent = () => {
+      if (!error) {
+        return {
+          title: t('errors.ticketNotFound', 'Ticket not found'),
+          message: t('errors.ticketNotFoundMessage', 'The requested ticket could not be found.'),
+          showBackButton: true
+        };
+      }
+
+      // Handle specific error types with appropriate user messages
+      if (error.name === 'ForbiddenError' || (error as any).status === 403) {
+        return {
+          title: t('errors.accessDenied', 'Access Denied'),
+          message: t('errors.accessDeniedMessage', 'You do not have permission to view this ticket. You can only access tickets that you have created.'),
+          showBackButton: true
+        };
+      }
+
+      if (error.name === 'NotFoundError' || (error as any).status === 404) {
+        return {
+          title: t('errors.ticketNotFound', 'Ticket Not Found'),
+          message: t('errors.ticketNotFoundMessage', 'The requested ticket could not be found. It may have been deleted or you may not have permission to view it.'),
+          showBackButton: true
+        };
+      }
+
+      if (error.name === 'BadRequestError' || (error as any).status === 400) {
+        return {
+          title: t('errors.invalidRequest', 'Invalid Request'),
+          message: t('errors.invalidRequestMessage', 'The ticket ID provided is invalid.'),
+          showBackButton: true
+        };
+      }
+
+      // Generic error for other cases
+      return {
+        title: t('errors.loadingError', 'Error Loading Ticket'),
+        message: t('errors.loadingErrorMessage', 'An error occurred while loading the ticket. Please try again later.'),
+        showBackButton: true
+      };
+    };
+
+    const errorContent = getErrorContent();
+
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-center">
-        <p className="text-lg font-medium text-destructive mb-4">Erro ao carregar o ticket</p>
-        {error && <p className="text-sm text-muted-foreground">{error.message}</p>}
-        <Button variant="outline" onClick={() => navigate(-1)}>
-          Voltar
-        </Button>
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+        <div className="max-w-md w-full mx-4">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center space-y-4">
+                <div className="mx-auto w-12 h-12 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center">
+                  <AlertCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
+                </div>
+                
+                <div className="space-y-2">
+                  <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
+                    {errorContent.title}
+                  </h3>
+                  <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                    {errorContent.message}
+                  </p>
+                </div>
+
+                {errorContent.showBackButton && (
+                  <div className="flex gap-2 justify-center">
+                    <Button variant="outline" onClick={() => navigate(-1)}>
+                      <ArrowLeft className="h-4 w-4 mr-2" />
+                      {t('common.goBack', 'Go Back')}
+                    </Button>
+                    <Button variant="default" onClick={() => navigate('/tickets')}>
+                      {t('navigation.myTickets', 'My Tickets')}
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
@@ -192,8 +264,8 @@ export const TicketDetail = () => {
             <div className="flex items-center gap-2 md:gap-4 w-full sm:w-auto">
               <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                <span className="hidden sm:inline">Back</span>
-                <span className="sm:hidden">Back</span>
+                <span className="hidden sm:inline">{t('tickets.detail.back')}</span>
+                <span className="sm:hidden">{t('tickets.detail.back')}</span>
               </Button>
               <div className="flex items-center gap-1 md:gap-2 flex-wrap">
                 <span className="text-xs md:text-sm text-zinc-500 truncate max-w-[100px] md:max-w-none">{ticket.id}</span>
@@ -208,19 +280,19 @@ export const TicketDetail = () => {
             <div className="flex items-center gap-1 md:gap-2 w-full sm:w-auto">
               <Button variant="outline" size="sm" onClick={() => window.print()} className="flex-1 sm:flex-none">
                 <Printer className="h-4 w-4 mr-1 md:mr-2" />
-                <span className="hidden md:inline">Print</span>
-                <span className="md:hidden">Print</span>
+                <span className="hidden md:inline">{t('tickets.detail.print')}</span>
+                <span className="md:hidden">{t('tickets.detail.print')}</span>
               </Button>
               <Button variant="outline" size="sm" onClick={() => copyToClipboard(window.location.href)} className="flex-1 sm:flex-none">
                 <Share2 className="h-4 w-4 mr-1 md:mr-2" />
-                <span className="hidden md:inline">Share</span>
-                <span className="md:hidden">Share</span>
+                <span className="hidden md:inline">{t('tickets.detail.share')}</span>
+                <span className="md:hidden">{t('tickets.detail.share')}</span>
               </Button>
               {canViewInternalFeatures && (
                 <Button variant="default" size="sm" className="flex-1 sm:flex-none">
                   <Edit className="h-4 w-4 mr-1 md:mr-2" />
-                  <span className="hidden md:inline">Edit</span>
-                  <span className="md:hidden">Edit</span>
+                  <span className="hidden md:inline">{t('tickets.detail.edit')}</span>
+                  <span className="md:hidden">{t('tickets.detail.edit')}</span>
                 </Button>
               )}
             </div>
@@ -241,7 +313,7 @@ export const TicketDetail = () => {
           <div className="flex items-center gap-6 text-sm text-zinc-400">
                     <div className="flex items-center gap-2">
               <User className="h-4 w-4 text-zinc-500" />
-              <span>Created by {requesterProfile?.full_name ?? '—'}</span>
+              <span>{t('tickets.detail.createdBy', { name: requesterProfile?.full_name ?? '—' })}</span>
                     </div>
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4 text-zinc-500" />
@@ -249,12 +321,12 @@ export const TicketDetail = () => {
                   </div>
             <div className="flex items-center gap-2">
               <User className="h-4 w-4 text-zinc-500" />
-              <span>Assigned to {assigneeProfile?.full_name ?? '—'}</span>
+              <span>{t('tickets.detail.assignedTo', { name: assigneeProfile?.full_name ?? '—' })}</span>
                     </div>
             {ticket.resolved_at && (
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-4 w-4 text-emerald-500" />
-                <span>Resolved {formatDate(ticket.resolved_at)}</span>
+                <span>{t('tickets.detail.resolved', { date: formatDate(ticket.resolved_at) })}</span>
                     </div>
             )}
                   </div>
@@ -272,7 +344,7 @@ export const TicketDetail = () => {
             >
               <Card>
                 <CardHeader>
-                  <CardTitle>Description</CardTitle>
+                  <CardTitle>{t('tickets.detail.description')}</CardTitle>
               </CardHeader>
               <CardContent>
                   <div className="prose prose-zinc dark:prose-invert max-w-none">
@@ -292,35 +364,35 @@ export const TicketDetail = () => {
                       className="data-[state=active]:bg-zinc-800/50 rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500"
                     >
                       <MessageCircle className="h-4 w-4 mr-2" />
-                      Chat
+                      {t('tickets.detail.chat')}
                 </TabsTrigger>
                     <TabsTrigger
                       value="comments"
                       className="data-[state=active]:bg-zinc-800/50 rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500"
                     >
                       <MessageSquare className="h-4 w-4 mr-2" />
-                      Comments
+                      {t('tickets.detail.comments')}
                   </TabsTrigger>
                     <TabsTrigger
                       value="tasks"
                       className="data-[state=active]:bg-zinc-800/50 rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500"
                     >
                       <CheckSquare className="h-4 w-4 mr-2" />
-                      Tasks
+                      {t('tickets.detail.tasks')}
                   </TabsTrigger>
                     <TabsTrigger
                       value="activity"
                       className="data-[state=active]:bg-zinc-800/50 rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500"
                     >
                       <Activity className="h-4 w-4 mr-2" />
-                      Activity
+                      {t('tickets.detail.activity')}
                 </TabsTrigger>
                     <TabsTrigger
                       value="feedback"
                       className="data-[state=active]:bg-zinc-800/50 rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500"
                     >
                       <Star className="h-4 w-4 mr-2" />
-                      Feedback
+                      {t('tickets.detail.feedback')}
                 </TabsTrigger>
               </TabsList>
               
@@ -370,15 +442,15 @@ export const TicketDetail = () => {
                   <div className="flex flex-wrap gap-2">
                     <Button variant="outline" size="sm" className="flex-1">
                       <UserPlus className="h-4 w-4 mr-2" />
-                      Assign to Me
+                      {t('tickets.detail.assignToMe')}
                     </Button>
                     <Button variant="outline" size="sm" className="flex-1">
                       <AlertTriangle className="h-4 w-4 mr-2" />
-                      Escalate
+                      {t('tickets.detail.escalate')}
                     </Button>
                     <Button variant="outline" size="sm" className="flex-1 text-red-500 hover:text-red-600">
                       <XCircle className="h-4 w-4 mr-2" />
-                      Close
+                      {t('tickets.detail.close')}
                     </Button>
                   </div>
                 </CardContent>
@@ -395,7 +467,7 @@ export const TicketDetail = () => {
                 <CardHeader className="border-b border-zinc-200 dark:border-zinc-800">
                   <CardTitle className="flex items-center gap-2 text-zinc-900 dark:text-white">
                     <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                    Properties
+                    {t('tickets.detail.properties')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
@@ -407,7 +479,7 @@ export const TicketDetail = () => {
                           <Hexagon className="h-4 w-4 text-purple-600 dark:text-purple-400" />
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-zinc-900 dark:text-white">Category</p>
+                          <p className="text-sm font-medium text-zinc-900 dark:text-white">{t('tickets.detail.category')}</p>
                           <p className="text-sm text-zinc-500 dark:text-zinc-400">
                             {ticket.category ?? '—'}
                           </p>
@@ -427,7 +499,7 @@ export const TicketDetail = () => {
                           <BookOpen className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-zinc-900 dark:text-white">Department</p>
+                          <p className="text-sm font-medium text-zinc-900 dark:text-white">{t('tickets.detail.department')}</p>
                           <p className="text-sm text-zinc-500 dark:text-zinc-400">
                             {ticket.department ?? '—'}
                           </p>
@@ -447,7 +519,7 @@ export const TicketDetail = () => {
                           <Calendar className="h-4 w-4 text-amber-600 dark:text-amber-400" />
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-zinc-900 dark:text-white">Due Date</p>
+                          <p className="text-sm font-medium text-zinc-900 dark:text-white">{t('tickets.detail.dueDate')}</p>
                           <p className="text-sm text-zinc-500 dark:text-zinc-400">
                             {ticket.due_date ? formatDate(ticket.due_date) : '—'}
                           </p>
@@ -496,7 +568,7 @@ export const TicketDetail = () => {
             >
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-sm font-medium">SLA Monitoring</CardTitle>
+                  <CardTitle className="text-sm font-medium">{t('tickets.detail.slaMonitoring')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <SLAMonitor
@@ -520,7 +592,7 @@ export const TicketDetail = () => {
             >
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-sm font-medium">Tags</CardTitle>
+                  <CardTitle className="text-sm font-medium">{t('tickets.detail.tags')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <TicketTags
@@ -542,7 +614,7 @@ export const TicketDetail = () => {
               <Card>
                 <CardHeader>
                   <CardTitle className="text-sm font-medium flex items-center gap-2">
-                    <span>Knowledge Base</span>
+                    <span>{t('tickets.detail.knowledgeBase')}</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -561,7 +633,7 @@ export const TicketDetail = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Users className="h-4 w-4 text-blue-500" />
-                    People
+                    {t('tickets.detail.people')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
@@ -569,7 +641,7 @@ export const TicketDetail = () => {
                     {/* Requester */}
                     <div className="p-4">
                       <div className="flex items-center justify-between mb-4">
-                        <p className="text-sm font-medium text-zinc-400">Requester</p>
+                        <p className="text-sm font-medium text-zinc-400">{t('tickets.detail.requester')}</p>
                         {canViewInternalFeatures && (
                           <Button variant="ghost" size="sm" className="text-zinc-500 hover:text-zinc-400">
                             <Mail className="h-4 w-4" />
@@ -602,7 +674,7 @@ export const TicketDetail = () => {
                     {/* Assignee */}
                     <div className="p-4">
                       <div className="flex items-center justify-between mb-4">
-                        <p className="text-sm font-medium text-zinc-400">Assignee</p>
+                        <p className="text-sm font-medium text-zinc-400">{t('tickets.detail.assignee')}</p>
                         <div className="flex items-center gap-2">
                           {canViewInternalFeatures && (
                             <>

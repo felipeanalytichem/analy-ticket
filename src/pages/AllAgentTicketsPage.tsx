@@ -10,6 +10,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { DatabaseService, TicketWithDetails } from "@/lib/database";
 import { TicketList } from "@/components/tickets/TicketList";
 import { cn } from "@/lib/utils";
+import { useAllActiveAgents } from "@/hooks/useAgents";
+import { SafeTranslation } from '@/components/ui/SafeTranslation';
 
 interface AgentTicketStats {
   total: number;
@@ -23,9 +25,20 @@ const AllAgentTicketsPage = () => {
   const { userProfile } = useAuth();
   const [tickets, setTickets] = useState<TicketWithDetails[]>([]);
   const [filteredTickets, setFilteredTickets] = useState<TicketWithDetails[]>([]);
-  const [agents, setAgents] = useState<Array<{ id: string; name: string; email: string }>>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
+  
+  // Use the new agent hook for fetching all active agents
+  const { 
+    agents, 
+    isLoading: agentsLoading, 
+    isError: agentsError, 
+    refetch: refetchAgents 
+  } = useAllActiveAgents({
+    enabled: !!(userProfile?.id && (userProfile.role === 'agent' || userProfile.role === 'admin')),
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: true
+  });
   
   // Filter states
   const [selectedAgent, setSelectedAgent] = useState<string>("all");
@@ -41,7 +54,7 @@ const AllAgentTicketsPage = () => {
     avgResolutionTime: 0
   });
 
-  // Load tickets and agents
+  // Load tickets only (agents are now loaded via the hook)
   useEffect(() => {
     const loadData = async () => {
       if (!userProfile?.id || (userProfile.role !== 'agent' && userProfile.role !== 'admin')) return;
@@ -61,20 +74,6 @@ const AllAgentTicketsPage = () => {
         );
 
         setTickets(filteredAgentTickets);
-        
-        // Extract unique agents from tickets
-        const uniqueAgents = new Map<string, { id: string; name: string; email: string }>();
-        allAgentTickets.forEach(ticket => {
-          if (ticket.assigned_to && ticket.assignee) {
-            uniqueAgents.set(ticket.assigned_to, {
-              id: ticket.assigned_to,
-              name: ticket.assignee.full_name || ticket.assignee.email,
-              email: ticket.assignee.email
-            });
-          }
-        });
-        
-        setAgents(Array.from(uniqueAgents.values()));
         
         // Calculate statistics
         calculateStatistics(allAgentTickets);
@@ -163,8 +162,10 @@ const AllAgentTicketsPage = () => {
     });
   };
 
-  const handleRefresh = () => {
+  const handleRefresh = async () => {
     setRefreshKey(prev => prev + 1);
+    // Also refresh the agents data
+    await refetchAgents();
   };
 
   const formatTime = (hours: number) => {
@@ -190,7 +191,7 @@ const AllAgentTicketsPage = () => {
             Access Denied
           </h2>
           <p className="text-gray-600 dark:text-gray-400">
-            This page is only available to agents and administrators.
+            <SafeTranslation i18nKey="admin.accessDenied.agentsAndAdmins" fallback="This page is only available to agents and administrators." />
           </p>
         </div>
       </div>
@@ -222,9 +223,9 @@ const AllAgentTicketsPage = () => {
             variant="outline"
             size="default"
             className="w-full sm:w-auto"
-            disabled={isLoading}
+            disabled={isLoading || agentsLoading}
           >
-            <RefreshCw className={cn("h-4 w-4 mr-2", isLoading && "animate-spin")} />
+            <RefreshCw className={cn("h-4 w-4 mr-2", (isLoading || agentsLoading) && "animate-spin")} />
             Refresh
           </Button>
         </div>
@@ -324,15 +325,23 @@ const AllAgentTicketsPage = () => {
               </label>
               <Select value={selectedAgent} onValueChange={setSelectedAgent}>
                 <SelectTrigger>
-                  <SelectValue placeholder="All agents" />
+                  <SelectValue placeholder={agentsLoading ? "Loading agents..." : "All agents"} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Agents</SelectItem>
-                  {agents.map((agent) => (
-                    <SelectItem key={agent.id} value={agent.id}>
-                      {agent.name}
+                  {agentsError ? (
+                    <SelectItem value="error" disabled>
+                      Error loading agents
                     </SelectItem>
-                  ))}
+                  ) : (
+                    agents
+                      .sort((a, b) => a.full_name.localeCompare(b.full_name))
+                      .map((agent) => (
+                        <SelectItem key={agent.id} value={agent.id}>
+                          {agent.full_name}
+                        </SelectItem>
+                      ))
+                  )}
                 </SelectContent>
               </Select>
             </div>
@@ -391,12 +400,29 @@ const AllAgentTicketsPage = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {isLoading ? (
+            {(isLoading || agentsLoading) ? (
               <div className="flex items-center justify-center h-32">
                 <div className="text-center">
                   <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-2 text-gray-400" />
-                  <p className="text-gray-600 dark:text-gray-400">Loading tickets...</p>
+                  <p className="text-gray-600 dark:text-gray-400">
+                    {isLoading && agentsLoading ? "Loading tickets and agents..." : 
+                     isLoading ? "Loading tickets..." : "Loading agents..."}
+                  </p>
                 </div>
+              </div>
+            ) : agentsError ? (
+              <div className="text-center py-8">
+                <Users className="h-12 w-12 mx-auto mb-4 text-red-400" />
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                  Error Loading Agents
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                  Failed to load agent information for filtering.
+                </p>
+                <Button onClick={refetchAgents} variant="outline">
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Retry Loading Agents
+                </Button>
               </div>
             ) : filteredTickets.length === 0 ? (
               <div className="text-center py-8">

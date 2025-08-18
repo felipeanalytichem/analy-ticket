@@ -13,11 +13,14 @@ import { Badge } from '@/components/ui/badge';
 import { User, Settings, LogOut, Shield, UserCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { SafeTranslation } from '@/components/ui/SafeTranslation';
+import { useTranslation } from 'react-i18next';
 
 export function UserProfile() {
   const { user, userProfile, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   if (!user || !userProfile) {
     return null;
@@ -80,11 +83,11 @@ export function UserProfile() {
   const getRoleLabel = (role: string) => {
     switch (role) {
       case 'admin':
-        return 'Administrator';
+        return t('auth.administrator');
       case 'agent':
-        return 'Agent';
+        return t('auth.agent');
       default:
-        return 'User';
+        return t('auth.user');
     }
   };
 
@@ -129,16 +132,16 @@ export function UserProfile() {
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => navigate('/profile')}>
           <User className="mr-2 h-4 w-4" />
-          <span>My Profile</span>
+          <span><SafeTranslation i18nKey="navigation.profile" fallback="My Profile" /></span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => navigate('/settings')}>
           <Settings className="mr-2 h-4 w-4" />
-          <span>Settings</span>
+          <span><SafeTranslation i18nKey="navigation.settings" fallback="Settings" /></span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut} className="text-red-600 focus:text-red-600">
           <LogOut className="mr-2 h-4 w-4" />
-          <span>Logout</span>
+          <span><SafeTranslation i18nKey="navigation.logout" fallback="Logout" /></span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -47,7 +47,7 @@ import { supabase } from '@/lib/supabase';
 import { UploadService } from '@/lib/uploadService';
 import { toast } from 'sonner';
 import { formatDistanceToNow } from 'date-fns';
-import { ptBR, enUS, es } from 'date-fns/locale';
+import { ptBR, enUS, es, fr, nl, de } from 'date-fns/locale';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useTheme } from '@/components/theme-provider';
 import { AvatarEditor } from '@/components/profile/AvatarEditor';
@@ -353,6 +353,9 @@ const Profile: React.FC = () => {
     switch (language) {
       case 'pt-BR': return ptBR;
       case 'es-ES': return es;
+      case 'fr-FR': return fr;
+      case 'nl-NL': return nl;
+      case 'de-DE': return de;
       default: return enUS;
     }
   };
@@ -437,7 +440,7 @@ const Profile: React.FC = () => {
                 
                 <div className="flex-1 space-y-3">
                   <div>
-                    <h3 className="text-xl font-semibold">{userProfile.full_name || 'Name not provided'}</h3>
+                    <h3 className="text-xl font-semibold">{userProfile.full_name || t('auth.nameNotProvided')}</h3>
                     <p className="text-muted-foreground">{userProfile.email}</p>
                   </div>
                   
@@ -446,7 +449,7 @@ const Profile: React.FC = () => {
                       {getRoleDisplay(userProfile.role)}
                     </Badge>
                     {userProfile.role === 'agent' && (
-                      <Badge variant="outline">Level 2</Badge>
+                      <Badge variant="outline">{t('auth.level2')}</Badge>
                     )}
                   </div>
                   
@@ -498,6 +501,9 @@ const Profile: React.FC = () => {
                       <SelectItem value="en-US">{t('profile.english')}</SelectItem>
                       <SelectItem value="pt-BR">{t('profile.portuguese')}</SelectItem>
                       <SelectItem value="es-ES">{t('profile.spanish')}</SelectItem>
+                      <SelectItem value="fr-FR">{t('profile.french')}</SelectItem>
+                      <SelectItem value="nl-NL">{t('profile.dutch')}</SelectItem>
+                      <SelectItem value="de-DE">{t('profile.german')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

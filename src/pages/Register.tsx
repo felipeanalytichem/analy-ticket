@@ -145,7 +145,7 @@ export default function Register() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t('auth.email')}</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                   <Input
@@ -252,10 +252,10 @@ export default function Register() {
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Criando conta...
+                    {t('auth.creatingAccount')}
                   </>
                 ) : (
-                  'Criar conta'
+                  t('auth.createAccount')
                 )}
               </Button>
             </form>
@@ -267,7 +267,7 @@ export default function Register() {
                 </div>
                 <div className="relative flex justify-center text-sm">
                   <span className="px-2 bg-white dark:bg-gray-800 text-gray-500">
-                    Já tem uma conta?
+                    {t('auth.alreadyHaveAccount')}
                   </span>
                 </div>
               </div>
@@ -278,7 +278,7 @@ export default function Register() {
                     variant="outline"
                     className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
                   >
-                    Fazer login
+                    {t('auth.signInLink')}
                   </Button>
                 </Link>
               </div>
@@ -289,7 +289,7 @@ export default function Register() {
         {/* Footer */}
         <div className="text-center text-sm text-gray-600 dark:text-gray-400">
           <p>
-            © 2024 AnalytiChem GmbH. Todos os direitos reservados.
+            {t('auth.copyright')}
           </p>
         </div>
       </div>

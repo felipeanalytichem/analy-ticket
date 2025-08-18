@@ -18,6 +18,7 @@ import { DatabaseService, TicketWithDetails, Notification } from "@/lib/database
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
+import { useTranslation } from "react-i18next";
 
 interface NotificationWithTicket extends Notification {
   ticket?: TicketWithDetails;
@@ -31,6 +32,7 @@ interface AgentNotificationsProps {
 let globalSubscriptionFlag = false;
 
 export const AgentNotifications = ({ onTicketSelect }: AgentNotificationsProps) => {
+  const { t } = useTranslation();
   const [notifications, setNotifications] = useState<any[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -141,8 +143,8 @@ export const AgentNotifications = ({ onTicketSelect }: AgentNotificationsProps) 
             id: `sample-1-${Date.now()}`,
             user_id: userProfile.id,
             type: 'ticket_assigned',
-            title: 'Novo Ticket Atribuído',
-            message: `Ticket ACS-TK-202506-0027 foi atribuído para você`,
+            title: t('tickets.newTicketAssigned'),
+            message: t('tickets.ticketAssignedToYou', { ticketNumber: 'ACS-TK-202506-0027' }),
             ticket_id: null,
             read: false,
             priority: 'high',
@@ -152,8 +154,8 @@ export const AgentNotifications = ({ onTicketSelect }: AgentNotificationsProps) 
             id: `sample-2-${Date.now()}`,
             user_id: userProfile.id,
             type: 'comment_added',
-            title: 'Nova Resposta do Cliente',
-            message: `Cliente respondeu no ticket ACS-TK-202506-0026`,
+            title: t('tickets.newCustomerResponse'),
+            message: t('tickets.customerRespondedToTicket', { ticketNumber: 'ACS-TK-202506-0026' }),
             ticket_id: null,
             read: false,
             priority: 'medium',
@@ -163,8 +165,8 @@ export const AgentNotifications = ({ onTicketSelect }: AgentNotificationsProps) 
             id: `sample-3-${Date.now()}`,
             user_id: userProfile.id,
             type: 'ticket_assigned',
-            title: 'Novo Ticket Atribuído',
-            message: `Ticket TK-MBTVRA2-XWCUY foi atribuído para você`,
+            title: t('tickets.newTicketAssigned'),
+            message: t('tickets.ticketAssignedToYou', { ticketNumber: 'TK-MBTVRA2-XWCUY' }),
             ticket_id: null,
             read: false,
             priority: 'medium',
@@ -215,8 +217,8 @@ export const AgentNotifications = ({ onTicketSelect }: AgentNotificationsProps) 
     } catch (error) {
       console.error('Error loading notifications:', error);
       toast({
-        title: "Erro",
-        description: "Não foi possível carregar as notificações.",
+        title: t('tickets.error'),
+        description: t('tickets.couldNotLoadNotifications'),
         variant: "destructive",
       });
     } finally {
@@ -305,14 +307,14 @@ export const AgentNotifications = ({ onTicketSelect }: AgentNotificationsProps) 
       }
       
       toast({
-        title: "Notificação marcada como lida",
-        description: "A notificação foi marcada como lida com sucesso.",
+        title: t('tickets.notificationMarkedAsRead'),
+        description: t('tickets.notificationMarkedAsReadSuccessfully'),
       });
     } catch (error) {
       console.error('Error marking notification as read:', error);
       toast({
-        title: "Erro",
-        description: "Não foi possível marcar a notificação como lida.",
+        title: t('tickets.error'),
+        description: t('tickets.couldNotMarkNotificationAsRead'),
         variant: "destructive",
       });
     }
@@ -343,14 +345,14 @@ export const AgentNotifications = ({ onTicketSelect }: AgentNotificationsProps) 
       }
       
       toast({
-        title: "Todas as notificações foram marcadas como lidas",
-        description: "Suas notificações foram atualizadas com sucesso.",
+        title: t('tickets.allNotificationsMarkedAsRead'),
+        description: t('tickets.notificationsUpdatedSuccessfully'),
       });
     } catch (error) {
       console.error('Error marking all notifications as read:', error);
       toast({
-        title: "Erro",
-        description: "Não foi possível marcar todas as notificações como lidas.",
+        title: t('tickets.error'),
+        description: t('tickets.couldNotMarkAllNotificationsAsRead'),
         variant: "destructive",
       });
     }
@@ -367,8 +369,8 @@ export const AgentNotifications = ({ onTicketSelect }: AgentNotificationsProps) 
 
     if (!success) {
       toast({
-        title: 'Erro',
-        description: 'Não foi possível excluir a notificação.',
+        title: t('tickets.error'),
+        description: t('tickets.couldNotDeleteNotification'),
         variant: 'destructive'
       });
       return; // keep it in the list
@@ -426,10 +428,10 @@ export const AgentNotifications = ({ onTicketSelect }: AgentNotificationsProps) 
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-    if (diffMins < 1) return 'Agora';
-    if (diffMins < 60) return `${diffMins}min atrás`;
-    if (diffHours < 24) return `${diffHours}h atrás`;
-    if (diffDays < 7) return `${diffDays}d atrás`;
+    if (diffMins < 1) return t('tickets.now');
+    if (diffMins < 60) return t('tickets.minutesAgo', { minutes: diffMins });
+    if (diffHours < 24) return t('tickets.hoursAgo', { hours: diffHours });
+    if (diffDays < 7) return t('tickets.daysAgo', { days: diffDays });
     
     return date.toLocaleDateString('pt-BR', {
       day: '2-digit',
@@ -471,7 +473,7 @@ export const AgentNotifications = ({ onTicketSelect }: AgentNotificationsProps) 
         <Card className="absolute right-0 top-full mt-2 w-96 max-h-96 overflow-hidden shadow-lg z-50">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">Notificações</CardTitle>
+              <CardTitle className="text-lg">{t('tickets.notifications')}</CardTitle>
               <div className="flex items-center gap-2">
                 {unreadCount > 0 && (
                   <Button
@@ -481,7 +483,7 @@ export const AgentNotifications = ({ onTicketSelect }: AgentNotificationsProps) 
                     className="text-xs"
                     disabled={isLoading}
                   >
-                    Marcar todas como lidas
+                    {t('tickets.markAllAsRead')}
                   </Button>
                 )}
                 <Button
@@ -500,12 +502,12 @@ export const AgentNotifications = ({ onTicketSelect }: AgentNotificationsProps) 
               {isLoading ? (
                 <div className="p-4 text-center text-gray-500">
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900 mx-auto mb-2"></div>
-                  <p>Carregando notificações...</p>
+                  <p>{t('tickets.loadingNotifications')}</p>
                 </div>
               ) : notifications.length === 0 ? (
                 <div className="p-4 text-center text-gray-500">
                   <Bell className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                  <p>Nenhuma notificação</p>
+                  <p>{t('tickets.noNotifications')}</p>
                 </div>
               ) : (
                 <div className="space-y-1">
@@ -532,8 +534,8 @@ export const AgentNotifications = ({ onTicketSelect }: AgentNotificationsProps) 
                             .catch(error => {
                               console.error('Error fetching ticket:', error);
                               toast({
-                                title: "Erro",
-                                description: "Não foi possível abrir o ticket.",
+                                title: t('tickets.error'),
+                                description: t('tickets.couldNotOpenTicket'),
                                 variant: "destructive",
                               });
                             });
@@ -581,7 +583,7 @@ export const AgentNotifications = ({ onTicketSelect }: AgentNotificationsProps) 
                             
                             {(notification.ticket || notification.ticket_id) && (
                               <div className="flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400">
-                                Ver ticket
+                                {t('tickets.viewTicket')}
                                 <ArrowRight className="h-3 w-3" />
                               </div>
                             )}

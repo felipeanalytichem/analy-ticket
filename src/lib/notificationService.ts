@@ -1,5 +1,9 @@
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
+import { NotificationTemplateService } from '@/services/NotificationTemplateService';
+import { NotificationPermissionValidator } from '@/services/NotificationPermissionValidator';
+import { NotificationDataSecurity } from '@/services/NotificationDataSecurity';
+import i18n from '@/i18n';
 
 export interface Notification {
   id?: string;
@@ -55,6 +59,26 @@ export class NotificationService {
    */
   static async getNotifications(userId?: string, limit = 50): Promise<NotificationWithTicket[]> {
     try {
+      // If userId is provided, validate read permissions
+      if (userId) {
+        const permissionValidator = NotificationPermissionValidator.getInstance();
+        const currentUser = await supabase.auth.getUser();
+        
+        if (currentUser.data.user && currentUser.data.user.id !== userId) {
+          // Check if current user can read other user's notifications
+          const { data: userProfile } = await supabase
+            .from('users')
+            .select('role')
+            .eq('id', currentUser.data.user.id)
+            .single();
+          
+          if (!userProfile || userProfile.role !== 'admin') {
+            console.warn('Unauthorized attempt to read other user notifications');
+            return [];
+          }
+        }
+      }
+
       let query = supabase
         .from('notifications')
         .select('*')
@@ -77,6 +101,7 @@ export class NotificationService {
       }
 
       const notificationsWithTickets: NotificationWithTicket[] = [];
+      const dataSecurity = NotificationDataSecurity.getInstance();
 
       for (const notification of notifications) {
         let ticket = null;
@@ -90,17 +115,37 @@ export class NotificationService {
           ticket = ticketData;
         }
 
+        // Decrypt notification content if encrypted
+        let decryptedContent = {
+          title: notification.title,
+          message: notification.message || notification.title || 'Notificação'
+        };
+
+        if (notification.encrypted_fields && notification.encryption_data) {
+          try {
+            decryptedContent = await dataSecurity.processNotificationForDisplay({
+              title: notification.title,
+              message: notification.message || notification.title || 'Notificação',
+              encrypted_fields: notification.encrypted_fields,
+              encryption_data: notification.encryption_data
+            });
+          } catch (error) {
+            console.error('Error decrypting notification:', error);
+            // Keep original content as fallback
+          }
+        }
+
         const processedNotification: NotificationWithTicket = {
           id: notification.id,
           user_id: notification.user_id,
-          message: notification.message || notification.title || 'Notificação',
+          message: decryptedContent.message,
           type: notification.type as 'ticket_created' | 'ticket_updated' | 'ticket_assigned' | 'comment_added' | 'status_changed' | 'priority_changed' | 'assignment_changed' | 'sla_warning' | 'sla_breach',
           ticket_id: notification.ticket_id,
           read: notification.read !== undefined ? notification.read : false,
           priority: notification.priority || 'medium',
           created_at: notification.created_at,
           updated_at: notification.updated_at,
-          title: notification.title,
+          title: decryptedContent.title,
           ticket
         };
 
@@ -142,6 +187,25 @@ export class NotificationService {
    */
   static async markAsRead(notificationId: string): Promise<boolean> {
     try {
+      // Validate permission to modify notification
+      const currentUser = await supabase.auth.getUser();
+      if (!currentUser.data.user) {
+        console.error('No authenticated user for markAsRead');
+        return false;
+      }
+
+      const permissionValidator = NotificationPermissionValidator.getInstance();
+      const permission = await permissionValidator.validateModifyPermission(
+        currentUser.data.user.id,
+        notificationId,
+        'update'
+      );
+
+      if (!permission.allowed) {
+        console.error('Permission denied for markAsRead:', permission.reason);
+        return false;
+      }
+
       const { error } = await supabase
         .from('notifications')
         .update({ 
@@ -167,6 +231,27 @@ export class NotificationService {
    */
   static async markAllAsRead(userId: string): Promise<boolean> {
     try {
+      // Validate permission - users can only mark their own notifications as read
+      const currentUser = await supabase.auth.getUser();
+      if (!currentUser.data.user) {
+        console.error('No authenticated user for markAllAsRead');
+        return false;
+      }
+
+      // Check if user is trying to mark their own notifications or if they're admin
+      if (currentUser.data.user.id !== userId) {
+        const { data: userProfile } = await supabase
+          .from('users')
+          .select('role')
+          .eq('id', currentUser.data.user.id)
+          .single();
+        
+        if (!userProfile || userProfile.role !== 'admin') {
+          console.error('Permission denied: Cannot mark other user notifications as read');
+          return false;
+        }
+      }
+
       const { error } = await supabase
         .from('notifications')
         .update({ 
@@ -193,6 +278,25 @@ export class NotificationService {
    */
   static async deleteNotification(notificationId: string): Promise<boolean> {
     try {
+      // Validate permission to delete notification
+      const currentUser = await supabase.auth.getUser();
+      if (!currentUser.data.user) {
+        console.error('No authenticated user for deleteNotification');
+        return false;
+      }
+
+      const permissionValidator = NotificationPermissionValidator.getInstance();
+      const permission = await permissionValidator.validateModifyPermission(
+        currentUser.data.user.id,
+        notificationId,
+        'delete'
+      );
+
+      if (!permission.allowed) {
+        console.error('Permission denied for deleteNotification:', permission.reason);
+        return false;
+      }
+
       const { error } = await supabase
         .from('notifications')
         .delete()
@@ -263,6 +367,13 @@ export class NotificationService {
    */
   static async createTicketCreatedNotification(ticketId: string, context: NotificationContext): Promise<boolean> {
     try {
+      // Validate permission to create notification
+      const currentUser = await supabase.auth.getUser();
+      if (!currentUser.data.user) {
+        console.error('No authenticated user for createTicketCreatedNotification');
+        return false;
+      }
+
       // Get all agents and admins to notify
       const { data: recipients, error: agentsError } = await supabase
         .from('users')
@@ -274,24 +385,72 @@ export class NotificationService {
         return false;
       }
 
-      const notifications = recipients.map(user => ({
-        user_id: user.id,
-        type: 'ticket_created' as const,
-        title: JSON.stringify({
-          key: 'notifications.types.ticket_created.title',
-          params: { ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8) }
-        }),
-        message: JSON.stringify({
-          key: 'notifications.types.ticket_created.message',
-          params: { 
-            ticketTitle: context.ticketTitle || 'notifications.fallback.noTitle',
-            userName: context.userName || 'notifications.fallback.unknownUser'
-          }
-        }),
-        priority: 'medium' as const,
-        ticket_id: ticketId,
-        read: false
-      }));
+      // Validate permission for each recipient
+      const permissionValidator = NotificationPermissionValidator.getInstance();
+      const validRecipients = [];
+
+      for (const recipient of recipients) {
+        const permission = await permissionValidator.validateCreatePermission({
+          userId: currentUser.data.user.id,
+          targetUserId: recipient.id,
+          notificationType: 'ticket_created',
+          ticketId,
+          priority: 'medium'
+        });
+
+        if (permission.allowed) {
+          validRecipients.push(recipient);
+        } else {
+          console.warn(`Permission denied for recipient ${recipient.id}:`, permission.reason);
+        }
+      }
+
+      const templateService = NotificationTemplateService.getInstance();
+      const titleTemplate = templateService.createTemplate('notifications.types.ticket_created.title', {
+        ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8)
+      });
+      const messageTemplate = templateService.createTemplate('notifications.types.ticket_created.message', {
+        ticketTitle: context.ticketTitle || i18n.t('notifications.fallback.noTicketTitle'),
+        userName: context.userName || i18n.t('notifications.fallback.unknownUser')
+      });
+
+      // Process notifications for security
+      const dataSecurity = NotificationDataSecurity.getInstance();
+      const notifications = [];
+
+      for (const user of validRecipients) {
+        const rawNotification = {
+          title: templateService.serializeTemplate(titleTemplate),
+          message: templateService.serializeTemplate(messageTemplate),
+          type: 'ticket_created' as const
+        };
+
+        // Validate and sanitize the notification data
+        const validation = dataSecurity.validateNotificationData({
+          ...rawNotification,
+          user_id: user.id
+        });
+
+        if (!validation.valid) {
+          console.error('Invalid notification data:', validation.errors);
+          continue;
+        }
+
+        // Process for storage (sanitize and encrypt if needed)
+        const processedNotification = await dataSecurity.processNotificationForStorage(rawNotification);
+
+        notifications.push({
+          user_id: user.id,
+          type: 'ticket_created' as const,
+          title: processedNotification.title,
+          message: processedNotification.message,
+          priority: 'medium' as const,
+          ticket_id: ticketId,
+          read: false,
+          encrypted_fields: processedNotification.encrypted_fields,
+          encryption_data: processedNotification.encryption_data
+        });
+      }
 
       const { error } = await supabase
         .from('notifications')
@@ -315,19 +474,40 @@ export class NotificationService {
    */
   static async createTicketAssignedNotification(ticketId: string, assignedUserId: string, context: NotificationContext): Promise<boolean> {
     try {
+      // Validate permission to create notification
+      const currentUser = await supabase.auth.getUser();
+      if (!currentUser.data.user) {
+        console.error('No authenticated user for createTicketAssignedNotification');
+        return false;
+      }
+
+      const permissionValidator = NotificationPermissionValidator.getInstance();
+      const permission = await permissionValidator.validateCreatePermission({
+        userId: currentUser.data.user.id,
+        targetUserId: assignedUserId,
+        notificationType: 'ticket_assigned',
+        ticketId,
+        priority: 'high'
+      });
+
+      if (!permission.allowed) {
+        console.error('Permission denied for createTicketAssignedNotification:', permission.reason);
+        return false;
+      }
+
+      const templateService = NotificationTemplateService.getInstance();
+      const titleTemplate = templateService.createTemplate('notifications.types.ticket_assigned.title', {
+        ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8)
+      });
+      const messageTemplate = templateService.createTemplate('notifications.types.ticket_assigned.message', {
+        ticketTitle: context.ticketTitle || i18n.t('notifications.fallback.noTicketTitle')
+      });
+
       const notification = {
         user_id: assignedUserId,
         type: 'ticket_assigned' as const,
-        title: JSON.stringify({
-          key: 'notifications.types.ticket_assigned.title',
-          params: { ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8) }
-        }),
-        message: JSON.stringify({
-          key: 'notifications.types.ticket_assigned.message',
-          params: { 
-            ticketTitle: context.ticketTitle || 'notifications.fallback.noTitle'
-          }
-        }),
+        title: templateService.serializeTemplate(titleTemplate),
+        message: templateService.serializeTemplate(messageTemplate),
         priority: 'high' as const,
         ticket_id: ticketId,
         read: false
@@ -355,20 +535,20 @@ export class NotificationService {
    */
   static async createTicketStatusNotification(ticketId: string, ticketUserId: string, context: NotificationContext): Promise<boolean> {
     try {
+      const templateService = NotificationTemplateService.getInstance();
+      const titleTemplate = templateService.createTemplate('notifications.types.status_changed.title', {
+        ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8)
+      });
+      const messageTemplate = templateService.createTemplate('notifications.types.status_changed.message', {
+        ticketTitle: context.ticketTitle || i18n.t('notifications.fallback.noTicketTitle'),
+        status: context.newStatus || i18n.t('notifications.fallback.unknownTicket')
+      });
+
       const notificationData = {
         user_id: ticketUserId,
         type: 'status_changed' as const,
-        title: JSON.stringify({
-          key: 'notifications.types.status_changed.title',
-          params: { ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8) }
-        }),
-        message: JSON.stringify({
-          key: 'notifications.types.status_changed.message',
-          params: { 
-            ticketTitle: context.ticketTitle || 'notifications.fallback.noTitle',
-            status: context.newStatus || 'unknown'
-          }
-        }),
+        title: templateService.serializeTemplate(titleTemplate),
+        message: templateService.serializeTemplate(messageTemplate),
         priority: 'medium' as const,
         ticket_id: ticketId,
         read: false,
@@ -408,6 +588,14 @@ export class NotificationService {
         return false;
       }
 
+      const templateService = NotificationTemplateService.getInstance();
+      const titleTemplate = templateService.createTemplate('notifications.types.comment_added.title', {
+        ticketNumber: ticket.ticket_number || '#' + ticketId.slice(-8)
+      });
+      const messageTemplate = templateService.createTemplate('notifications.types.comment_added.message', {
+        ticketTitle: ticket.title || i18n.t('notifications.fallback.noTicketTitle')
+      });
+
       const notifications = [];
       
       // Notify ticket creator (if not the commenter)
@@ -415,14 +603,8 @@ export class NotificationService {
         notifications.push({
           user_id: ticket.user_id,
           type: 'comment_added' as const,
-          title: JSON.stringify({
-            key: 'notifications.types.comment_added.title',
-            params: { ticketNumber: ticket.ticket_number || '#' + ticketId.slice(-8) }
-          }),
-          message: JSON.stringify({
-            key: 'notifications.types.comment_added.message',
-            params: { ticketTitle: ticket.title || 'notifications.fallback.noTitle' }
-          }),
+          title: templateService.serializeTemplate(titleTemplate),
+          message: templateService.serializeTemplate(messageTemplate),
           priority: 'medium' as const,
           ticket_id: ticketId,
           read: false
@@ -434,14 +616,8 @@ export class NotificationService {
         notifications.push({
           user_id: ticket.assigned_to,
           type: 'comment_added' as const,
-          title: JSON.stringify({
-            key: 'notifications.types.comment_added.title',
-            params: { ticketNumber: ticket.ticket_number || '#' + ticketId.slice(-8) }
-          }),
-          message: JSON.stringify({
-            key: 'notifications.types.comment_added.message',
-            params: { ticketTitle: ticket.title || 'notifications.fallback.noTitle' }
-          }),
+          title: templateService.serializeTemplate(titleTemplate),
+          message: templateService.serializeTemplate(messageTemplate),
           priority: 'medium' as const,
           ticket_id: ticketId,
           read: false
@@ -508,37 +684,21 @@ export class NotificationService {
    */
   static showToastNotification(notification: Notification): void {
     const icon = this.getNotificationIcon(notification.type || 'default');
+    const templateService = NotificationTemplateService.getInstance();
     
-    // Try to translate the message and title if they're JSON i18n keys
-    let message = notification.message;
-    let title = notification.title;
+    // Process the notification content using the template service
+    const processedContent = templateService.processNotificationForDisplay({
+      title: notification.title,
+      message: notification.message,
+      type: notification.type
+    });
     
-    try {
-      const parsedMessage = JSON.parse(notification.message);
-      if (parsedMessage.key) {
-        // For toast notifications, we'll use a simplified message since we don't have access to t() here
-        message = 'New notification';
-      }
-    } catch {
-      // If it's not JSON, use as-is
-    }
-    
-    try {
-      const parsedTitle = JSON.parse(notification.title);
-      if (parsedTitle.key) {
-        // Use a simplified title for toast
-        title = '🔔 New Notification';
-      }
-    } catch {
-      // If it's not JSON, use as-is
-    }
-    
-    const displayMessage = `${title}: ${message}`;
+    const displayMessage = `${processedContent.title}: ${processedContent.message}`;
     
     toast(`${icon} ${displayMessage}`, {
       duration: 5000,
       action: notification.ticket_id ? {
-        label: 'View Ticket',
+        label: i18n.t('notifications.actions.viewTicket'),
         onClick: () => {
           window.location.href = `/ticket/${notification.ticket_id}`;
         }
@@ -551,18 +711,17 @@ export class NotificationService {
    */
   static async createSLAWarningNotification(ticketId: string, userId: string, context: NotificationContext): Promise<boolean> {
     try {
+      const templateService = NotificationTemplateService.getInstance();
+      const titleTemplate = templateService.createTemplate('notifications.types.sla_warning.title');
+      const messageTemplate = templateService.createTemplate('notifications.types.sla_warning.message', {
+        ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8)
+      });
+
       const notificationData = {
         user_id: userId,
         type: 'sla_warning' as const,
-        title: JSON.stringify({
-          key: 'notifications.types.sla_warning.title'
-        }),
-        message: JSON.stringify({
-          key: 'notifications.types.sla_warning.message',
-          params: { 
-            ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8)
-          }
-        }),
+        title: templateService.serializeTemplate(titleTemplate),
+        message: templateService.serializeTemplate(messageTemplate),
         ticket_id: ticketId,
         priority: 'high' as const,
         read: false,
@@ -591,18 +750,17 @@ export class NotificationService {
    */
   static async createSLABreachNotification(ticketId: string, userId: string, context: NotificationContext): Promise<boolean> {
     try {
+      const templateService = NotificationTemplateService.getInstance();
+      const titleTemplate = templateService.createTemplate('notifications.types.sla_breach.title');
+      const messageTemplate = templateService.createTemplate('notifications.types.sla_breach.message', {
+        ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8)
+      });
+
       const notificationData = {
         user_id: userId,
         type: 'sla_breach' as const,
-        title: JSON.stringify({
-          key: 'notifications.types.sla_breach.title'
-        }),
-        message: JSON.stringify({
-          key: 'notifications.types.sla_breach.message',
-          params: { 
-            ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8)
-          }
-        }),
+        title: templateService.serializeTemplate(titleTemplate),
+        message: templateService.serializeTemplate(messageTemplate),
         ticket_id: ticketId,
         priority: 'high' as const,
         read: false,
@@ -631,18 +789,17 @@ export class NotificationService {
    */
   static async createFirstResponseNotification(ticketId: string, userId: string, context: NotificationContext): Promise<boolean> {
     try {
+      const templateService = NotificationTemplateService.getInstance();
+      const titleTemplate = templateService.createTemplate('notifications.types.first_response.title');
+      const messageTemplate = templateService.createTemplate('notifications.types.first_response.message', {
+        ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8)
+      });
+
       const notificationData = {
         user_id: userId,
         type: 'status_changed' as const,
-        title: JSON.stringify({
-          key: 'notifications.types.first_response.title'
-        }),
-        message: JSON.stringify({
-          key: 'notifications.types.first_response.message',
-          params: { 
-            ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8)
-          }
-        }),
+        title: templateService.serializeTemplate(titleTemplate),
+        message: templateService.serializeTemplate(messageTemplate),
         priority: 'medium' as const,
         ticket_id: ticketId,
         read: false,
@@ -667,11 +824,17 @@ export class NotificationService {
 
   static async createFeedbackRequestNotification(ticketId: string, userId: string, context: NotificationContext): Promise<boolean> {
     try {
+      const templateService = NotificationTemplateService.getInstance();
+      const titleTemplate = templateService.createTemplate('notifications.types.feedback_request.title');
+      const messageTemplate = templateService.createTemplate('notifications.types.feedback_request.message', {
+        ticketNumber: context.ticketNumber || '#' + ticketId.slice(-8)
+      });
+
       const notificationData = {
         user_id: userId,
         type: 'status_changed' as const,
-        title: 'Avalie seu atendimento',
-        message: `Seu chamado #${context.ticketNumber} foi resolvido! Que tal avaliar o atendimento recebido? Sua opinião é muito importante para nós.`,
+        title: templateService.serializeTemplate(titleTemplate),
+        message: templateService.serializeTemplate(messageTemplate),
         priority: 'medium' as const,
         ticket_id: ticketId,
         read: false,

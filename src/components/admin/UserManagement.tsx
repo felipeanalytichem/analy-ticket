@@ -1,17 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo, memo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogFooter 
-} from "@/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,31 +13,29 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { UserList } from "@/components/admin/UserList";
+import { UserForm } from "@/components/admin/UserForm";
+import { UserPasswordDialog } from "@/components/admin/UserPasswordDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { adminService } from "@/lib/adminService";
 import { useAuth } from "@/contexts/AuthContext";
 import { 
   Users, 
   Plus, 
-  Edit, 
-  Trash2, 
-  Shield, 
-  Loader2, 
-  Search, 
-  Copy,
-  Check,
+  Search,
+  Loader2,
+  AlertCircle,
   RefreshCw,
-  Clock,
-  UserPlus,
-  Send,
-  Key,
-  AlertTriangle,
-  Eye,
-  EyeOff
+  Wifi
 } from "lucide-react";
 import { EmailService } from '@/lib/emailService';
+import { transformUserName } from '@/lib/utils';
+import { SafeTranslation } from '@/components/ui/SafeTranslation';
+import { useTranslation } from 'react-i18next';
+import { UserManagementSkeleton } from './UserManagementSkeleton';
+import { useDebounce } from '@/hooks/useDebounce';
+import { errorRecoveryService, ErrorType, type RecoveryResult } from '@/lib/errorRecoveryService';
 
 interface User {
   id: string;
@@ -62,56 +51,213 @@ interface User {
   must_change_password?: boolean;
 }
 
-export const UserManagement = () => {
+interface UserFormData {
+  name: string;
+  email: string;
+  role: "user" | "agent" | "admin";
+}
+
+// Memoized UserManagement component for better performance
+export const UserManagement = memo(() => {
   const { user, userProfile, loading: authLoading } = useAuth();
+  const { t } = useTranslation();
+  
+  // Optimized component state with progressive loading phases
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
+  const [initialLoad, setInitialLoad] = useState(true); // Track first load for skeleton
+  const [error, setError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all");
+  
+  // Enhanced error recovery state
+  const [recoveryInProgress, setRecoveryInProgress] = useState(false);
+  const [lastRecoveryResult, setLastRecoveryResult] = useState<RecoveryResult<User[]> | null>(null);
+  const [connectivityStatus, setConnectivityStatus] = useState<boolean | null>(null);
+  
+  // Debounced search for better performance
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+  const [tempPasswordColumnsExist, setTempPasswordColumnsExist] = useState(false);
+  const [deleteUserId, setDeleteUserId] = useState<string | null>(null);
+  
+  // Form state - memoized to prevent unnecessary re-renders
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [roleFilter, setRoleFilter] = useState("all");
-  const [generateTempPassword, setGenerateTempPassword] = useState(false);
-  const [tempPasswordColumnsExist, setTempPasswordColumnsExist] = useState(false);
-  const [generatedPassword, setGeneratedPassword] = useState<string | null>(null);
+  
+  // Password dialog state
   const [showPasswordDialog, setShowPasswordDialog] = useState(false);
-  const [copiedPassword, setCopiedPassword] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [deleteUserId, setDeleteUserId] = useState<string | null>(null);
+  const [generatedPassword, setGeneratedPassword] = useState<string | null>(null);
+  const [createdUser, setCreatedUser] = useState<User | null>(null);
+  
   const { toast } = useToast();
 
-  const loadUsers = async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
+  // Enhanced data loading with comprehensive error recovery
+  const loadUsers = useCallback(async (isRetry = false) => {
+    const loadOperation = async (): Promise<User[]> => {
+      const startTime = performance.now();
+      
+      // Optimized query with specific fields to reduce data transfer
+      const { data, error: dbError } = await supabase
         .from("users")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .select(`
+          id,
+          email,
+          full_name,
+          role,
+          avatar_url,
+          created_at,
+          updated_at,
+          temporary_password,
+          temporary_password_expires_at,
+          must_change_password
+        `)
+        .order("created_at", { ascending: false })
+        .limit(100); // Limit initial load for better performance
 
-      if (error) {
-        console.error("Error loading users:", error);
+      if (dbError) {
+        throw new Error(`Database query failed: ${dbError.message}`);
+      }
+
+      // Optimized transformation with early return for empty data
+      if (!data || data.length === 0) {
+        return [];
+      }
+
+      // Batch transform user data for better performance
+      const transformedUsers = data.map(user => ({
+        ...user,
+        name: transformUserName(user.full_name, user.email)
+      }));
+
+      // Performance logging for monitoring
+      const loadTime = performance.now() - startTime;
+      if (loadTime > 2000) {
+        console.warn(`User loading took ${loadTime.toFixed(2)}ms - consider optimization`);
+      }
+
+      return transformedUsers;
+    };
+
+    try {
+      // Only show loading for initial load or retries
+      if (!isRetry || users.length === 0) {
+        setLoading(true);
+      }
+      setError(null);
+      setRecoveryInProgress(true);
+
+      // Execute with comprehensive error recovery
+      const result = await errorRecoveryService.executeWithRetry(
+        loadOperation,
+        {
+          operation: 'loadUsers',
+          isRetry,
+          userCount: users.length,
+          timestamp: new Date().toISOString()
+        },
+        {
+          maxRetries: isRetry ? 2 : 3, // Fewer retries for manual retries
+          baseDelay: 1000,
+          maxDelay: 10000
+        }
+      );
+
+      setLastRecoveryResult(result);
+
+      if (result.success && result.data) {
+        setUsers(result.data);
+        setInitialLoad(false);
+        setRetryCount(0);
+        
+        // Log successful recovery if there were previous attempts
+        if (result.attempts > 1) {
+          console.log(`✅ User loading succeeded after ${result.attempts} attempts in ${result.totalTime}ms`);
+          toast({
+            title: "Connection Restored",
+            description: `Successfully loaded users after ${result.attempts} attempts.`,
+            variant: "default",
+          });
+        }
+      } else {
+        throw result.error || new Error('Failed to load users');
+      }
+      
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to load users";
+      console.error("Error loading users:", error);
+      setError(errorMessage);
+      setInitialLoad(false);
+      
+      // Update retry count
+      if (isRetry) {
+        setRetryCount(prev => prev + 1);
+      }
+      
+      // Show toast with recovery information
+      if (!isRetry) {
         toast({
-          title: "Error",
-          description: "Failed to load users",
+          title: "Error Loading Users",
+          description: `${errorMessage}${lastRecoveryResult ? ` (${lastRecoveryResult.attempts} attempts)` : ''}`,
+          variant: "destructive",
+        });
+      }
+      
+      throw error; // Re-throw for retry handling
+    } finally {
+      setLoading(false);
+      setRecoveryInProgress(false);
+    }
+  }, [toast, users.length, lastRecoveryResult]);
+
+  // Enhanced retry function with comprehensive error recovery
+  const retryLoadUsers = useCallback(async () => {
+    try {
+      setError(null);
+      
+      // Test connectivity before retrying
+      const isConnected = await errorRecoveryService.testConnectivity();
+      setConnectivityStatus(isConnected);
+      
+      if (!isConnected) {
+        toast({
+          title: "Connection Issue",
+          description: "Please check your internet connection and try again.",
           variant: "destructive",
         });
         return;
       }
-
-      setUsers(data || []);
+      
+      await loadUsers(true); // Mark as retry attempt
     } catch (error) {
-      console.error("Error loading users:", error);
-      toast({
-        title: "Error",
-        description: "Failed to load users",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
+      console.error("Manual retry failed:", error);
+      
+      // Show detailed error information
+      const errorStats = errorRecoveryService.getErrorStats();
+      console.log("Error recovery statistics:", errorStats);
     }
-  };
+  }, [loadUsers, toast]);
 
-  const checkTempPasswordColumns = async () => {
+  // Test network connectivity
+  const testConnectivity = useCallback(async () => {
+    setConnectivityStatus(null); // Show loading state
+    const isConnected = await errorRecoveryService.testConnectivity();
+    setConnectivityStatus(isConnected);
+    
+    toast({
+      title: isConnected ? "Connection OK" : "Connection Failed",
+      description: isConnected 
+        ? "Network connectivity is working properly." 
+        : "Unable to connect to the server. Please check your internet connection.",
+      variant: isConnected ? "default" : "destructive",
+    });
+    
+    return isConnected;
+  }, [toast]);
+
+  const checkTempPasswordColumns = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('users')
@@ -128,147 +274,141 @@ export const UserManagement = () => {
       console.log('Temporary password system not available');
       setTempPasswordColumnsExist(false);
     }
-  };
-
-  useEffect(() => {
-    loadUsers();
-    checkTempPasswordColumns();
   }, []);
 
-  const roleLabels = {
-    admin: "Administrator",
-    agent: "Agent", 
-    user: "User"
-  };
-
-  const getRoleColor = (role: string) => {
-    switch (role) {
-      case "admin": return "destructive";
-      case "agent": return "default";
-      case "user": return "secondary";
-      default: return "secondary";
+  // Optimized useEffect with reduced dependencies and better performance
+  useEffect(() => {
+    // Only load data when user is authenticated and has admin role
+    if (user && userProfile && userProfile.role === 'admin' && !authLoading) {
+      // Skip if data is already loaded to prevent unnecessary requests
+      if (users.length > 0 && !error) {
+        return;
+      }
+      
+      // Progressive loading approach
+      const performInitialLoad = async () => {
+        try {
+          // Load users and temp password columns in parallel for better performance
+          const [usersResult] = await Promise.allSettled([
+            loadUsers(),
+            checkTempPasswordColumns()
+          ]);
+          
+          // Handle any failures in parallel operations with enhanced recovery
+          if (usersResult.status === 'rejected') {
+            console.log("Initial load failed, error recovery service will handle retries automatically");
+            // The error recovery service in loadUsers will handle automatic retries
+            // No need for manual retry logic here
+          }
+        } catch (error) {
+          console.error("Unexpected error during initial load:", error);
+        }
+      };
+      
+      performInitialLoad();
     }
-  };
+  }, [user, userProfile, authLoading]); // Reduced dependencies for better performance
 
-  // Check authentication and admin role
-  if (authLoading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin" />
-        <span className="ml-2">Loading...</span>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return (
-      <Card>
-        <CardContent className="p-6">
-          <div className="text-center">
-            <AlertTriangle className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Authentication Required</h3>
-            <p className="text-gray-600">Please log in to access user management.</p>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (userProfile?.role !== 'admin') {
-    return (
-      <Card>
-        <CardContent className="p-6">
-          <div className="text-center">
-            <Shield className="h-12 w-12 text-red-500 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Access Denied</h3>
-            <p className="text-gray-600">Administrator privileges required to access user management.</p>
-            <p className="text-sm text-gray-500 mt-2">Current role: {userProfile?.role || 'None'}</p>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
+  // Simple authentication check
+  const isAuthenticated = !!user && !!userProfile;
+  const hasAdminRole = userProfile?.role === 'admin';
+  const canAccessPage = isAuthenticated && hasAdminRole;
 
 
 
-  const filteredUsers = users.filter((user) => {
-    const matchesSearch = 
-      (user.name && user.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (user.email && user.email.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchesRole = roleFilter === "all" || user.role === roleFilter;
-    return matchesSearch && matchesRole;
-  });
-
-  const handleCreateUser = () => {
-    setEditingUser({
-      id: "",
-      name: "",
-      email: "",
-      role: "user",
-      created_at: "",
-      updated_at: "",
-    });
-    setIsCreating(true);
-    setGenerateTempPassword(false);
-  };
-
-  const handleEditUser = (user: User) => {
-    setEditingUser({
-      ...user,
-      name: user.full_name || user.name || user.email || ''
-    });
-    setIsCreating(false);
-    setGenerateTempPassword(false);
-  };
-
-  const handleSaveUser = async () => {
-    if (!editingUser?.name || !editingUser?.email || !editingUser?.role) {
-      toast({
-        title: "Required Fields",
-        description: "Please fill in name, email and role.",
-        variant: "destructive",
+  // Optimized search and filtering with debounced search for better performance
+  const filteredUsers = useMemo(() => {
+    // Early return for no filters
+    if (!debouncedSearchTerm.trim() && roleFilter === "all") {
+      return users;
+    }
+    
+    let filtered = users;
+    
+    // Optimized search filter with early termination
+    if (debouncedSearchTerm.trim()) {
+      const searchLower = debouncedSearchTerm.toLowerCase().trim();
+      filtered = filtered.filter(user => {
+        // Check most common fields first for better performance
+        return user.email.toLowerCase().includes(searchLower) ||
+               user.name.toLowerCase().includes(searchLower) ||
+               (user.full_name && user.full_name.toLowerCase().includes(searchLower));
       });
-      return;
     }
+    
+    // Apply role filter after search for better performance
+    if (roleFilter !== "all") {
+      filtered = filtered.filter(user => user.role === roleFilter);
+    }
+    
+    return filtered;
+  }, [users, debouncedSearchTerm, roleFilter]);
 
-    try {
-      setIsSubmitting(true);
+  // Optimized callback handlers with stable references
+  const handleDeleteUser = useCallback((userId: string) => {
+    setDeleteUserId(userId);
+  }, []);
 
+  const handleCreateUser = useCallback(() => {
+    setEditingUser(null);
+    setIsCreating(true);
+    setIsFormOpen(true);
+  }, []);
+
+  const handleEditUser = useCallback((user: User) => {
+    setEditingUser(user);
+    setIsCreating(false);
+    setIsFormOpen(true);
+  }, []);
+
+  const handleCloseForm = useCallback(() => {
+    setIsFormOpen(false);
+    setEditingUser(null);
+    setIsCreating(false);
+  }, []);
+
+  // Optimized search handler with debouncing for better performance
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchTerm(value);
+  }, []);
+
+  const handleRoleFilterChange = useCallback((value: string) => {
+    setRoleFilter(value);
+  }, []);
+
+  const handleSaveUser = useCallback(async (userData: UserFormData, generateTempPassword: boolean) => {
+    const saveOperation = async () => {
       if (isCreating) {
         // Create user via Edge Function
         const response = await adminService.createUser({
-          email: editingUser.email,
-          name: editingUser.name,
-          role: editingUser.role,
+          email: userData.email,
+          name: userData.name,
+          role: userData.role,
           generateTempPassword: generateTempPassword
         });
 
         if (response.user) {
+          // Add user to list
           setUsers(prev => [response.user as User, ...prev]);
           
-          if (response.temporaryPassword) {
-            console.log(`[User Creation] Temporary password generated for ${editingUser.email}: ${response.temporaryPassword}`);
-            setGeneratedPassword(response.temporaryPassword);
-            setEditingUser(response.user as User);
-            setShowPasswordDialog(true);
-          } else {
-            setGeneratedPassword(null);
-            setEditingUser(response.user as User);
-            setShowPasswordDialog(true); 
-          }
+          // Set up password dialog state
+          setCreatedUser(response.user as User);
+          setGeneratedPassword(response.temporaryPassword || null);
+          
+          // Close form and show password dialog
+          setIsFormOpen(false);
+          setShowPasswordDialog(true);
         }
 
-        toast({
-          title: "User Created",
-          description: "User has been successfully created in the authentication system.",
-        });
-        return;
+        return response;
 
       } else { // Update logic for existing user
+        if (!editingUser) throw new Error('No user selected for editing');
+        
         const updates: Partial<User> & { full_name?: string } = {
-            full_name: editingUser.name,
-            email: editingUser.email,
-            role: editingUser.role,
+            full_name: userData.name,
+            email: userData.email,
+            role: userData.role,
             updated_at: new Date().toISOString()
         };
         
@@ -282,11 +422,11 @@ export const UserManagement = () => {
         const originalUser = users.find(u => u.id === editingUser.id);
         const authUpdates: { email?: string; user_metadata?: any } = {};
 
-        if (editingUser.email !== originalUser?.email) {
-            authUpdates.email = editingUser.email;
+        if (userData.email !== originalUser?.email) {
+            authUpdates.email = userData.email;
         }
-        if (editingUser.role !== originalUser?.role) {
-            authUpdates.user_metadata = { role: editingUser.role };
+        if (userData.role !== originalUser?.role) {
+            authUpdates.user_metadata = { role: userData.role };
         }
 
         if (Object.keys(authUpdates).length > 0) {
@@ -296,138 +436,150 @@ export const UserManagement = () => {
             );
             if (authError) {
                 console.warn("Failed to update auth user:", authError);
-                toast({
-                    title: "Warning",
-                    description: "User profile updated, but failed to update authentication details.",
-                    variant: "default",
-                });
+                // Don't throw here, just warn - profile update succeeded
             }
         }
 
-        // Also update auth user email if changed
-        if (editingUser.email !== users.find(u => u.id === editingUser.id)?.email) {
-            const { error: authError } = await supabase.auth.admin.updateUserById(
-                editingUser.id,
-                { email: editingUser.email }
-            );
-            if (authError) {
-                console.warn("Failed to update auth user email:", authError);
-                toast({
-                    title: "Warning",
-                    description: "User profile updated, but failed to update authentication email. The user may need to log in with their old email.",
-                    variant: "default",
-                });
-            }
-        }
-
-        await loadUsers();
-        toast({
-          title: "User Updated",
-          description: "User details have been successfully updated.",
-        });
+        // Update user in list
+        setUsers(prev => prev.map(u => 
+          u.id === editingUser.id 
+            ? { ...u, ...updates, name: userData.name }
+            : u
+        ));
+        
+        // Close form
+        setIsFormOpen(false);
+        
+        return { success: true };
       }
+    };
+
+    try {
+      setIsSubmitting(true);
+      
+      // Execute with comprehensive error recovery
+      const result = await errorRecoveryService.executeWithRetry(
+        saveOperation,
+        {
+          operation: isCreating ? 'createUser' : 'updateUser',
+          userData: { email: userData.email, role: userData.role },
+          timestamp: new Date().toISOString()
+        },
+        {
+          maxRetries: 2, // Fewer retries for user operations
+          baseDelay: 1500,
+          maxDelay: 8000
+        }
+      );
+
+      if (result.success) {
+        const successMessage = isCreating 
+          ? "User has been successfully created in the authentication system."
+          : "User details have been successfully updated.";
+          
+        toast({
+          title: isCreating 
+            ? t('admin.userManagement.userCreated', 'User Created')
+            : t('admin.userManagement.userUpdated', 'User Updated'),
+          description: result.attempts > 1 
+            ? `${successMessage} (Completed after ${result.attempts} attempts)`
+            : successMessage,
+        });
+        
+        // Refresh data in background for updates
+        if (!isCreating) {
+          loadUsers();
+        }
+      } else {
+        throw result.error || new Error('Save operation failed');
+      }
+      
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "An unknown error occurred.";
-      console.error("Error saving user:", errorMessage);
+      
+      // Get error recovery statistics for better error reporting
+      const errorStats = errorRecoveryService.getErrorStats();
+      const detailedMessage = lastRecoveryResult 
+        ? `${errorMessage} (${lastRecoveryResult.attempts} attempts, ${lastRecoveryResult.totalTime}ms)`
+        : errorMessage;
+      
       toast({
-        title: "Error",
-        description: `Error saving user: ${errorMessage}`,
+        title: t('admin.userManagement.errorSavingUser', 'Error Saving User'),
+        description: `Error saving user: ${detailedMessage}`,
         variant: "destructive",
       });
+      
+      console.error('Save user error with recovery stats:', { error, errorStats });
+      throw error; // Re-throw to let form handle the error state
     } finally {
       setIsSubmitting(false);
-      if (!showPasswordDialog) {
-          setEditingUser(null);
-          setIsCreating(false);
-      }
     }
-  };
+  }, [isCreating, editingUser, users, toast, loadUsers, t, lastRecoveryResult]);
 
-  const generateTemporaryPassword = async (userId: string): Promise<string> => {
-    try {
+  const handleResetTempPassword = useCallback(async (userId: string) => {
+    const resetPasswordOperation = async () => {
       const tempPassword = await adminService.generateTemporaryPassword(userId);
-      return tempPassword;
-    } catch (error) {
-      console.error('Error generating temporary password:', error);
-      throw error;
-    }
-  };
-
-  const handleResetTempPassword = async (userId: string) => {
-    try {
-      const tempPassword = await generateTemporaryPassword(userId);
       setGeneratedPassword(tempPassword);
       setShowPasswordDialog(true);
       
       // Refresh user list to show updated status
-      loadUsers();
+      await loadUsers();
       
-      toast({
-        title: "Temporary Password Generated",
-        description: "New temporary password has been generated successfully.",
-      });
+      return tempPassword;
+    };
+
+    try {
+      // Execute with error recovery
+      const result = await errorRecoveryService.executeWithRetry(
+        resetPasswordOperation,
+        {
+          operation: 'resetTempPassword',
+          userId,
+          timestamp: new Date().toISOString()
+        },
+        {
+          maxRetries: 2,
+          baseDelay: 1500,
+          maxDelay: 6000
+        }
+      );
+
+      if (result.success) {
+        toast({
+          title: t('admin.userManagement.tempPasswordGenerated'),
+          description: result.attempts > 1 
+            ? `${t('admin.userManagement.tempPasswordGeneratedDesc')} (Completed after ${result.attempts} attempts)`
+            : t('admin.userManagement.tempPasswordGeneratedDesc'),
+        });
+      } else {
+        throw result.error || new Error('Password reset failed');
+      }
+      
     } catch (error) {
       console.error('Error resetting temporary password:', error);
       toast({
-        title: "Error",
-        description: "Error generating new temporary password.",
+        title: t('common.error', 'Error'),
+        description: t('admin.userManagement.errorGeneratingPassword'),
         variant: "destructive",
       });
     }
-  };
+  }, [loadUsers, toast, t]);
 
-  // Copy password to clipboard
-  const copyPasswordToClipboard = async () => {
-    if (generatedPassword) {
-      try {
-        await navigator.clipboard.writeText(generatedPassword);
-        setCopiedPassword(true);
-        setTimeout(() => setCopiedPassword(false), 2000);
-        toast({
-          title: "Copied!",
-          description: "Temporary password copied to clipboard.",
-        });
-      } catch (err) {
-        console.error('Failed to copy password:', err);
-        toast({
-          title: "Error",
-          description: "Failed to copy password.",
-          variant: "destructive",
-        });
-      }
-    }
-  };
+  const handleClosePasswordDialog = useCallback(() => {
+    setShowPasswordDialog(false);
+    setGeneratedPassword(null);
+    setCreatedUser(null);
+    setEditingUser(null);
+    setIsCreating(false);
+  }, []);
 
-  // Check if temporary password is expired
-  const isPasswordExpired = (expiresAt: string | null) => {
-    if (!expiresAt) return false;
-    return new Date(expiresAt) < new Date();
-  };
 
-  // Get remaining time for password expiry
-  const getPasswordExpiryTime = (expiresAt: string | null) => {
-    if (!expiresAt) return '';
-    const expiry = new Date(expiresAt);
-    const now = new Date();
-    const diff = expiry.getTime() - now.getTime();
-    
-    if (diff <= 0) return 'Expired';
-    
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    
-    if (hours > 0) {
-      return `${hours}h ${minutes}m remaining`;
-    } else {
-      return `${minutes}m remaining`;
-    }
-  };
 
-  const confirmDeleteUser = async () => {
+  const confirmDeleteUser = useCallback(async () => {
     if (!deleteUserId) return;
     
-    try {
-      console.log('🗑️ Deleting user:', deleteUserId);
+    const deleteOperation = async () => {
+      console.log(`🗑️ Deleting user:`, deleteUserId);
       
       const { error } = await supabase
         .from('users')
@@ -436,46 +588,58 @@ export const UserManagement = () => {
 
       if (error) {
         console.error('Delete error:', error);
-        throw error;
+        throw new Error(`Failed to delete user: ${error.message}`);
       }
 
       // Remove from local state
       setUsers(prev => prev.filter(user => user.id !== deleteUserId));
       
-      toast({
-        title: "User Removed",
-        description: "User has been removed successfully.",
-      });
-      
       console.log('✅ User deleted successfully');
+      return { success: true };
+    };
+    
+    try {
+      // Execute with error recovery
+      const result = await errorRecoveryService.executeWithRetry(
+        deleteOperation,
+        {
+          operation: 'deleteUser',
+          userId: deleteUserId,
+          timestamp: new Date().toISOString()
+        },
+        {
+          maxRetries: 2,
+          baseDelay: 1000,
+          maxDelay: 5000
+        }
+      );
+
+      if (result.success) {
+        toast({
+          title: t('admin.userManagement.userRemoved'),
+          description: result.attempts > 1 
+            ? `${t('admin.userManagement.userRemovedDesc')} (Completed after ${result.attempts} attempts)`
+            : t('admin.userManagement.userRemovedDesc'),
+        });
+      } else {
+        throw result.error || new Error('Delete operation failed');
+      }
+      
     } catch (error) {
-      console.error('Error deleting user:', error);
+      const errorMessage = error instanceof Error ? error.message : "An unknown error occurred.";
       toast({
-        title: "Error",
-        description: "Error removing user. Please try again.",
+        title: t('admin.userManagement.errorRemovingUser'),
+        description: `Error removing user: ${errorMessage}`,
         variant: "destructive",
       });
     } finally {
       setDeleteUserId(null);
     }
-  };
+  }, [deleteUserId, toast, t]);
 
-  const formatDate = (dateString: string) => {
-    try {
-      return new Date(dateString).toLocaleDateString('en-US', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    } catch (error) {
-      return 'Invalid Date';
-    }
-  };
 
-  // Send invitation email to existing user
-  const handleSendInvitation = async (user: User) => {
+
+  const handleSendInvitation = useCallback(async (user: User) => {
     try {
       console.log('📧 Sending invitation email to existing user:', user.email);
       
@@ -487,48 +651,160 @@ export const UserManagement = () => {
 
       if (emailResult.success) {
         toast({
-          title: "Invitation Sent",
-          description: `Invitation access email sent to ${user.email}.`,
+          title: t('admin.userManagement.invitationSent'),
+          description: t('admin.userManagement.invitationSentDesc', { email: user.email }),
         });
       } else {
         console.warn('⚠️ Failed to send invitation email:', emailResult.error);
         toast({
-          title: "Send Error",
-          description: `Failed to send invitation email to ${user.email}: ${emailResult.error}`,
+          title: t('admin.userManagement.sendError'),
+          description: t('admin.userManagement.sendErrorDesc', { email: user.email, error: emailResult.error }),
           variant: "destructive",
         });
       }
     } catch (error) {
       console.error('❌ Error sending invitation email:', error);
       toast({
-        title: "Send Error",
-        description: "Unexpected error sending invitation email.",
+        title: t('admin.userManagement.sendError'),
+        description: t('admin.userManagement.unexpectedError'),
         variant: "destructive",
       });
     }
-  };
+  }, [toast, t]);
 
-  if (loading) {
+  // Show loading state during authentication
+  if (authLoading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin" />
-        <span className="ml-2">Loading users...</span>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
+          <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+        </div>
       </div>
     );
   }
 
+  // Show access denied for non-admin users
+  if (!canAccessPage) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+            Access Denied
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
+            You don't have permission to access this page.
+          </p>
+          <Button
+            onClick={() => window.history.back()}
+            variant="outline"
+          >
+            Go Back
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Show skeleton during initial load for better perceived performance
+  if (initialLoad && loading && users.length === 0 && !error) {
+    return <UserManagementSkeleton />;
+  }
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-testid="user-management-container">
+      {/* Progressive loading indicator - only show for subsequent loads */}
+      {loading && !initialLoad && users.length === 0 && !error && (
+        <div className="flex items-center justify-center py-8">
+          <Loader2 className="h-6 w-6 animate-spin mr-2" />
+          <span>Loading users...</span>
+        </div>
+      )}
+
+      {/* Enhanced error indicator with comprehensive recovery information */}
+      {error && (
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+          <div className="flex items-center">
+            <AlertCircle className="h-5 w-5 text-red-500 mr-2" />
+            <div className="flex-1">
+              <h3 className="text-sm font-medium text-red-800 dark:text-red-200">
+                Error Loading Users
+              </h3>
+              <p className="text-sm text-red-700 dark:text-red-300 mt-1">
+                {error}
+              </p>
+              
+              {/* Recovery information */}
+              {lastRecoveryResult && (
+                <div className="mt-2 space-y-1">
+                  <p className="text-xs text-red-600 dark:text-red-400">
+                    Recovery attempts: {lastRecoveryResult.attempts} 
+                    {lastRecoveryResult.totalTime && ` (${lastRecoveryResult.totalTime}ms)`}
+                  </p>
+                  {lastRecoveryResult.recoveryActions.length > 0 && (
+                    <p className="text-xs text-red-600 dark:text-red-400">
+                      Actions taken: {lastRecoveryResult.recoveryActions.join(', ')}
+                    </p>
+                  )}
+                </div>
+              )}
+              
+              {/* Connectivity status */}
+              {connectivityStatus !== null && (
+                <div className="mt-2 flex items-center gap-1">
+                  <div className={`w-2 h-2 rounded-full ${connectivityStatus ? 'bg-green-500' : 'bg-red-500'}`} />
+                  <span className="text-xs text-red-600 dark:text-red-400">
+                    Network: {connectivityStatus ? 'Connected' : 'Disconnected'}
+                  </span>
+                </div>
+              )}
+            </div>
+            
+            <div className="ml-4 flex flex-col gap-2">
+              <Button
+                onClick={retryLoadUsers}
+                variant="outline"
+                size="sm"
+                disabled={loading || recoveryInProgress}
+              >
+                <RefreshCw className={`h-4 w-4 mr-1 ${(loading || recoveryInProgress) ? 'animate-spin' : ''}`} />
+                {loading || recoveryInProgress ? 'Retrying...' : 'Retry'}
+              </Button>
+              
+              <Button
+                onClick={testConnectivity}
+                variant="outline"
+                size="sm"
+                disabled={connectivityStatus === null}
+              >
+                {connectivityStatus === null ? (
+                  <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                ) : (
+                  <Wifi className="h-4 w-4 mr-1" />
+                )}
+                Test Connection
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg flex items-center gap-2">
               <Users className="h-5 w-5" />
-              User Management ({users.length})
+              <span data-testid="user-count">
+                <SafeTranslation 
+                  i18nKey="admin.userManagement.userCount" 
+                  fallback="User Management ({{count}})"
+                  values={{ count: users.length }}
+                />
+              </span>
             </CardTitle>
-            <Button onClick={handleCreateUser} className="flex items-center gap-2">
+            <Button onClick={handleCreateUser} className="flex items-center gap-2" data-testid="create-user-button">
               <Plus className="h-4 w-4" />
-              New User
+              <SafeTranslation i18nKey="admin.userManagement.newUser" fallback="New User" />
             </Button>
           </div>
         </CardHeader>
@@ -537,108 +813,60 @@ export const UserManagement = () => {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
-                placeholder="Search users by name or email..."
+                placeholder={t('admin.userManagement.searchPlaceholder')}
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => handleSearchChange(e.target.value)}
                 className="pl-10"
+                data-testid="search-input"
               />
             </div>
-            <Select value={roleFilter} onValueChange={setRoleFilter}>
-              <SelectTrigger className="w-full sm:w-48">
-                <SelectValue placeholder="Filter by role" />
+            <Select value={roleFilter} onValueChange={handleRoleFilterChange}>
+              <SelectTrigger className="w-full sm:w-48" data-testid="role-filter">
+                <SelectValue placeholder={t('admin.userManagement.filterByRole')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Roles</SelectItem>
-                <SelectItem value="admin">Administrator</SelectItem>
-                <SelectItem value="agent">Agent</SelectItem>
-                <SelectItem value="user">User</SelectItem>
+                <SelectItem value="all" data-testid="role-filter-all">
+                  <SafeTranslation i18nKey="admin.userManagement.allRoles" fallback="All Roles" />
+                </SelectItem>
+                <SelectItem value="admin" data-testid="role-filter-admin">
+                  <SafeTranslation i18nKey="admin.userManagement.administrator" fallback="Administrator" />
+                </SelectItem>
+                <SelectItem value="agent" data-testid="role-filter-agent">
+                  <SafeTranslation i18nKey="admin.userManagement.agent" fallback="Agent" />
+                </SelectItem>
+                <SelectItem value="user" data-testid="role-filter-user">
+                  <SafeTranslation i18nKey="admin.userManagement.user" fallback="User" />
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          <div className="space-y-4">
-            {filteredUsers.length === 0 ? (
-              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                {searchTerm || roleFilter !== "all" 
-                  ? "No users found with the applied filters."
-                  : "No users registered."
-                }
-              </div>
-            ) : (
-              filteredUsers.map((user) => (
-                <div key={user.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow bg-white dark:bg-gray-800">
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="font-medium text-gray-900 dark:text-gray-100">
-                          {user.name || 'Name not available'}
-                        </h3>
-                        <Badge variant={getRoleColor(user.role)}>
-                          <Shield className="h-3 w-3 mr-1" />
-                          {roleLabels[user.role]}
-                        </Badge>
-                        {tempPasswordColumnsExist && user.temporary_password && (
-                          <Badge variant={isPasswordExpired(user.temporary_password_expires_at) ? "destructive" : "outline"}>
-                            <Clock className="h-3 w-3 mr-1" />
-                            {isPasswordExpired(user.temporary_password_expires_at) ? "Password expired" : "Temporary password"}
-                          </Badge>
-                        )}
-                      </div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">{user.email}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-500">
-                        Created on: {formatDate(user.created_at)}
-                      </p>
-                      {tempPasswordColumnsExist && user.temporary_password && !isPasswordExpired(user.temporary_password_expires_at) && (
-                        <p className="text-xs text-orange-600 dark:text-orange-400">
-                          Password expires in: {getPasswordExpiryTime(user.temporary_password_expires_at)}
-                        </p>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleSendInvitation(user)}
-                        title="Send invitation email"
-                        className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:text-blue-400 dark:hover:text-blue-300 dark:hover:bg-blue-900/20"
-                      >
-                        <Send className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleEditUser(user)}
-                        title="Edit user"
-                        className="text-gray-600 hover:text-gray-800 hover:bg-gray-50 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:bg-gray-700"
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      {tempPasswordColumnsExist && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleResetTempPassword(user.id)}
-                          title="Generate new temporary password"
-                          className="text-green-600 hover:text-green-800 hover:bg-green-50 dark:text-green-400 dark:hover:text-green-300 dark:hover:bg-green-900/20"
-                        >
-                          <RefreshCw className="h-4 w-4" />
-                        </Button>
-                      )}
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setDeleteUserId(user.id)}
-                        title="Remove user"
-                        className="text-red-600 hover:text-red-800 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
+          <UserList
+            users={filteredUsers}
+            tempPasswordColumnsExist={tempPasswordColumnsExist}
+            searchTerm={debouncedSearchTerm}
+            roleFilter={roleFilter}
+            onEditUser={handleEditUser}
+            onDeleteUser={handleDeleteUser}
+            onSendInvitation={handleSendInvitation}
+            onResetTempPassword={handleResetTempPassword}
+          />
+          
+          {/* Search results info */}
+          {debouncedSearchTerm && (
+            <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">
+              <SafeTranslation 
+                i18nKey="admin.userManagement.showingResults" 
+                fallback="Showing {{filtered}} of {{total}} users"
+                values={{ filtered: filteredUsers.length, total: users.length }}
+              />
+              <> <SafeTranslation 
+                i18nKey="admin.userManagement.searchResults" 
+                fallback='for "{{term}}"'
+                values={{ term: debouncedSearchTerm }}
+              /></>
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -646,9 +874,11 @@ export const UserManagement = () => {
       <AlertDialog open={!!deleteUserId} onOpenChange={() => setDeleteUserId(null)}>
         <AlertDialogContent className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-gray-900 dark:text-gray-100">Confirm Removal</AlertDialogTitle>
+            <AlertDialogTitle className="text-gray-900 dark:text-gray-100">
+              <SafeTranslation i18nKey="admin.userManagement.confirmRemoval" fallback="Confirm Removal" />
+            </AlertDialogTitle>
             <AlertDialogDescription className="text-gray-600 dark:text-gray-400">
-              Are you sure you want to remove this user? This action cannot be undone.
+              <SafeTranslation i18nKey="admin.userManagement.confirmRemovalDesc" fallback="Are you sure you want to remove this user? This action cannot be undone." />
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -656,320 +886,38 @@ export const UserManagement = () => {
               onClick={() => setDeleteUserId(null)}
               className="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
             >
-              Cancel
+              <SafeTranslation i18nKey="admin.userManagement.cancel" fallback="Cancel" />
             </AlertDialogCancel>
             <AlertDialogAction 
               onClick={confirmDeleteUser}
               className="bg-red-600 hover:bg-red-700 text-white"
             >
-              Remove
+              <SafeTranslation i18nKey="admin.userManagement.remove" fallback="Remove" />
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* User Edit Dialog */}
-      <Dialog open={!!editingUser} onOpenChange={(open) => {
-        if (!open) {
-          setEditingUser(null);
-          setIsCreating(false);
-          setGenerateTempPassword(false);
-        }
-      }}>
-        <DialogContent className="max-w-md bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
-          <DialogHeader>
-            <DialogTitle className="text-gray-900 dark:text-gray-100">
-              {isCreating ? "New User" : "Edit User"}
-            </DialogTitle>
-          </DialogHeader>
-          
-          {editingUser && (
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name" className="text-gray-900 dark:text-gray-100">Full Name</Label>
-                <Input
-                  id="name"
-                  value={editingUser.name}
-                  onChange={(e) =>
-                    setEditingUser({
-                      ...editingUser,
-                      name: e.target.value
-                    })
-                  }
-                  placeholder="Enter full name"
-                  className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
-                />
-              </div>
+      {/* User Form */}
+      <UserForm
+        isOpen={isFormOpen}
+        onClose={handleCloseForm}
+        onSave={handleSaveUser}
+        user={editingUser}
+        isCreating={isCreating}
+        tempPasswordColumnsExist={tempPasswordColumnsExist}
+        isSubmitting={isSubmitting}
+      />
 
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-gray-900 dark:text-gray-100">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={editingUser.email}
-                  onChange={(e) =>
-                    setEditingUser({
-                      ...editingUser,
-                      email: e.target.value
-                    })
-                  }
-                  placeholder="Enter email"
-                  className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="role" className="text-gray-900 dark:text-gray-100">Role</Label>
-                                 <Select
-                   value={editingUser.role}
-                   onValueChange={(value: "user" | "agent" | "admin") =>
-                     setEditingUser({
-                       ...editingUser,
-                       role: value
-                     })
-                   }
-                >
-                  <SelectTrigger className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
-                    <SelectItem value="user" className="text-gray-900 dark:text-gray-100">User</SelectItem>
-                    <SelectItem value="agent" className="text-gray-900 dark:text-gray-100">Agent</SelectItem>
-                    <SelectItem value="admin" className="text-gray-900 dark:text-gray-100">Administrator</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {isCreating && tempPasswordColumnsExist && (
-                <div className="space-y-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                  <div className="flex items-center space-x-2">
-                    <input
-                      id="generateTempPassword"
-                      type="checkbox"
-                      checked={generateTempPassword}
-                      onChange={(e) => setGenerateTempPassword(e.target.checked)}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    />
-                    <Label htmlFor="generateTempPassword" className="text-sm font-medium flex items-center gap-2 text-gray-900 dark:text-gray-100">
-                      <Key className="h-4 w-4 text-blue-600" />
-                      Generate temporary password
-                    </Label>
-                  </div>
-                  
-                  {generateTempPassword && (
-                    <Alert className="bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-700">
-                      <AlertTriangle className="h-4 w-4 text-blue-600" />
-                      <AlertDescription className="text-sm text-blue-900 dark:text-blue-100">
-                        <strong>Important:</strong> A temporary password will be generated automatically. 
-                        The user will be required to change it on the first login. The password expires in 24 hours.
-                      </AlertDescription>
-                    </Alert>
-                  )}
-                </div>
-              )}
-
-              {isCreating && !tempPasswordColumnsExist && (
-                <Alert className="bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-800">
-                  <AlertTriangle className="h-4 w-4 text-amber-600" />
-                  <AlertDescription className="text-sm text-amber-900 dark:text-amber-100">
-                    <strong>Temporary password system not available.</strong><br/>
-                    To enable this feature, apply the database migration.
-                    <br/>
-                    <a 
-                      href="/APPLY_MIGRATION.md" 
-                      target="_blank"
-                      className="text-blue-600 hover:underline font-medium"
-                    >
-                      View instructions →
-                    </a>
-                  </AlertDescription>
-                </Alert>
-              )}
-            </div>
-          )}
-          
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setEditingUser(null);
-                setIsCreating(false);
-                setGenerateTempPassword(false);
-              }}
-              disabled={isSubmitting}
-              className="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleSaveUser}
-              disabled={isSubmitting || !editingUser?.name || !editingUser?.email}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                isCreating ? "Create" : "Save"
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* User Invitation Dialog with Temporary Password */}
-      <Dialog open={showPasswordDialog} onOpenChange={(open) => {
-        if (!open) {
-          setShowPasswordDialog(false);
-          setGeneratedPassword(null);
-          setCopiedPassword(false);
-          setEditingUser(null);
-          setIsCreating(false);
-          setGenerateTempPassword(false);
-          setShowPassword(false);
-        }
-      }}>
-        <DialogContent className="max-w-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-gray-900 dark:text-gray-100">
-              <UserPlus className="h-5 w-5 text-green-600" />
-              User Created - Invitation Instructions
-            </DialogTitle>
-          </DialogHeader>
-          
-          <div className="space-y-4">
-            <Alert className="bg-green-50 border-green-200 dark:bg-green-900/20 dark:border-green-800">
-              <Check className="h-4 w-4 text-green-600" />
-              <AlertDescription className="text-sm text-green-900 dark:text-green-100">
-                <strong>User created successfully!</strong><br/>
-                {generatedPassword ? 
-                  "Temporary password generated. Share the information below with the user." :
-                  "The user needs to register using the link below."
-                }
-              </AlertDescription>
-            </Alert>
-
-            {/* User Information */}
-            <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-              <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">User Information:</h4>
-              <div className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                <div><strong>Email:</strong> {editingUser?.email}</div>
-                <div><strong>Name:</strong> {editingUser?.name}</div>
-                <div><strong>Role:</strong> {editingUser?.role && roleLabels[editingUser.role]}</div>
-              </div>
-            </div>
-
-            {/* Registration Link */}
-            <div className="space-y-2">
-              <Label className="text-gray-900 dark:text-gray-100">Registration Link:</Label>
-              <div className="flex items-center gap-2">
-                <Input
-                  value={`${window.location.origin}/register`}
-                  readOnly
-                  className="text-sm bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
-                />
-                <Button
-                  onClick={() => {
-                    navigator.clipboard.writeText(`${window.location.origin}/register`);
-                    toast({
-                      title: "Copied!",
-                      description: "Registration link copied to clipboard.",
-                    });
-                  }}
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600"
-                >
-                  <Copy className="h-4 w-4" />
-                  Copy
-                </Button>
-              </div>
-            </div>
-
-            {/* Temporary Password Display */}
-            {generatedPassword && (
-              <div className="space-y-2 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
-                <Label className="text-amber-900 dark:text-amber-100 font-medium">Generated Temporary Password:</Label>
-                <div className="flex items-center gap-2">
-                  <Input
-                    value={generatedPassword}
-                    type={showPassword ? "text" : "password"}
-                    readOnly
-                    className="font-mono text-sm bg-white dark:bg-gray-800 border-amber-300 dark:border-amber-600 text-gray-900 dark:text-gray-100"
-                  />
-                  <Button
-                    onClick={() => setShowPassword(!showPassword)}
-                    variant="outline"
-                    size="sm"
-                    className="bg-white dark:bg-gray-800 border-amber-300 dark:border-amber-600"
-                    title={showPassword ? "Hide password" : "Show password"}
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </Button>
-                  <Button
-                    onClick={copyPasswordToClipboard}
-                    variant="outline"
-                    size="sm"
-                    className="flex items-center gap-2 bg-white dark:bg-gray-800 border-amber-300 dark:border-amber-600"
-                  >
-                    {copiedPassword ? (
-                      <>
-                        <Check className="h-4 w-4 text-green-600" />
-                        Copied
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="h-4 w-4" />
-                        Copy
-                      </>
-                    )}
-                  </Button>
-                </div>
-                <Alert className="mt-2 bg-amber-100 dark:bg-amber-900/30 border-amber-300 dark:border-amber-700">
-                  <Clock className="h-4 w-4 text-amber-600" />
-                  <AlertDescription className="text-xs text-amber-900 dark:text-amber-100">
-                    <strong>Important:</strong> This password expires in 24 hours and must be changed on the first login.
-                  </AlertDescription>
-                </Alert>
-              </div>
-            )}
-
-            {/* Instructions */}
-            <Alert className="bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800">
-              <AlertTriangle className="h-4 w-4 text-blue-600" />
-              <AlertDescription className="text-sm text-blue-900 dark:text-blue-100">
-                <strong>Instructions for the user:</strong><br/>
-                1. Access the registration link<br/>
-                2. Use the email: <strong>{editingUser?.email}</strong><br/>
-                {generatedPassword ? 
-                  "3. Use the provided temporary password" :
-                  "3. Create a strong password"
-                }<br/>
-                4. Complete registration
-              </AlertDescription>
-            </Alert>
-          </div>
-          
-          <DialogFooter>
-            <Button
-              onClick={() => {
-                setShowPasswordDialog(false);
-                setGeneratedPassword(null);
-                setCopiedPassword(false);
-                setEditingUser(null);
-                setIsCreating(false);
-                setGenerateTempPassword(false);
-                setShowPassword(false);
-              }}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              I Understand
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {/* Password Dialog */}
+      <UserPasswordDialog
+        isOpen={showPasswordDialog}
+        onClose={handleClosePasswordDialog}
+        user={createdUser}
+        generatedPassword={generatedPassword}
+      />
     </div>
   );
-};
+});
+
+UserManagement.displayName = "UserManagement";

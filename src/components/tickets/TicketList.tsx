@@ -97,7 +97,7 @@ export const TicketList = ({ limit, showAll = true, assignedOnly = false, unassi
         const errorMessage = error instanceof Error ? error.message : "Failed to load tickets";
         setError(errorMessage);
         toast({
-          title: "Error loading tickets",
+          title: t('tickets.errorLoadingTickets'),
           description: errorMessage,
           variant: "destructive",
         });
@@ -225,8 +225,8 @@ export const TicketList = ({ limit, showAll = true, assignedOnly = false, unassi
   const reloadTickets = async () => {
     if (!userProfile) {
       toast({
-        title: "Error",
-        description: "Please log in to view tickets",
+        title: t('tickets.error'),
+        description: t('tickets.pleaseLoginToViewTickets'),
         variant: "destructive",
       });
       return;
@@ -255,14 +255,14 @@ export const TicketList = ({ limit, showAll = true, assignedOnly = false, unassi
       
       setTickets(ticketData);
       toast({
-        title: "Success",
-        description: "Tickets refreshed successfully",
+        title: t('tickets.success'),
+        description: t('tickets.ticketsRefreshedSuccessfully'),
       });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Failed to refresh tickets";
       setError(errorMessage);
       toast({
-        title: "Error refreshing tickets",
+        title: t('tickets.errorRefreshingTickets'),
         description: errorMessage,
         variant: "destructive",
       });
@@ -481,7 +481,7 @@ export const TicketList = ({ limit, showAll = true, assignedOnly = false, unassi
     return (
       <Alert variant="destructive">
         <AlertCircle className="h-4 w-4" />
-        <AlertTitle>Error</AlertTitle>
+        <AlertTitle>{t('tickets.error')}</AlertTitle>
         <AlertDescription>{error}</AlertDescription>
         <Button
           variant="outline"
@@ -493,12 +493,12 @@ export const TicketList = ({ limit, showAll = true, assignedOnly = false, unassi
           {isRefreshing ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Retrying...
+              {t('tickets.retrying')}
             </>
           ) : (
             <>
               <RefreshCw className="mr-2 h-4 w-4" />
-              Retry
+              {t('tickets.retry')}
             </>
           )}
         </Button>
@@ -511,11 +511,11 @@ export const TicketList = ({ limit, showAll = true, assignedOnly = false, unassi
       <Card className="p-6">
         <div className="text-center">
           <AlertCircle className="mx-auto h-8 w-8 text-muted-foreground" />
-          <h3 className="mt-2 text-lg font-medium">No tickets found</h3>
+          <h3 className="mt-2 text-lg font-medium">{t('tickets.noTicketsFound')}</h3>
           <p className="mt-1 text-sm text-muted-foreground">
             {searchTerm
-              ? "Try adjusting your search or filters"
-              : "No tickets are available at the moment"}
+              ? t('tickets.adjustSearchFilters')
+              : t('tickets.noTicketsMessage')}
           </p>
           <Button
             variant="outline"
@@ -527,12 +527,12 @@ export const TicketList = ({ limit, showAll = true, assignedOnly = false, unassi
             {isRefreshing ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Refreshing...
+                {t('tickets.refreshing')}
               </>
             ) : (
               <>
                 <RefreshCw className="mr-2 h-4 w-4" />
-                Refresh
+                {t('common.refresh')}
               </>
             )}
           </Button>

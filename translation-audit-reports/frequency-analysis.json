@@ -1,0 +1,210 @@
+{
+  "timestamp": "2025-07-31T13:55:04.676Z",
+  "summary": {
+    "uniqueStrings": 1431,
+    "totalOccurrences": 2793,
+    "averageFrequency": 1.9517819706498951
+  },
+  "topFrequentStrings": [
+    {
+      "text": "Button",
+      "frequency": 157
+    },
+    {
+      "text": "Promise",
+      "frequency": 30
+    },
+    {
+      "text": "Cancel",
+      "frequency": 15
+    },
+    {
+      "text": "Error loading agents:",
+      "frequency": 14
+    },
+    {
+      "text": "Error uploading file:",
+      "frequency": 12
+    },
+    {
+      "text": "Error removing reaction:",
+      "frequency": 12
+    },
+    {
+      "text": "sent",
+      "frequency": 11
+    },
+    {
+      "text": "Category",
+      "frequency": 10
+    },
+    {
+      "text": "Error sending message:",
+      "frequency": 10
+    },
+    {
+      "text": "Error adding reaction:",
+      "frequency": 10
+    },
+    {
+      "text": "Error submitting feedback:",
+      "frequency": 10
+    },
+    {
+      "text": "Description",
+      "frequency": 9
+    },
+    {
+      "text": "passed",
+      "frequency": 8
+    },
+    {
+      "text": "Error marking all notifications as read:",
+      "frequency": 8
+    },
+    {
+      "text": "Error deleting notification:",
+      "frequency": 8
+    },
+    {
+      "text": "Error creating task:",
+      "frequency": 8
+    },
+    {
+      "text": "🔗 Failed URL:",
+      "frequency": 8
+    },
+    {
+      "text": "Error assigning ticket:",
+      "frequency": 8
+    },
+    {
+      "text": "Retry",
+      "frequency": 7
+    },
+    {
+      "text": "open",
+      "frequency": 7
+    },
+    {
+      "text": "Actions",
+      "frequency": 6
+    },
+    {
+      "text": "Refresh",
+      "frequency": 6
+    },
+    {
+      "text": "Avg Resolution",
+      "frequency": 6
+    },
+    {
+      "text": "Error loading session timeout settings:",
+      "frequency": 6
+    },
+    {
+      "text": "Chat",
+      "frequency": 6
+    },
+    {
+      "text": "Start the conversation",
+      "frequency": 6
+    },
+    {
+      "text": "Export",
+      "frequency": 6
+    },
+    {
+      "text": "Close",
+      "frequency": 6
+    },
+    {
+      "text": "Error creating notification:",
+      "frequency": 6
+    },
+    {
+      "text": "Error marking notification as read:",
+      "frequency": 6
+    },
+    {
+      "text": "Ticket não encontrado",
+      "frequency": 6
+    },
+    {
+      "text": "Error getting chat messages:",
+      "frequency": 6
+    },
+    {
+      "text": "Error sending chat message:",
+      "frequency": 6
+    },
+    {
+      "text": "Error uploading chat file:",
+      "frequency": 6
+    },
+    {
+      "text": "Error marking chat as read:",
+      "frequency": 6
+    },
+    {
+      "text": "Error getting chat participants:",
+      "frequency": 6
+    },
+    {
+      "text": "Error getting unread count:",
+      "frequency": 6
+    },
+    {
+      "text": "🔧 Validation error:",
+      "frequency": 6
+    },
+    {
+      "text": "Todo tasks functionality requires database migration to be applied",
+      "frequency": 6
+    },
+    {
+      "text": "Error creating signed URL:",
+      "frequency": 6
+    },
+    {
+      "text": "Email",
+      "frequency": 6
+    },
+    {
+      "text": "Agent",
+      "frequency": 5
+    },
+    {
+      "text": "Featured",
+      "frequency": 5
+    },
+    {
+      "text": "Back",
+      "frequency": 5
+    },
+    {
+      "text": "Status",
+      "frequency": 5
+    },
+    {
+      "text": "Priority",
+      "frequency": 5
+    },
+    {
+      "text": "Apply",
+      "frequency": 5
+    },
+    {
+      "text": "pending",
+      "frequency": 5
+    },
+    {
+      "text": "Conditions",
+      "frequency": 4
+    },
+    {
+      "text": "Max Concurrent Tickets per Agent",
+      "frequency": 4
+    }
+  ]
+}

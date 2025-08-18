@@ -67,7 +67,7 @@ export default function Login() {
       const { error } = await cleanupAuthConflicts();
       
       if (error) {
-        setError('Erro ao limpar conflitos: ' + error.message);
+        setError(t('auth.cleanupConflictsError') + error.message);
         toast({
           title: t('auth.cleanupError'),
           description: error.message,
@@ -111,7 +111,7 @@ export default function Login() {
         {/* Login Form */}
         <Card className="shadow-xl border-0">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl text-center">Login</CardTitle>
+            <CardTitle className="text-2xl text-center">{t('auth.login')}</CardTitle>
             <CardDescription className="text-center">
               {t('auth.enterCredentials')}
             </CardDescription>
@@ -125,7 +125,7 @@ export default function Login() {
               )}
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t('auth.email')}</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                   <Input
@@ -142,7 +142,7 @@ export default function Login() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Senha</Label>
+                <Label htmlFor="password">{t('auth.password')}</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                   <Input
@@ -254,7 +254,7 @@ export default function Login() {
         {/* Footer */}
         <div className="text-center text-sm text-gray-600 dark:text-gray-400">
           <p>
-            © 2024 AnalytiChem GmbH. Todos os direitos reservados.
+            {t('auth.copyright')}
           </p>
         </div>
       </div>

@@ -44,27 +44,35 @@
 - [x] 5. Update sidebar navigation for agents
 
 
-
-
-
   - Add "All Agent Tickets" menu option in the sidebar for users with agent role
   - Ensure the new menu item is only visible to agents and admins
   - Update navigation styling and icons to match existing design
   - _Requirements: 4.1_
 
-- [ ] 6. Enhance TicketsPage component with improved filtering
+- [x] 6. Enhance TicketsPage component with improved filtering
+
+
+
+
   - Update `src/pages/TicketsPage.tsx` to use the enhanced filtering logic
   - Add proper error handling for unauthorized access scenarios
   - Implement loading states and error messages for filtered ticket views
   - _Requirements: 1.1, 1.2, 1.3, 6.1, 6.2_
 
-- [ ] 7. Update TicketDetail component with access validation
+- [x] 7. Update TicketDetail component with access validation
+
+
+
+
+
   - Add user permission checks in `src/pages/TicketDetail.tsx` before loading ticket details
   - Implement proper error responses (403 Forbidden) for unauthorized access attempts
   - Add user-friendly error messages when users try to access tickets they don't own
   - _Requirements: 1.4, 6.1, 6.2, 6.3_
 
-- [ ] 8. Create security audit logging system
+- [x] 8. Create security audit logging system
+
+
   - Implement logging function for unauthorized ticket access attempts
   - Add audit log entries with user ID, ticket ID, timestamp, and action type
   - Create database table or service for storing security audit logs

@@ -15,14 +15,14 @@ import {
   Star
 } from "lucide-react";
 import { DatabaseService, TicketActivityLog } from "@/lib/database";
-
-
+import { useTranslation } from "react-i18next";
 
 interface ActivityLogProps {
   ticketId: string;
 }
 
 export const ActivityLog = ({ ticketId }: ActivityLogProps) => {
+  const { t } = useTranslation();
   const [activities, setActivities] = useState<TicketActivityLog[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -117,15 +117,15 @@ export const ActivityLog = ({ ticketId }: ActivityLogProps) => {
             <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
             <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
           </div>
-          <p className="text-sm">Carregando atividades...</p>
+          <p className="text-sm">{t('tickets.loadingActivities')}</p>
         </div>
       ) : activities.length === 0 ? (
         <div className="text-center py-8 text-gray-500 dark:text-gray-400">
           <div className="p-3 rounded-full bg-gray-100 dark:bg-gray-800 w-12 h-12 mx-auto mb-3 flex items-center justify-center">
             <History className="h-6 w-6 text-gray-400 dark:text-gray-600" />
           </div>
-          <p className="text-sm font-medium mb-1">Nenhuma atividade</p>
-          <p className="text-xs">Este ticket ainda não possui histórico</p>
+          <p className="text-sm font-medium mb-1">{t('tickets.noActivity')}</p>
+          <p className="text-xs">{t('tickets.noActivityMessage')}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -177,13 +177,13 @@ export const ActivityLog = ({ ticketId }: ActivityLogProps) => {
                   {activity.metadata && (
                     <div className="text-xs text-gray-600 dark:text-gray-400 bg-gray-50/50 dark:bg-gray-800/50 p-2 rounded border border-gray-200/50 dark:border-gray-700/50 mt-2">
                       {activity.metadata.reason && (
-                        <p><span className="font-medium">Motivo:</span> {activity.metadata.reason}</p>
+                        <p><span className="font-medium">{t('tickets.reason')}:</span> {activity.metadata.reason}</p>
                       )}
                       {activity.metadata.comment_id && (
-                        <p><span className="font-medium">Tipo:</span> {activity.metadata.is_internal ? 'Nota interna' : 'Comentário público'}</p>
+                        <p><span className="font-medium">{t('tickets.type')}:</span> {activity.metadata.is_internal ? t('tickets.internalNote') : t('tickets.publicComment')}</p>
                       )}
                       {activity.metadata.rating && (
-                        <p><span className="font-medium">Avaliação:</span> {activity.metadata.rating} estrelas ({activity.metadata.satisfaction})</p>
+                        <p><span className="font-medium">{t('tickets.rating')}:</span> {activity.metadata.rating} {t('tickets.stars')} ({activity.metadata.satisfaction})</p>
                       )}
                     </div>
                   )}
@@ -195,7 +195,7 @@ export const ActivityLog = ({ ticketId }: ActivityLogProps) => {
           {activities.length > 5 && (
             <div className="text-center pt-2">
               <button className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium">
-                Ver mais {activities.length - 5} atividades
+                {t('tickets.viewMore')} {activities.length - 5} {t('tickets.activities')}
               </button>
             </div>
           )}

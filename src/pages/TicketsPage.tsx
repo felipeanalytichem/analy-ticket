@@ -4,13 +4,15 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, TrendingUp, Calendar, Clock, BarChart3, ChevronDown, ChevronUp } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Plus, TrendingUp, Calendar, Clock, BarChart3, ChevronDown, ChevronUp, AlertCircle, RefreshCw } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTicketCount } from "@/contexts/TicketCountContext";
 import { TicketDialog } from "@/components/tickets/dialogs/TicketDialog";
 import { TicketList } from "@/components/tickets/TicketList";
 import { AdvancedFilters } from "@/components/tickets/AdvancedFilters";
 import { DatabaseService, TicketWithDetails } from "@/lib/database";
+import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
 const TicketsPage = () => {
@@ -31,6 +33,9 @@ const TicketsPage = () => {
     avgResolutionTime: 0
   });
   const [isLoadingStats, setIsLoadingStats] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const { toast } = useToast();
 
   const getStatusFilter = () => {
     switch (status) {
@@ -43,19 +48,44 @@ const TicketsPage = () => {
     }
   };
 
-  // Load tickets and calculate statistics
+  // Load tickets and calculate statistics with enhanced filtering logic
   useEffect(() => {
     const loadTicketsAndStats = async () => {
+      if (!userProfile) {
+        setError("User profile not loaded. Please log in to view tickets.");
+        setIsLoadingStats(false);
+        return;
+      }
+
       setIsLoadingStats(true);
+      setError(null);
+      
       try {
+        // Enhanced filtering options based on user role and requirements
         const options = {
-          userId: userProfile?.id,
-          showAll: userRole !== "user",
-          statusFilter: getStatusFilter(),
+          userId: userProfile.id,
           userRole: userRole,
+          statusFilter: getStatusFilter(),
+          // For regular users, enforce strict filtering
+          showAll: userRole !== "user",
+          // Include closed tickets with 7-day visibility window for users
+          includeClosedTickets: userRole === "user" ? true : undefined,
         };
         
+        console.log('🔍 Enhanced filtering options:', {
+          userId: options.userId,
+          userRole: options.userRole,
+          statusFilter: options.statusFilter,
+          showAll: options.showAll,
+          includeClosedTickets: options.includeClosedTickets
+        });
+        
         const loadedTickets = await DatabaseService.getTickets(options);
+        
+        if (!Array.isArray(loadedTickets)) {
+          throw new Error("Invalid ticket data received from server");
+        }
+        
         setTickets(loadedTickets);
         
         console.log('🔍 Statistics Debug:', {
@@ -85,7 +115,17 @@ const TicketsPage = () => {
             relevantTickets = loadedTickets.filter(t => t.status === 'resolved');
             break;
           case "closed":
-            relevantTickets = loadedTickets.filter(t => t.status === 'closed');
+            // For closed tickets, apply additional time-based filtering for users
+            relevantTickets = loadedTickets.filter(t => {
+              if (t.status !== 'closed') return false;
+              
+              // For users, check if closed ticket is within 7-day visibility window
+              if (userRole === 'user') {
+                return DatabaseService.isClosedTicketVisible(t.closed_at);
+              }
+              
+              return true;
+            });
             break;
           default:
             relevantTickets = loadedTickets;
@@ -137,17 +177,55 @@ const TicketsPage = () => {
           weekCount,
           avgResolutionTime
         });
-      } catch (error) {
+        
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : "Failed to load tickets";
         console.error('Error loading tickets and statistics:', error);
+        
+        // Handle specific error types
+        if (error instanceof Error) {
+          if (error.name === 'UnauthorizedAccess') {
+            setError("Access denied: You can only view your own tickets");
+            toast({
+              title: "Access Denied",
+              description: "You can only view tickets that belong to you",
+              variant: "destructive",
+            });
+          } else if (error.name === 'NotFound') {
+            setError("No tickets found matching your criteria");
+          } else {
+            setError(errorMessage);
+            toast({
+              title: "Error loading tickets",
+              description: errorMessage,
+              variant: "destructive",
+            });
+          }
+        } else {
+          setError("An unexpected error occurred while loading tickets");
+          toast({
+            title: "Error loading tickets",
+            description: "An unexpected error occurred. Please try again.",
+            variant: "destructive",
+          });
+        }
+        
+        // Reset tickets and statistics on error
+        setTickets([]);
+        setStatistics({
+          total: 0,
+          todayCount: 0,
+          weekCount: 0,
+          avgResolutionTime: 0
+        });
+        
       } finally {
         setIsLoadingStats(false);
       }
     };
 
-    if (userProfile) {
-      loadTicketsAndStats();
-    }
-  }, [status, userProfile, userRole]);
+    loadTicketsAndStats();
+  }, [status, userProfile, userRole, toast]);
 
   const handleFiltersChange = (newFilters: Record<string, unknown>) => {
     setFilters(newFilters);
@@ -158,6 +236,52 @@ const TicketsPage = () => {
     setTicketListKey(prev => prev + 1);
     // Trigger sidebar count refresh
     triggerRefresh();
+  };
+
+  // Refresh function for manual ticket reload
+  const handleRefresh = async () => {
+    if (!userProfile || isRefreshing) return;
+
+    setIsRefreshing(true);
+    setError(null);
+
+    try {
+      const options = {
+        userId: userProfile.id,
+        userRole: userRole,
+        statusFilter: getStatusFilter(),
+        showAll: userRole !== "user",
+        includeClosedTickets: userRole === "user" ? true : undefined,
+      };
+
+      const loadedTickets = await DatabaseService.getTickets(options);
+      
+      if (!Array.isArray(loadedTickets)) {
+        throw new Error("Invalid ticket data received from server");
+      }
+
+      setTickets(loadedTickets);
+      setTicketListKey(prev => prev + 1);
+      triggerRefresh();
+
+      toast({
+        title: "Tickets refreshed",
+        description: "Your ticket list has been updated successfully",
+      });
+
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to refresh tickets";
+      console.error('Error refreshing tickets:', error);
+      
+      setError(errorMessage);
+      toast({
+        title: "Error refreshing tickets",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    } finally {
+      setIsRefreshing(false);
+    }
   };
 
   const getStatusTheme = () => {
@@ -226,16 +350,25 @@ const TicketsPage = () => {
 
   const getTicketListProps = () => {
     const baseProps = {
-      statusFilter: getStatusFilter()
+      statusFilter: getStatusFilter(),
+      userRole: userRole,
+      userId: userProfile?.id,
+      // Pass enhanced filtering options to TicketList
+      useEnhancedFiltering: true,
+      includeClosedTickets: userRole === "user" ? true : undefined,
     };
 
     switch (status) {
       case "in-progress":
-        return { ...baseProps, showAll: true };
+        return { 
+          ...baseProps, 
+          showAll: userRole !== "user",
+          assignedOnly: userRole === "agent" 
+        };
       case "all":
         return {
           ...baseProps,
-          showAll: userRole === "user",
+          showAll: userRole !== "user",
           unassignedOnly: userRole !== "user"
         };
       case "open":
@@ -243,10 +376,15 @@ const TicketsPage = () => {
       case "closed":
         return {
           ...baseProps,
-          assignedOnly: userRole !== "user"
+          showAll: userRole !== "user",
+          assignedOnly: userRole === "agent"
         };
       default:
-        return { ...baseProps, assignedOnly: true };
+        return { 
+          ...baseProps, 
+          showAll: userRole !== "user",
+          assignedOnly: userRole === "agent" 
+        };
     }
   };
 
@@ -284,26 +422,41 @@ const TicketsPage = () => {
               </div>
             </div>
           </div>
-          {showCreateButton && (
+          <div className="flex gap-2">
             <Button
               type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                console.log('🎫 Create Ticket button clicked in TicketsPage');
-                console.log('🔍 Current isCreateDialogOpen state:', isCreateDialogOpen);
-                setIsCreateDialogOpen(true);
-                console.log('✅ setIsCreateDialogOpen(true) called');
-                console.log('🎯 Dialog should now be open');
-              }}
-              className={cn("shadow-lg hover:shadow-xl transition-all duration-200 w-full sm:w-auto", theme.gradient)}
+              onClick={handleRefresh}
+              disabled={isRefreshing || isLoadingStats}
+              variant="outline"
               size="default"
+              className="shadow-lg hover:shadow-xl transition-all duration-200"
             >
-              <Plus className="h-4 w-4 md:h-5 md:w-5 mr-2" />
-              <span className="hidden sm:inline">New Ticket</span>
-              <span className="sm:hidden">New</span>
+              <RefreshCw className={cn("h-4 w-4 md:h-5 md:w-5", isRefreshing && "animate-spin")} />
+              <span className="hidden sm:inline ml-2">
+                {isRefreshing ? t('tickets.refreshing') : t('common.refresh')}
+              </span>
             </Button>
-          )}
+            {showCreateButton && (
+              <Button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  console.log('🎫 Create Ticket button clicked in TicketsPage');
+                  console.log('🔍 Current isCreateDialogOpen state:', isCreateDialogOpen);
+                  setIsCreateDialogOpen(true);
+                  console.log('✅ setIsCreateDialogOpen(true) called');
+                  console.log('🎯 Dialog should now be open');
+                }}
+                className={cn("shadow-lg hover:shadow-xl transition-all duration-200 w-full sm:w-auto", theme.gradient)}
+                size="default"
+              >
+                <Plus className="h-4 w-4 md:h-5 md:w-5 mr-2" />
+                <span className="hidden sm:inline">{t('tickets.newTicket')}</span>
+                <span className="sm:hidden">{t('tickets.newTicket')}</span>
+              </Button>
+            )}
+          </div>
         </div>
 
         {/* Statistics Cards */}
@@ -312,7 +465,7 @@ const TicketsPage = () => {
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400 flex items-center gap-2">
                 <BarChart3 className="h-4 w-4" />
-                Total {theme.name}
+                {t('common.totalTickets')} {theme.name}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -326,7 +479,7 @@ const TicketsPage = () => {
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400 flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
-                Created Today
+                {t('dashboard.createdToday', 'Created Today')}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -340,7 +493,7 @@ const TicketsPage = () => {
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400 flex items-center gap-2">
                 <TrendingUp className="h-4 w-4" />
-                This Week
+                {t('dashboard.thisWeek', 'This Week')}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -354,7 +507,7 @@ const TicketsPage = () => {
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400 flex items-center gap-2">
                 <Clock className="h-4 w-4" />
-                Avg Resolution
+                {t('common.avgResolution')}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -377,11 +530,11 @@ const TicketsPage = () => {
               <div className={cn("p-1.5 rounded-md text-white", theme.gradient)}>
                 <BarChart3 className="h-4 w-4" />
               </div>
-              <span>Advanced Filters</span>
+              <span>{t('tickets.advancedFilters')}</span>
             </div>
             <Badge variant="outline" className="flex items-center gap-1">
               {showFilters ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
-              {showFilters ? "Hide" : "Show"}
+              {showFilters ? t('common.hide', 'Hide') : t('common.show', 'Show')}
             </Badge>
           </CardTitle>
         </CardHeader>
@@ -392,6 +545,27 @@ const TicketsPage = () => {
         )}
       </Card>
       
+      {/* Error Display */}
+      {error && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>{t('tickets.error')}</AlertTitle>
+          <AlertDescription className="flex items-center justify-between">
+            <span>{error}</span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              className="ml-4"
+            >
+              <RefreshCw className={cn("h-3 w-3 mr-1", isRefreshing && "animate-spin")} />
+              {t('tickets.retry')}
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* Enhanced Ticket List */}
       <div className="space-y-4">
         <TicketList key={`tickets-${status}-${ticketListKey}`} {...getTicketListProps()} />

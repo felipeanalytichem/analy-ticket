@@ -1,4 +1,5 @@
 import { UserManagement } from "@/components/admin/UserManagement";
+import { UserManagementErrorBoundary } from "@/components/admin/UserManagementErrorBoundary";
 
 const UserManagementPage = () => {
   return (
@@ -6,7 +7,14 @@ const UserManagementPage = () => {
       <div>
         <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-gray-900 dark:text-white">User Management</h2>
       </div>
-      <UserManagement />
+      <UserManagementErrorBoundary
+        enableGracefulDegradation={true}
+        useFallbackComponent={true}
+        onRetry={() => window.location.reload()}
+        onReset={() => window.location.reload()}
+      >
+        <UserManagement />
+      </UserManagementErrorBoundary>
     </div>
   );
 };

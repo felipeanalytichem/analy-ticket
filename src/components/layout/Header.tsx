@@ -181,7 +181,7 @@ export function Header({ title = "Dashboard", showSearch = true, onSearch }: Hea
                 )}
               >
                 <User className="mr-2 h-4 w-4" />
-                <span>Profile</span>
+                <span>{t('header.profile')}</span>
               </DropdownMenuItem>
               
               <DropdownMenuItem 
@@ -192,7 +192,7 @@ export function Header({ title = "Dashboard", showSearch = true, onSearch }: Hea
                 )}
               >
                 <Settings className="mr-2 h-4 w-4" />
-                <span>Settings</span>
+                <span>{t('header.settings')}</span>
               </DropdownMenuItem>
 
               {/* Mobile-only: Language switcher */}
@@ -214,7 +214,7 @@ export function Header({ title = "Dashboard", showSearch = true, onSearch }: Hea
                 )}
               >
                 <LogOut className="mr-2 h-4 w-4" />
-                <span>Log out</span>
+                <span>{t('header.logout')}</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

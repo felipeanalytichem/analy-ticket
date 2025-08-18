@@ -26,6 +26,8 @@ import {
 import { assignmentService, type AgentMetrics } from '@/lib/assignmentService';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
+import { SafeTranslation } from '@/components/ui/SafeTranslation';
+import { useTranslation } from 'react-i18next';
 
 export const WorkloadDashboard = () => {
   const [agents, setAgents] = useState<AgentMetrics[]>([]);
@@ -36,6 +38,7 @@ export const WorkloadDashboard = () => {
   
   const { toast } = useToast();
   const { userProfile } = useAuth();
+  const { t } = useTranslation();
 
   useEffect(() => {
     loadWorkloadData();
@@ -66,7 +69,7 @@ export const WorkloadDashboard = () => {
       
       if (result.success) {
         toast({
-          title: "Workload Rebalanced",
+          title: t('admin.workloadDashboard.workloadRebalanced'),
           description: result.message,
         });
         
@@ -74,15 +77,15 @@ export const WorkloadDashboard = () => {
         await loadWorkloadData();
       } else {
         toast({
-          title: "Rebalancing Failed",
+          title: t('admin.workloadDashboard.rebalancingFailed'),
           description: result.message,
           variant: "destructive",
         });
       }
     } catch (err) {
       toast({
-        title: "Error",
-        description: "Failed to rebalance workload",
+        title: t('common.error'),
+        description: t('admin.workloadDashboard.rebalancingError'),
         variant: "destructive",
       });
     } finally {
@@ -113,10 +116,10 @@ export const WorkloadDashboard = () => {
   const getWorkloadStatus = (agent: AgentMetrics) => {
     const utilizationRate = agent.currentWorkload / agent.maxConcurrentTickets;
     
-    if (utilizationRate >= 0.9) return { status: 'overloaded', color: 'bg-red-500', text: 'Overloaded' };
-    if (utilizationRate >= 0.7) return { status: 'busy', color: 'bg-yellow-500', text: 'Busy' };
-    if (utilizationRate >= 0.3) return { status: 'moderate', color: 'bg-blue-500', text: 'Moderate' };
-    return { status: 'light', color: 'bg-green-500', text: 'Light' };
+    if (utilizationRate >= 0.9) return { status: 'overloaded', color: 'bg-red-500', text: t('admin.workloadDashboard.overloaded', 'Overloaded') };
+    if (utilizationRate >= 0.7) return { status: 'busy', color: 'bg-yellow-500', text: t('admin.workloadDashboard.busy', 'Busy') };
+    if (utilizationRate >= 0.3) return { status: 'moderate', color: 'bg-blue-500', text: t('admin.workloadDashboard.moderate', 'Moderate') };
+    return { status: 'light', color: 'bg-green-500', text: t('admin.workloadDashboard.light', 'Light') };
   };
 
   const getInitials = (name: string) => {
@@ -146,7 +149,7 @@ export const WorkloadDashboard = () => {
       <Alert>
         <AlertTriangle className="h-4 w-4" />
         <AlertDescription>
-          Access denied. This dashboard is only available to administrators.
+          <SafeTranslation i18nKey="admin.workloadDashboard.accessDenied" fallback="Access denied. This dashboard is only available to administrators." />
         </AlertDescription>
       </Alert>
     );
@@ -157,15 +160,17 @@ export const WorkloadDashboard = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Workload Dashboard</h1>
+          <h1 className="text-2xl font-bold">
+            <SafeTranslation i18nKey="admin.workloadDashboard.title" fallback="Workload Dashboard" />
+          </h1>
           <p className="text-muted-foreground">
-            Monitor and manage agent workload distribution
+            <SafeTranslation i18nKey="admin.workloadDashboard.description" fallback="Monitor and manage agent workload distribution" />
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" onClick={loadWorkloadData} disabled={isLoading}>
             <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-            Refresh
+            <SafeTranslation i18nKey="admin.workloadDashboard.refresh" fallback="Refresh" />
           </Button>
           <Button onClick={handleRebalance} disabled={isRebalancing || agents.length < 2}>
             {isRebalancing ? (
@@ -173,7 +178,7 @@ export const WorkloadDashboard = () => {
             ) : (
               <Zap className="h-4 w-4 mr-2" />
             )}
-            Rebalance
+            <SafeTranslation i18nKey="admin.workloadDashboard.rebalance" fallback="Rebalance" />
           </Button>
         </div>
       </div>
@@ -189,20 +194,24 @@ export const WorkloadDashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Active Tickets</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              <SafeTranslation i18nKey="admin.workloadDashboard.totalActiveTickets" fallback="Total Active Tickets" />
+            </CardTitle>
             <BarChart3 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{teamStats.totalTickets}</div>
             <p className="text-xs text-muted-foreground">
-              Across all agents
+              <SafeTranslation i18nKey="admin.workloadDashboard.acrossAllAgents" fallback="Across all agents" />
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Team Utilization</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              <SafeTranslation i18nKey="admin.workloadDashboard.teamUtilization" fallback="Team Utilization" />
+            </CardTitle>
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -213,13 +222,19 @@ export const WorkloadDashboard = () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Available Agents</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              <SafeTranslation i18nKey="admin.workloadDashboard.availableAgents" fallback="Available Agents" />
+            </CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{teamStats.availableAgents}</div>
             <p className="text-xs text-muted-foreground">
-              Out of {agents.length} total
+              <SafeTranslation 
+                i18nKey="admin.workloadDashboard.outOfTotal" 
+                fallback="Out of {{total}} total"
+                values={{ total: agents.length }}
+              />
             </p>
           </CardContent>
         </Card>
@@ -228,9 +243,15 @@ export const WorkloadDashboard = () => {
       {/* Agent Details */}
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="performance">Performance</TabsTrigger>
-          <TabsTrigger value="categories">Category Expertise</TabsTrigger>
+          <TabsTrigger value="overview">
+            <SafeTranslation i18nKey="admin.workloadDashboard.overview" fallback="Overview" />
+          </TabsTrigger>
+          <TabsTrigger value="performance">
+            <SafeTranslation i18nKey="admin.workloadDashboard.performance" fallback="Performance" />
+          </TabsTrigger>
+          <TabsTrigger value="categories">
+            <SafeTranslation i18nKey="admin.workloadDashboard.categories" fallback="Category Expertise" />
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
@@ -238,13 +259,15 @@ export const WorkloadDashboard = () => {
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="h-6 w-6 animate-spin mr-2" />
-                <span>Loading agent data...</span>
+                <span>
+                  <SafeTranslation i18nKey="admin.workloadDashboard.loadingAgentData" fallback="Loading agent data..." />
+                </span>
               </div>
             ) : agents.length === 0 ? (
               <Alert>
                 <Users className="h-4 w-4" />
                 <AlertDescription>
-                  No agents found. Make sure there are users with agent or admin roles.
+                  <SafeTranslation i18nKey="admin.workloadDashboard.noAgentsFound" fallback="No agents found. Make sure there are users with agent or admin roles." />
                 </AlertDescription>
               </Alert>
             ) : (
@@ -285,25 +308,33 @@ export const WorkloadDashboard = () => {
                           
                           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                             <div>
-                              <div className="text-sm text-muted-foreground mb-1">Current Workload</div>
+                              <div className="text-sm text-muted-foreground mb-1">
+                                <SafeTranslation i18nKey="admin.workloadDashboard.currentWorkload" fallback="Current Workload" />
+                              </div>
                               <div className="font-medium">
-                                {agent.currentWorkload}/{agent.maxConcurrentTickets} tickets
+                                {agent.currentWorkload}/{agent.maxConcurrentTickets} <SafeTranslation i18nKey="admin.workloadDashboard.tickets" fallback="tickets" />
                               </div>
                               <Progress value={utilizationRate} className="mt-1 h-2" />
                             </div>
                             
                             <div>
-                              <div className="text-sm text-muted-foreground mb-1">Avg Resolution</div>
+                              <div className="text-sm text-muted-foreground mb-1">
+                                <SafeTranslation i18nKey="admin.workloadDashboard.avgResolution" fallback="Avg Resolution" />
+                              </div>
                               <div className="font-medium">{Math.round(agent.averageResolutionTime)}h</div>
                             </div>
                             
                             <div>
-                              <div className="text-sm text-muted-foreground mb-1">Resolution Rate</div>
+                              <div className="text-sm text-muted-foreground mb-1">
+                                <SafeTranslation i18nKey="admin.workloadDashboard.resolutionRate" fallback="Resolution Rate" />
+                              </div>
                               <div className="font-medium">{Math.round(agent.resolutionRate * 100)}%</div>
                             </div>
                             
                             <div>
-                              <div className="text-sm text-muted-foreground mb-1">Satisfaction</div>
+                              <div className="text-sm text-muted-foreground mb-1">
+                                <SafeTranslation i18nKey="admin.workloadDashboard.satisfaction" fallback="Satisfaction" />
+                              </div>
                               <div className="font-medium">{agent.customerSatisfactionScore.toFixed(1)}/5</div>
                             </div>
                           </div>
@@ -513,7 +544,11 @@ export const WorkloadDashboard = () => {
 
       {/* Last Updated */}
       <div className="text-center text-sm text-muted-foreground">
-        Last updated: {lastUpdated.toLocaleTimeString()}
+        <SafeTranslation 
+          i18nKey="admin.workloadDashboard.lastUpdated" 
+          fallback="Last updated: {{time}}"
+          values={{ time: lastUpdated.toLocaleTimeString() }}
+        />
       </div>
     </div>
   );

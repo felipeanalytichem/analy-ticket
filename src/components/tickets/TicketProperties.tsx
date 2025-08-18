@@ -4,6 +4,7 @@ import { TicketTags } from '@/components/tickets/TicketTags';
 import { KnowledgeBase } from '@/components/knowledge/KnowledgeBase';
 import { useUser } from '@/hooks/useUser';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface TicketPropertiesProps {
   ticket: any;
@@ -12,6 +13,7 @@ interface TicketPropertiesProps {
 }
 
 export function TicketProperties({ ticket, userRole, className }: TicketPropertiesProps) {
+  const { t } = useTranslation();
   const { data: assigneeProfile } = useUser(ticket?.assigned_to ?? undefined);
 
   const handleTagsChange = (tags: string[]) => {
@@ -23,7 +25,7 @@ export function TicketProperties({ ticket, userRole, className }: TicketProperti
       {/* SLA */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-sm font-medium">SLA Monitoring</CardTitle>
+          <CardTitle className="text-sm font-medium">{t('tickets.slaMonitoring')}</CardTitle>
         </CardHeader>
         <CardContent>
           <SLAMonitor
@@ -41,7 +43,7 @@ export function TicketProperties({ ticket, userRole, className }: TicketProperti
       {/* Tags */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-sm font-medium">Tags</CardTitle>
+          <CardTitle className="text-sm font-medium">{t('tickets.tags')}</CardTitle>
         </CardHeader>
         <CardContent>
           <TicketTags
@@ -57,7 +59,7 @@ export function TicketProperties({ ticket, userRole, className }: TicketProperti
       <Card>
         <CardHeader>
           <CardTitle className="text-sm font-medium flex items-center gap-2">
-            <span>Knowledge Base</span>
+            <span>{t('tickets.knowledgeBase')}</span>
           </CardTitle>
         </CardHeader>
         <CardContent>

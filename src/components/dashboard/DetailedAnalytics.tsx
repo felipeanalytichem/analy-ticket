@@ -622,12 +622,12 @@ export function DetailedAnalytics() {
   };
 
   const chartConfig = {
-    created: { label: "Created", color: "#3b82f6" },
-    resolved: { label: "Resolved", color: "#10b981" },
-    inProgress: { label: "In Progress", color: "#f59e0b" },
-    backlog: { label: "Backlog", color: "#ef4444" },
-    tickets: { label: "Tickets", color: "#6366f1" },
-    productivity: { label: "Productivity", color: "#8b5cf6" }
+    created: { label: t('tickets.created', 'Created'), color: "#3b82f6" },
+    resolved: { label: t('status.resolved'), color: "#10b981" },
+    inProgress: { label: t('status.inProgress'), color: "#f59e0b" },
+    backlog: { label: t('dashboard.backlog', 'Backlog'), color: "#ef4444" },
+    tickets: { label: t('common.tickets', 'Tickets'), color: "#6366f1" },
+    productivity: { label: t('dashboard.productivity', 'Productivity'), color: "#8b5cf6" }
   };
 
   if (loading) {
@@ -678,7 +678,7 @@ export function DetailedAnalytics() {
               isMobile ? "text-2xl" : "text-3xl"
             )}
           >
-            Detailed Analytics
+            {t('dashboard.detailedAnalyticsTitle')}
           </h1>
           <p 
             className={cn(
@@ -689,7 +689,7 @@ export function DetailedAnalytics() {
             id="analytics-description"
             aria-describedby="analytics-title"
           >
-            Comprehensive insights and performance metrics
+            {t('dashboard.detailedAnalyticsSubtitle')}
           </p>
         </div>
         <Badge 
@@ -706,7 +706,7 @@ export function DetailedAnalytics() {
             className="h-4 w-4 mr-1" 
             aria-hidden="true"
           />
-          Real-time Data
+          {t('dashboard.realTimeData')}
         </Badge>
       </header>
 
@@ -739,7 +739,7 @@ export function DetailedAnalytics() {
                 )}
                 aria-hidden="true"
               />
-              Key Performance Indicators
+              {t('dashboard.keyPerformanceIndicators')}
             </CardTitle>
           </CardHeader>
           <CardContent className={cn(

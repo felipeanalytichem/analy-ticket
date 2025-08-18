@@ -1,0 +1,2131 @@
+{
+  "timestamp": "2025-07-31T14:15:39.100Z",
+  "summary": {
+    "totalMissingKeys": 528,
+    "affectedLocales": [
+      "en-US",
+      "es-ES",
+      "pt-BR"
+    ]
+  },
+  "missingByLocale": {
+    "en-US": [
+      {
+        "key": "profile.french",
+        "context": "profile"
+      },
+      {
+        "key": "profile.dutch",
+        "context": "profile"
+      },
+      {
+        "key": "profile.german",
+        "context": "profile"
+      },
+      {
+        "key": "todo.actions.assign",
+        "context": "todo.actions"
+      },
+      {
+        "key": "todo.actions.assignToMe",
+        "context": "todo.actions"
+      },
+      {
+        "key": "todo.actions.reassign",
+        "context": "todo.actions"
+      },
+      {
+        "key": "todo.actions.resolve",
+        "context": "todo.actions"
+      },
+      {
+        "key": "todo.actions.close",
+        "context": "todo.actions"
+      },
+      {
+        "key": "todo.actions.reopen",
+        "context": "todo.actions"
+      },
+      {
+        "key": "todo.actions.viewDetails",
+        "context": "todo.actions"
+      },
+      {
+        "key": "todo.actions.transfer",
+        "context": "todo.actions"
+      },
+      {
+        "key": "chat.typePlaceholder",
+        "context": "chat"
+      },
+      {
+        "key": "chat.searchPlaceholder",
+        "context": "chat"
+      }
+    ],
+    "es-ES": [
+      {
+        "key": "header.share",
+        "context": "header"
+      },
+      {
+        "key": "header.print",
+        "context": "header"
+      },
+      {
+        "key": "header.not_available",
+        "context": "header"
+      },
+      {
+        "key": "header.all",
+        "context": "header"
+      },
+      {
+        "key": "header.copyright",
+        "context": "header"
+      },
+      {
+        "key": "tickets.newTicket",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.ticketNumber",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.title",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.description",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.status.open",
+        "context": "tickets.status"
+      },
+      {
+        "key": "tickets.status.pending",
+        "context": "tickets.status"
+      },
+      {
+        "key": "tickets.status.inProgress",
+        "context": "tickets.status"
+      },
+      {
+        "key": "tickets.status.resolved",
+        "context": "tickets.status"
+      },
+      {
+        "key": "tickets.status.closed",
+        "context": "tickets.status"
+      },
+      {
+        "key": "tickets.priority",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.category",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.assignedTo",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.createdBy",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.createdAt",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.updatedAt",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.resolvedAt",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.closedAt",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.resolution",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.comments",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.addComment",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.untitled",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.resolve.title",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.resolve.currentStatus",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.resolve.resolutionNotes",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.resolve.resolutionNotesPlaceholder",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.resolve.resolutionNotesRequired",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.resolve.tip",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.resolve.tipText",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.resolve.resolving",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.resolve.resolveButton",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.resolve.successTitle",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.resolve.successDescription",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.resolve.error",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.resolve.errorDefault",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.close.title",
+        "context": "tickets.close"
+      },
+      {
+        "key": "tickets.close.infoTitle",
+        "context": "tickets.close"
+      },
+      {
+        "key": "tickets.close.infoDesc",
+        "context": "tickets.close"
+      },
+      {
+        "key": "tickets.close.statusLabel",
+        "context": "tickets.close"
+      },
+      {
+        "key": "tickets.close.closing",
+        "context": "tickets.close"
+      },
+      {
+        "key": "tickets.close.confirm",
+        "context": "tickets.close"
+      },
+      {
+        "key": "tickets.close.errors.title",
+        "context": "tickets.close.errors"
+      },
+      {
+        "key": "tickets.close.errors.generic",
+        "context": "tickets.close.errors"
+      },
+      {
+        "key": "tickets.close.errors.notResolved",
+        "context": "tickets.close.errors"
+      },
+      {
+        "key": "tickets.close.errors.emptyResolution",
+        "context": "tickets.close.errors"
+      },
+      {
+        "key": "tickets.close.errors.noResolvedDate",
+        "context": "tickets.close.errors"
+      },
+      {
+        "key": "tickets.close.errors.cannotClose",
+        "context": "tickets.close.errors"
+      },
+      {
+        "key": "tickets.close.errors.statusMustBeResolved",
+        "context": "tickets.close.errors"
+      },
+      {
+        "key": "tickets.close.errors.resolutionRequired",
+        "context": "tickets.close.errors"
+      },
+      {
+        "key": "tickets.close.errors.resolvedDateRequired",
+        "context": "tickets.close.errors"
+      },
+      {
+        "key": "tickets.close.success.title",
+        "context": "tickets.close.success"
+      },
+      {
+        "key": "tickets.close.success.description",
+        "context": "tickets.close.success"
+      },
+      {
+        "key": "tickets.reopen.title",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.infoTitle",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.infoDesc",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.ticketLabel",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.statusLabel",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.previousResolutionLabel",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.closedOnly",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.creatorOnly",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.reasonLabel",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.reasonPlaceholder",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.reasonHelper",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.reasonRequired",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.noPermission",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.sending",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.sendButton",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.sentTitle",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.sentDesc",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.descriptionSr",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.transfer.title",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.descriptionSr",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.transferToLabel",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.loadingAgents",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.selectAgentPlaceholder",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.noAgents",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.reasonLabel",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.reasonPlaceholder",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.reasonRequired",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.selectAgentError",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.loadAgentsError",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.transferring",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.transferredTitle",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.transferredDesc",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.transferError",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.workloadTitle",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.workloadHint",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.requester",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.created_on",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.updated_on",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.created_by",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.assigned_to",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.attachments",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.resolved_on",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.customer_feedback",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.activity_log",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.tasks",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.account_information",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.username",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.license_type",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.mfa_setup",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.job_information",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.job_title",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.manager",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.start_date",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.company_information",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.company",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.department",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.office_location",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.contact_information",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.business_phone",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.mobile_phone",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.additional_information",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.signature_group",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.usage_location",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.distribution_list",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.attached_form",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.by",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.assigned",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.feedbackReceived",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.userRatedService",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.clickToViewRating",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.assign.title",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.currentStatus",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.aboutToAssign",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.responsibility1",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.responsibility2",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.responsibility3",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.responsibility4",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.assignToMe",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.assignToAgent",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.selectAgent",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.selectAgentPlaceholder",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.loadAgentsError",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.successTitle",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.successDescription",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.error",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.errorDefault",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.assigning",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.assignButton",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.loading",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.actions.assign",
+        "context": "tickets.actions"
+      },
+      {
+        "key": "tickets.actions.assignToMe",
+        "context": "tickets.actions"
+      },
+      {
+        "key": "tickets.actions.reassign",
+        "context": "tickets.actions"
+      },
+      {
+        "key": "tickets.actions.edit",
+        "context": "tickets.actions"
+      },
+      {
+        "key": "tickets.actions.resolve",
+        "context": "tickets.actions"
+      },
+      {
+        "key": "tickets.actions.close",
+        "context": "tickets.actions"
+      },
+      {
+        "key": "tickets.actions.reopen",
+        "context": "tickets.actions"
+      },
+      {
+        "key": "tickets.actions.delete",
+        "context": "tickets.actions"
+      },
+      {
+        "key": "tickets.actions.viewDetails",
+        "context": "tickets.actions"
+      },
+      {
+        "key": "tickets.actions.transfer",
+        "context": "tickets.actions"
+      },
+      {
+        "key": "tickets.fields.title",
+        "context": "tickets.fields"
+      },
+      {
+        "key": "tickets.fields.description",
+        "context": "tickets.fields"
+      },
+      {
+        "key": "tickets.fields.priority",
+        "context": "tickets.fields"
+      },
+      {
+        "key": "tickets.fields.category",
+        "context": "tickets.fields"
+      },
+      {
+        "key": "tickets.fields.subcategory",
+        "context": "tickets.fields"
+      },
+      {
+        "key": "tickets.fields.country",
+        "context": "tickets.fields"
+      },
+      {
+        "key": "tickets.fields.status",
+        "context": "tickets.fields"
+      },
+      {
+        "key": "tickets.fields.assignedTo",
+        "context": "tickets.fields"
+      },
+      {
+        "key": "tickets.fields.createdAt",
+        "context": "tickets.fields"
+      },
+      {
+        "key": "tickets.fields.updatedAt",
+        "context": "tickets.fields"
+      },
+      {
+        "key": "tickets.fields.resolvedAt",
+        "context": "tickets.fields"
+      },
+      {
+        "key": "tickets.fields.closedAt",
+        "context": "tickets.fields"
+      },
+      {
+        "key": "tickets.placeholders.title",
+        "context": "tickets.placeholders"
+      },
+      {
+        "key": "tickets.placeholders.description",
+        "context": "tickets.placeholders"
+      },
+      {
+        "key": "tickets.placeholders.selectPriority",
+        "context": "tickets.placeholders"
+      },
+      {
+        "key": "tickets.placeholders.selectCategory",
+        "context": "tickets.placeholders"
+      },
+      {
+        "key": "tickets.placeholders.selectSubcategory",
+        "context": "tickets.placeholders"
+      },
+      {
+        "key": "tickets.placeholders.selectCountry",
+        "context": "tickets.placeholders"
+      },
+      {
+        "key": "tickets.placeholders.selectStatus",
+        "context": "tickets.placeholders"
+      },
+      {
+        "key": "tickets.placeholders.selectAssignee",
+        "context": "tickets.placeholders"
+      },
+      {
+        "key": "sla.monitor",
+        "context": "sla"
+      },
+      {
+        "key": "sla.response_time",
+        "context": "sla"
+      },
+      {
+        "key": "sla.resolution_time",
+        "context": "sla"
+      },
+      {
+        "key": "sla.first_response_target",
+        "context": "sla"
+      },
+      {
+        "key": "sla.resolution_target",
+        "context": "sla"
+      },
+      {
+        "key": "sla.target_met",
+        "context": "sla"
+      },
+      {
+        "key": "sla.overdue",
+        "context": "sla"
+      },
+      {
+        "key": "sla.resolved_late",
+        "context": "sla"
+      },
+      {
+        "key": "sla.responded_at",
+        "context": "sla"
+      },
+      {
+        "key": "sla.resolved_at",
+        "context": "sla"
+      },
+      {
+        "key": "sla.waiting_first_response",
+        "context": "sla"
+      },
+      {
+        "key": "sla.in_progress",
+        "context": "sla"
+      },
+      {
+        "key": "sla.time_elapsed",
+        "context": "sla"
+      },
+      {
+        "key": "sla.total_time",
+        "context": "sla"
+      },
+      {
+        "key": "sla.target",
+        "context": "sla"
+      },
+      {
+        "key": "sla.elapsed",
+        "context": "sla"
+      },
+      {
+        "key": "sla.remaining",
+        "context": "sla"
+      },
+      {
+        "key": "sla.minutes_short",
+        "context": "sla"
+      },
+      {
+        "key": "sla.hours_short",
+        "context": "sla"
+      },
+      {
+        "key": "sla.days_short",
+        "context": "sla"
+      },
+      {
+        "key": "sla.status.met",
+        "context": "sla.status"
+      },
+      {
+        "key": "sla.status.overdue",
+        "context": "sla.status"
+      },
+      {
+        "key": "sla.status.warning",
+        "context": "sla.status"
+      },
+      {
+        "key": "sla.status.in_progress",
+        "context": "sla.status"
+      },
+      {
+        "key": "sla.status.completed_late",
+        "context": "sla.status"
+      },
+      {
+        "key": "sla.status.missed",
+        "context": "sla.status"
+      },
+      {
+        "key": "sla.active",
+        "context": "sla"
+      },
+      {
+        "key": "sla.completed",
+        "context": "sla"
+      },
+      {
+        "key": "sla.stopped",
+        "context": "sla"
+      },
+      {
+        "key": "sla.status_label",
+        "context": "sla"
+      },
+      {
+        "key": "profile.french",
+        "context": "profile"
+      },
+      {
+        "key": "profile.dutch",
+        "context": "profile"
+      },
+      {
+        "key": "profile.german",
+        "context": "profile"
+      },
+      {
+        "key": "auth.loginError",
+        "context": "auth"
+      },
+      {
+        "key": "auth.loginSuccess",
+        "context": "auth"
+      },
+      {
+        "key": "auth.welcomeMessage",
+        "context": "auth"
+      },
+      {
+        "key": "auth.unexpectedError",
+        "context": "auth"
+      },
+      {
+        "key": "auth.cleanupError",
+        "context": "auth"
+      },
+      {
+        "key": "auth.conflictsResolved",
+        "context": "auth"
+      },
+      {
+        "key": "auth.tryLoginAgain",
+        "context": "auth"
+      },
+      {
+        "key": "auth.unexpectedCleanupError",
+        "context": "auth"
+      },
+      {
+        "key": "auth.resolvingConflicts",
+        "context": "auth"
+      },
+      {
+        "key": "auth.resolveAuthConflicts",
+        "context": "auth"
+      },
+      {
+        "key": "auth.noAccount",
+        "context": "auth"
+      },
+      {
+        "key": "auth.createAccount",
+        "context": "auth"
+      },
+      {
+        "key": "auth.nameRequired",
+        "context": "auth"
+      },
+      {
+        "key": "auth.emailRequired",
+        "context": "auth"
+      },
+      {
+        "key": "auth.passwordMinLength",
+        "context": "auth"
+      },
+      {
+        "key": "auth.passwordsDontMatch",
+        "context": "auth"
+      },
+      {
+        "key": "auth.registrationError",
+        "context": "auth"
+      },
+      {
+        "key": "auth.accountCreated",
+        "context": "auth"
+      },
+      {
+        "key": "auth.accountCreatedMessage",
+        "context": "auth"
+      },
+      {
+        "key": "auth.fillDataToCreateAccount",
+        "context": "auth"
+      },
+      {
+        "key": "auth.registration",
+        "context": "auth"
+      },
+      {
+        "key": "auth.enterInfoToCreateAccount",
+        "context": "auth"
+      },
+      {
+        "key": "auth.confirmPasswordPlaceholder",
+        "context": "auth"
+      },
+      {
+        "key": "auth.iAgreeWith",
+        "context": "auth"
+      },
+      {
+        "key": "auth.termsOfUse",
+        "context": "auth"
+      },
+      {
+        "key": "auth.and",
+        "context": "auth"
+      },
+      {
+        "key": "auth.privacyPolicy",
+        "context": "auth"
+      },
+      {
+        "key": "auth.error",
+        "context": "auth"
+      },
+      {
+        "key": "auth.emailSent",
+        "context": "auth"
+      },
+      {
+        "key": "auth.checkInboxForReset",
+        "context": "auth"
+      },
+      {
+        "key": "auth.resetLinkSentTo",
+        "context": "auth"
+      },
+      {
+        "key": "auth.checkInboxAndSpam",
+        "context": "auth"
+      },
+      {
+        "key": "auth.sendAgain",
+        "context": "auth"
+      },
+      {
+        "key": "auth.backToLogin",
+        "context": "auth"
+      },
+      {
+        "key": "auth.enterEmailForReset",
+        "context": "auth"
+      },
+      {
+        "key": "auth.willSendResetLink",
+        "context": "auth"
+      },
+      {
+        "key": "auth.sending",
+        "context": "auth"
+      },
+      {
+        "key": "auth.sendResetLink",
+        "context": "auth"
+      },
+      {
+        "key": "auth.welcomeBack",
+        "context": "auth"
+      },
+      {
+        "key": "auth.loginInstructions",
+        "context": "auth"
+      },
+      {
+        "key": "auth.enterCredentials",
+        "context": "auth"
+      },
+      {
+        "key": "auth.emailPlaceholder",
+        "context": "auth"
+      },
+      {
+        "key": "auth.passwordPlaceholder",
+        "context": "auth"
+      },
+      {
+        "key": "auth.loggingIn",
+        "context": "auth"
+      },
+      {
+        "key": "auth.fullName",
+        "context": "auth"
+      },
+      {
+        "key": "auth.fullNamePlaceholder",
+        "context": "auth"
+      },
+      {
+        "key": "todo.actions.assign",
+        "context": "todo.actions"
+      },
+      {
+        "key": "todo.actions.assignToMe",
+        "context": "todo.actions"
+      },
+      {
+        "key": "todo.actions.reassign",
+        "context": "todo.actions"
+      },
+      {
+        "key": "todo.actions.resolve",
+        "context": "todo.actions"
+      },
+      {
+        "key": "todo.actions.close",
+        "context": "todo.actions"
+      },
+      {
+        "key": "todo.actions.reopen",
+        "context": "todo.actions"
+      },
+      {
+        "key": "todo.actions.viewDetails",
+        "context": "todo.actions"
+      },
+      {
+        "key": "todo.actions.transfer",
+        "context": "todo.actions"
+      },
+      {
+        "key": "chat.typePlaceholder",
+        "context": "chat"
+      },
+      {
+        "key": "chat.attachFile",
+        "context": "chat"
+      },
+      {
+        "key": "chat.attachImage",
+        "context": "chat"
+      },
+      {
+        "key": "chat.searchMessages",
+        "context": "chat"
+      },
+      {
+        "key": "chat.searchPlaceholder",
+        "context": "chat"
+      },
+      {
+        "key": "chat.addReaction",
+        "context": "chat"
+      },
+      {
+        "key": "chat.replyingTo",
+        "context": "chat"
+      },
+      {
+        "key": "chat.fileTooLarge",
+        "context": "chat"
+      },
+      {
+        "key": "chat.fileTypeNotAllowed",
+        "context": "chat"
+      },
+      {
+        "key": "chat.fileUploaded",
+        "context": "chat"
+      },
+      {
+        "key": "chat.uploadFailed",
+        "context": "chat"
+      },
+      {
+        "key": "chat.failedToSend",
+        "context": "chat"
+      },
+      {
+        "key": "chat.imagePreview",
+        "context": "chat"
+      },
+      {
+        "key": "chat.cancel",
+        "context": "chat"
+      },
+      {
+        "key": "chat.sendImage",
+        "context": "chat"
+      },
+      {
+        "key": "chat.isTyping",
+        "context": "chat"
+      },
+      {
+        "key": "chat.areTyping",
+        "context": "chat"
+      },
+      {
+        "key": "chat.internal",
+        "context": "chat"
+      }
+    ],
+    "pt-BR": [
+      {
+        "key": "common.searchPlaceholder",
+        "context": "common"
+      },
+      {
+        "key": "common.remove",
+        "context": "common"
+      },
+      {
+        "key": "common.send",
+        "context": "common"
+      },
+      {
+        "key": "common.submit",
+        "context": "common"
+      },
+      {
+        "key": "common.create",
+        "context": "common"
+      },
+      {
+        "key": "common.update",
+        "context": "common"
+      },
+      {
+        "key": "common.preview",
+        "context": "common"
+      },
+      {
+        "key": "common.titlePlaceholder",
+        "context": "common"
+      },
+      {
+        "key": "common.descriptionPlaceholder",
+        "context": "common"
+      },
+      {
+        "key": "header.searchPlaceholder",
+        "context": "header"
+      },
+      {
+        "key": "header.filter",
+        "context": "header"
+      },
+      {
+        "key": "header.clear",
+        "context": "header"
+      },
+      {
+        "key": "header.refresh",
+        "context": "header"
+      },
+      {
+        "key": "header.export",
+        "context": "header"
+      },
+      {
+        "key": "header.import",
+        "context": "header"
+      },
+      {
+        "key": "header.download",
+        "context": "header"
+      },
+      {
+        "key": "header.upload",
+        "context": "header"
+      },
+      {
+        "key": "header.share",
+        "context": "header"
+      },
+      {
+        "key": "header.print",
+        "context": "header"
+      },
+      {
+        "key": "header.totalTickets",
+        "context": "header"
+      },
+      {
+        "key": "header.agent",
+        "context": "header"
+      },
+      {
+        "key": "header.unknownUser",
+        "context": "header"
+      },
+      {
+        "key": "header.not_available",
+        "context": "header"
+      },
+      {
+        "key": "header.all",
+        "context": "header"
+      },
+      {
+        "key": "header.copyright",
+        "context": "header"
+      },
+      {
+        "key": "header.pageNotFound",
+        "context": "header"
+      },
+      {
+        "key": "header.returnToHome",
+        "context": "header"
+      },
+      {
+        "key": "header.admin",
+        "context": "header"
+      },
+      {
+        "key": "tickets.newTicket",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.ticketNumber",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.title",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.description",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.status.open",
+        "context": "tickets.status"
+      },
+      {
+        "key": "tickets.status.pending",
+        "context": "tickets.status"
+      },
+      {
+        "key": "tickets.status.inProgress",
+        "context": "tickets.status"
+      },
+      {
+        "key": "tickets.status.resolved",
+        "context": "tickets.status"
+      },
+      {
+        "key": "tickets.status.closed",
+        "context": "tickets.status"
+      },
+      {
+        "key": "tickets.priority",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.category",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.assignedTo",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.createdBy",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.createdAt",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.updatedAt",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.resolvedAt",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.closedAt",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.resolution",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.comments",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.addComment",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.untitled",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.resolve.title",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.resolve.currentStatus",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.resolve.resolutionNotes",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.resolve.resolutionNotesPlaceholder",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.resolve.resolutionNotesRequired",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.resolve.tip",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.resolve.tipText",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.resolve.resolving",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.resolve.resolveButton",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.resolve.successTitle",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.resolve.successDescription",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.resolve.error",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.resolve.errorDefault",
+        "context": "tickets.resolve"
+      },
+      {
+        "key": "tickets.close.title",
+        "context": "tickets.close"
+      },
+      {
+        "key": "tickets.close.infoTitle",
+        "context": "tickets.close"
+      },
+      {
+        "key": "tickets.close.infoDesc",
+        "context": "tickets.close"
+      },
+      {
+        "key": "tickets.close.statusLabel",
+        "context": "tickets.close"
+      },
+      {
+        "key": "tickets.close.closing",
+        "context": "tickets.close"
+      },
+      {
+        "key": "tickets.close.confirm",
+        "context": "tickets.close"
+      },
+      {
+        "key": "tickets.close.errors.title",
+        "context": "tickets.close.errors"
+      },
+      {
+        "key": "tickets.close.errors.generic",
+        "context": "tickets.close.errors"
+      },
+      {
+        "key": "tickets.close.errors.notResolved",
+        "context": "tickets.close.errors"
+      },
+      {
+        "key": "tickets.close.errors.emptyResolution",
+        "context": "tickets.close.errors"
+      },
+      {
+        "key": "tickets.close.errors.noResolvedDate",
+        "context": "tickets.close.errors"
+      },
+      {
+        "key": "tickets.close.errors.cannotClose",
+        "context": "tickets.close.errors"
+      },
+      {
+        "key": "tickets.close.errors.statusMustBeResolved",
+        "context": "tickets.close.errors"
+      },
+      {
+        "key": "tickets.close.errors.resolutionRequired",
+        "context": "tickets.close.errors"
+      },
+      {
+        "key": "tickets.close.errors.resolvedDateRequired",
+        "context": "tickets.close.errors"
+      },
+      {
+        "key": "tickets.close.success.title",
+        "context": "tickets.close.success"
+      },
+      {
+        "key": "tickets.close.success.description",
+        "context": "tickets.close.success"
+      },
+      {
+        "key": "tickets.reopen.title",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.infoTitle",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.infoDesc",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.ticketLabel",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.statusLabel",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.previousResolutionLabel",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.closedOnly",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.creatorOnly",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.reasonLabel",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.reasonPlaceholder",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.reasonHelper",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.reasonRequired",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.noPermission",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.sending",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.sendButton",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.sentTitle",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.sentDesc",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.reopen.descriptionSr",
+        "context": "tickets.reopen"
+      },
+      {
+        "key": "tickets.transfer.title",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.descriptionSr",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.transferToLabel",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.loadingAgents",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.selectAgentPlaceholder",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.noAgents",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.reasonLabel",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.reasonPlaceholder",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.reasonRequired",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.selectAgentError",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.loadAgentsError",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.transferring",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.transferredTitle",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.transferredDesc",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.transferError",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.workloadTitle",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.transfer.workloadHint",
+        "context": "tickets.transfer"
+      },
+      {
+        "key": "tickets.requester",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.created_on",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.updated_on",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.created_by",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.assigned_to",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.attachments",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.resolved_on",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.customer_feedback",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.activity_log",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.tasks",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.account_information",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.username",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.license_type",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.mfa_setup",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.job_information",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.job_title",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.manager",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.start_date",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.company_information",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.company",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.department",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.office_location",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.contact_information",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.business_phone",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.mobile_phone",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.additional_information",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.signature_group",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.usage_location",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.distribution_list",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.attached_form",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.by",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.assigned",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.feedbackReceived",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.userRatedService",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.clickToViewRating",
+        "context": "tickets"
+      },
+      {
+        "key": "tickets.assign.title",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.currentStatus",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.aboutToAssign",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.responsibility1",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.responsibility2",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.responsibility3",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.responsibility4",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.assignToMe",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.assignToAgent",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.selectAgent",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.selectAgentPlaceholder",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.loadAgentsError",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.successTitle",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.successDescription",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.error",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.errorDefault",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.assigning",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.assignButton",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.assign.loading",
+        "context": "tickets.assign"
+      },
+      {
+        "key": "tickets.actions.assign",
+        "context": "tickets.actions"
+      },
+      {
+        "key": "tickets.actions.assignToMe",
+        "context": "tickets.actions"
+      },
+      {
+        "key": "tickets.actions.reassign",
+        "context": "tickets.actions"
+      },
+      {
+        "key": "tickets.actions.edit",
+        "context": "tickets.actions"
+      },
+      {
+        "key": "tickets.actions.resolve",
+        "context": "tickets.actions"
+      },
+      {
+        "key": "tickets.actions.close",
+        "context": "tickets.actions"
+      },
+      {
+        "key": "tickets.actions.reopen",
+        "context": "tickets.actions"
+      },
+      {
+        "key": "tickets.actions.delete",
+        "context": "tickets.actions"
+      },
+      {
+        "key": "tickets.actions.viewDetails",
+        "context": "tickets.actions"
+      },
+      {
+        "key": "tickets.actions.transfer",
+        "context": "tickets.actions"
+      },
+      {
+        "key": "tickets.fields.title",
+        "context": "tickets.fields"
+      },
+      {
+        "key": "tickets.fields.description",
+        "context": "tickets.fields"
+      },
+      {
+        "key": "tickets.fields.priority",
+        "context": "tickets.fields"
+      },
+      {
+        "key": "tickets.fields.category",
+        "context": "tickets.fields"
+      },
+      {
+        "key": "tickets.fields.subcategory",
+        "context": "tickets.fields"
+      },
+      {
+        "key": "tickets.fields.country",
+        "context": "tickets.fields"
+      },
+      {
+        "key": "tickets.fields.status",
+        "context": "tickets.fields"
+      },
+      {
+        "key": "tickets.fields.assignedTo",
+        "context": "tickets.fields"
+      },
+      {
+        "key": "tickets.fields.createdAt",
+        "context": "tickets.fields"
+      },
+      {
+        "key": "tickets.fields.updatedAt",
+        "context": "tickets.fields"
+      },
+      {
+        "key": "tickets.fields.resolvedAt",
+        "context": "tickets.fields"
+      },
+      {
+        "key": "tickets.fields.closedAt",
+        "context": "tickets.fields"
+      },
+      {
+        "key": "tickets.placeholders.title",
+        "context": "tickets.placeholders"
+      },
+      {
+        "key": "tickets.placeholders.description",
+        "context": "tickets.placeholders"
+      },
+      {
+        "key": "tickets.placeholders.selectPriority",
+        "context": "tickets.placeholders"
+      },
+      {
+        "key": "tickets.placeholders.selectCategory",
+        "context": "tickets.placeholders"
+      },
+      {
+        "key": "tickets.placeholders.selectSubcategory",
+        "context": "tickets.placeholders"
+      },
+      {
+        "key": "tickets.placeholders.selectCountry",
+        "context": "tickets.placeholders"
+      },
+      {
+        "key": "tickets.placeholders.selectStatus",
+        "context": "tickets.placeholders"
+      },
+      {
+        "key": "tickets.placeholders.selectAssignee",
+        "context": "tickets.placeholders"
+      },
+      {
+        "key": "profile.user",
+        "context": "profile"
+      },
+      {
+        "key": "profile.agent",
+        "context": "profile"
+      },
+      {
+        "key": "profile.admin",
+        "context": "profile"
+      },
+      {
+        "key": "profile.french",
+        "context": "profile"
+      },
+      {
+        "key": "profile.dutch",
+        "context": "profile"
+      },
+      {
+        "key": "profile.german",
+        "context": "profile"
+      },
+      {
+        "key": "auth.login",
+        "context": "auth"
+      },
+      {
+        "key": "auth.register",
+        "context": "auth"
+      },
+      {
+        "key": "auth.logout",
+        "context": "auth"
+      },
+      {
+        "key": "auth.email",
+        "context": "auth"
+      },
+      {
+        "key": "auth.password",
+        "context": "auth"
+      },
+      {
+        "key": "auth.confirmPassword",
+        "context": "auth"
+      },
+      {
+        "key": "auth.dontHaveAccount",
+        "context": "auth"
+      },
+      {
+        "key": "auth.alreadyHaveAccount",
+        "context": "auth"
+      },
+      {
+        "key": "auth.signUp",
+        "context": "auth"
+      },
+      {
+        "key": "auth.signOut",
+        "context": "auth"
+      },
+      {
+        "key": "todo.actions.complete",
+        "context": "todo.actions"
+      },
+      {
+        "key": "todo.actions.start",
+        "context": "todo.actions"
+      },
+      {
+        "key": "todo.actions.pause",
+        "context": "todo.actions"
+      },
+      {
+        "key": "todo.actions.save",
+        "context": "todo.actions"
+      },
+      {
+        "key": "todo.actions.cancel",
+        "context": "todo.actions"
+      },
+      {
+        "key": "chat.attachFile",
+        "context": "chat"
+      },
+      {
+        "key": "chat.attachImage",
+        "context": "chat"
+      },
+      {
+        "key": "chat.searchMessages",
+        "context": "chat"
+      },
+      {
+        "key": "chat.addReaction",
+        "context": "chat"
+      },
+      {
+        "key": "chat.replyingTo",
+        "context": "chat"
+      },
+      {
+        "key": "chat.fileTooLarge",
+        "context": "chat"
+      },
+      {
+        "key": "chat.fileTypeNotAllowed",
+        "context": "chat"
+      },
+      {
+        "key": "chat.fileUploaded",
+        "context": "chat"
+      },
+      {
+        "key": "chat.uploadFailed",
+        "context": "chat"
+      },
+      {
+        "key": "chat.failedToSend",
+        "context": "chat"
+      },
+      {
+        "key": "chat.imagePreview",
+        "context": "chat"
+      },
+      {
+        "key": "chat.cancel",
+        "context": "chat"
+      },
+      {
+        "key": "chat.sendImage",
+        "context": "chat"
+      },
+      {
+        "key": "chat.isTyping",
+        "context": "chat"
+      },
+      {
+        "key": "chat.areTyping",
+        "context": "chat"
+      },
+      {
+        "key": "chat.internal",
+        "context": "chat"
+      }
+    ]
+  }
+}

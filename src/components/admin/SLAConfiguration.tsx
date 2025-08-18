@@ -12,6 +12,8 @@ import {
   AlertTriangle
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { SafeTranslation } from '@/components/ui/SafeTranslation';
+import { useTranslation } from 'react-i18next';
 
 interface SLAConfig {
   priority: string;
@@ -22,6 +24,7 @@ interface SLAConfig {
 
 export const SLAConfiguration = () => {
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [slaConfigs, setSlaConfigs] = useState<SLAConfig[]>([
     { priority: "urgent", responseTime: 1, resolutionTime: 4, escalationTime: 0.5 },
     { priority: "high", responseTime: 2, resolutionTime: 8, escalationTime: 1 },
@@ -31,11 +34,14 @@ export const SLAConfiguration = () => {
 
   const [editingConfig, setEditingConfig] = useState<SLAConfig | null>(null);
 
-  const priorityLabels = {
-    urgent: "🔴 Crítica",
-    high: "🟠 Alta",
-    medium: "🟡 Média",
-    low: "🟢 Baixa"
+  const getPriorityLabel = (priority: string) => {
+    switch (priority) {
+      case 'urgent': return t('admin.slaConfiguration.critical', '🔴 Critical');
+      case 'high': return t('admin.slaConfiguration.high', '🟠 High');
+      case 'medium': return t('admin.slaConfiguration.medium', '🟡 Medium');
+      case 'low': return t('admin.slaConfiguration.low', '🟢 Low');
+      default: return priority;
+    }
   };
 
   const getPriorityColor = (priority: string) => {
@@ -62,8 +68,8 @@ export const SLAConfiguration = () => {
     );
 
     toast({
-      title: "SLA Updated",
-      description: `Configuration for ${priorityLabels[editingConfig.priority]} priority was saved successfully.`,
+      title: t('admin.slaConfiguration.slaUpdated'),
+      description: t('admin.slaConfiguration.slaUpdatedDesc', { priority: getPriorityLabel(editingConfig.priority) }),
     });
 
     setEditingConfig(null);
@@ -82,8 +88,8 @@ export const SLAConfiguration = () => {
     ]);
 
     toast({
-      title: "Configurações Restauradas",
-      description: "Todas as configurações de SLA foram restauradas para os valores padrão.",
+      title: t('admin.slaConfiguration.configRestored'),
+      description: t('admin.slaConfiguration.configRestoredDesc'),
     });
   };
 
@@ -92,7 +98,9 @@ export const SLAConfiguration = () => {
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg dark:text-gray-100">SLA Configuration by Priority</CardTitle>
+            <CardTitle className="text-lg dark:text-gray-100">
+              <SafeTranslation i18nKey="admin.slaConfiguration.title" fallback="SLA Configuration by Priority" />
+            </CardTitle>
             <Button
               onClick={resetToDefaults}
               variant="outline"
@@ -100,7 +108,7 @@ export const SLAConfiguration = () => {
               className="flex items-center gap-2"
             >
               <RotateCcw className="h-4 w-4" />
-              Restaurar Padrões
+              <SafeTranslation i18nKey="admin.slaConfiguration.restoreDefaults" fallback="Restore Defaults" />
             </Button>
           </div>
         </CardHeader>
@@ -110,21 +118,21 @@ export const SLAConfiguration = () => {
               <div key={config.priority} className="border rounded-lg p-4 dark:border-gray-700">
                 <div className="flex items-center justify-between mb-4">
                   <Badge className={getPriorityColor(config.priority)}>
-                    {priorityLabels[config.priority]}
+                    {getPriorityLabel(config.priority)}
                   </Badge>
                   {editingConfig?.priority === config.priority ? (
                     <div className="flex gap-2">
                       <Button onClick={handleSave} size="sm">
                         <Save className="h-4 w-4 mr-1" />
-                        Salvar
+                        <SafeTranslation i18nKey="admin.slaConfiguration.save" fallback="Save" />
                       </Button>
                       <Button onClick={handleCancel} variant="outline" size="sm">
-                        Cancelar
+                        <SafeTranslation i18nKey="admin.slaConfiguration.cancel" fallback="Cancel" />
                       </Button>
                     </div>
                   ) : (
                     <Button onClick={() => handleEdit(config)} variant="outline" size="sm">
-                      Editar
+                      <SafeTranslation i18nKey="admin.slaConfiguration.edit" fallback="Edit" />
                     </Button>
                   )}
                 </div>
@@ -133,7 +141,7 @@ export const SLAConfiguration = () => {
                   <div>
                     <Label className="text-sm font-medium flex items-center gap-1 mb-2 dark:text-gray-200">
                       <Clock className="h-4 w-4" />
-                      Tempo de Resposta (horas)
+                      <SafeTranslation i18nKey="admin.slaConfiguration.responseTime" fallback="Response Time (hours)" />
                     </Label>
                     {editingConfig?.priority === config.priority ? (
                       <Input
@@ -157,7 +165,7 @@ export const SLAConfiguration = () => {
                   <div>
                     <Label className="text-sm font-medium flex items-center gap-1 mb-2 dark:text-gray-200">
                       <Clock className="h-4 w-4" />
-                      Tempo de Resolução (horas)
+                      <SafeTranslation i18nKey="admin.slaConfiguration.resolutionTime" fallback="Resolution Time (hours)" />
                     </Label>
                     {editingConfig?.priority === config.priority ? (
                       <Input
@@ -181,7 +189,7 @@ export const SLAConfiguration = () => {
                   <div>
                     <Label className="text-sm font-medium flex items-center gap-1 mb-2 dark:text-gray-200">
                       <AlertTriangle className="h-4 w-4" />
-                      Tempo de Escalação (horas)
+                      <SafeTranslation i18nKey="admin.slaConfiguration.escalationTime" fallback="Escalation Time (hours)" />
                     </Label>
                     {editingConfig?.priority === config.priority ? (
                       <Input
@@ -210,26 +218,34 @@ export const SLAConfiguration = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base dark:text-gray-100">Informações sobre SLA</CardTitle>
+          <CardTitle className="text-base dark:text-gray-100">
+            <SafeTranslation i18nKey="admin.slaConfiguration.slaInfo" fallback="SLA Information" />
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3 text-sm text-gray-600 dark:text-gray-300">
             <div className="flex items-start gap-2">
               <Clock className="h-4 w-4 mt-0.5 text-blue-500 dark:text-blue-400" />
               <div>
-                <strong className="dark:text-gray-200">Response Time:</strong> Maximum time for first response to ticket
+                <strong className="dark:text-gray-200">
+                  <SafeTranslation i18nKey="admin.slaConfiguration.responseTime" fallback="Response Time:" />
+                </strong> <SafeTranslation i18nKey="admin.slaConfiguration.responseTimeInfo" fallback="Maximum time for first response to ticket" />
               </div>
             </div>
             <div className="flex items-start gap-2">
               <Clock className="h-4 w-4 mt-0.5 text-green-500 dark:text-green-400" />
               <div>
-                <strong className="dark:text-gray-200">Resolution Time:</strong> Maximum time for complete ticket resolution
+                <strong className="dark:text-gray-200">
+                  <SafeTranslation i18nKey="admin.slaConfiguration.resolutionTime" fallback="Resolution Time:" />
+                </strong> <SafeTranslation i18nKey="admin.slaConfiguration.resolutionTimeInfo" fallback="Maximum time for complete ticket resolution" />
               </div>
             </div>
             <div className="flex items-start gap-2">
               <AlertTriangle className="h-4 w-4 mt-0.5 text-orange-500 dark:text-orange-400" />
               <div>
-                <strong className="dark:text-gray-200">Escalation Time:</strong> Time after which the ticket is automatically escalated if no response
+                <strong className="dark:text-gray-200">
+                  <SafeTranslation i18nKey="admin.slaConfiguration.escalationTime" fallback="Escalation Time:" />
+                </strong> <SafeTranslation i18nKey="admin.slaConfiguration.escalationTimeInfo" fallback="Time after which the ticket is automatically escalated if no response" />
               </div>
             </div>
           </div>

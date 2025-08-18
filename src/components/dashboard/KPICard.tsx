@@ -4,6 +4,7 @@ import { Progress } from "@/components/ui/progress";
 import { TrendingUp, TrendingDown, Minus, LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useTranslation } from "react-i18next";
 
 export type TrendDirection = 'up' | 'down' | 'neutral';
 export type KPIColor = 'blue' | 'green' | 'yellow' | 'red' | 'purple';
@@ -120,6 +121,7 @@ export const KPICard: React.FC<KPICardProps> = ({
   className
 }) => {
   const isMobile = useIsMobile();
+  const { t } = useTranslation();
   const colors = colorConfig[color];
   
   if (loading) {
@@ -193,7 +195,7 @@ export const KPICard: React.FC<KPICardProps> = ({
             {target && (
               <div className="mt-2 space-y-1">
                 <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-                  <span>Target: {formattedTarget}</span>
+                  <span>{t('dashboard.target')}: {formattedTarget}</span>
                   <span>{progress?.toFixed(0)}%</span>
                 </div>
                 <Progress 
@@ -212,9 +214,9 @@ export const KPICard: React.FC<KPICardProps> = ({
               )}>
                 {getTrendIcon(trend)}
                 <span className="text-xs">
-                  {trend === 'up' && 'Trending up'}
-                  {trend === 'down' && 'Trending down'}
-                  {trend === 'neutral' && 'No change'}
+                  {trend === 'up' && t('dashboard.trendingUp')}
+                  {trend === 'down' && t('dashboard.trendingDown')}
+                  {trend === 'neutral' && t('dashboard.noChange')}
                 </span>
               </div>
             )}

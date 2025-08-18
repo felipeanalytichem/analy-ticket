@@ -102,14 +102,14 @@ export const AdvancedFilters = ({ onFiltersChange }: AdvancedFiltersProps) => {
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg flex items-center gap-2">
             <Filter className="h-5 w-5" />
-            Advanced Filters
+            {t('tickets.advancedFilters')}
           </CardTitle>
           <Button
             variant="outline"
             size="sm"
             onClick={() => setIsExpanded(!isExpanded)}
           >
-            {isExpanded ? "Collapse" : "Expand"}
+            {isExpanded ? t('tickets.collapse') : t('tickets.expand')}
           </Button>
         </div>
       </CardHeader>
@@ -146,7 +146,7 @@ export const AdvancedFilters = ({ onFiltersChange }: AdvancedFiltersProps) => {
               onClick={clearAllFilters}
               className="h-6 px-2 text-xs"
             >
-              Clear all
+              {t('tickets.clearAll')}
             </Button>
           </div>
         )}
@@ -159,11 +159,11 @@ export const AdvancedFilters = ({ onFiltersChange }: AdvancedFiltersProps) => {
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="open">Open</SelectItem>
-                <SelectItem value="in_progress">In Progress</SelectItem>
-                <SelectItem value="resolved">Resolved</SelectItem>
-                <SelectItem value="closed">Closed</SelectItem>
+                <SelectItem value="all">{t('tickets.allStatus')}</SelectItem>
+                <SelectItem value="open">{t('status.open')}</SelectItem>
+                <SelectItem value="in_progress">{t('status.inProgress')}</SelectItem>
+                <SelectItem value="resolved">{t('status.resolved')}</SelectItem>
+                <SelectItem value="closed">{t('status.closed')}</SelectItem>
               </SelectContent>
             </Select>
 
@@ -172,35 +172,35 @@ export const AdvancedFilters = ({ onFiltersChange }: AdvancedFiltersProps) => {
                 <SelectValue placeholder="Priority" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Priorities</SelectItem>
-                <SelectItem value="low">Low</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="high">High</SelectItem>
-                <SelectItem value="urgent">Urgent</SelectItem>
+                <SelectItem value="all">{t('tickets.allPriorities')}</SelectItem>
+                <SelectItem value="low">{t('priority.low')}</SelectItem>
+                <SelectItem value="medium">{t('priority.medium')}</SelectItem>
+                <SelectItem value="high">{t('priority.high')}</SelectItem>
+                <SelectItem value="urgent">{t('priority.urgent')}</SelectItem>
               </SelectContent>
             </Select>
 
             <Select value={filters.category} onValueChange={(value) => updateFilter("category", value)}>
               <SelectTrigger>
-                <SelectValue placeholder="Category" />
+                <SelectValue placeholder={t('tickets.category')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                <SelectItem value="technical">Technical</SelectItem>
-                <SelectItem value="billing">Billing</SelectItem>
-                <SelectItem value="support">Support</SelectItem>
-                <SelectItem value="feature_request">Feature Request</SelectItem>
-                <SelectItem value="bug">Bug</SelectItem>
+                <SelectItem value="all">{t('tickets.allCategories')}</SelectItem>
+                <SelectItem value="technical">{t('tickets.technical')}</SelectItem>
+                <SelectItem value="billing">{t('tickets.billing')}</SelectItem>
+                <SelectItem value="support">{t('tickets.support')}</SelectItem>
+                <SelectItem value="feature_request">{t('tickets.featureRequest')}</SelectItem>
+                <SelectItem value="bug">{t('tickets.bug')}</SelectItem>
               </SelectContent>
             </Select>
 
             <Select value={filters.assignee} onValueChange={(value) => updateFilter("assignee", value)}>
               <SelectTrigger>
-                <SelectValue placeholder="Agent" />
+                <SelectValue placeholder={t('common.agent')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Agents</SelectItem>
-                <SelectItem value="unassigned">Unassigned</SelectItem>
+                <SelectItem value="all">{t('tickets.allAgents')}</SelectItem>
+                <SelectItem value="unassigned">{t('tickets.unassigned')}</SelectItem>
                 {agents.map((agent) => (
                   <SelectItem key={agent.id} value={agent.id}>
                     {agent.name}
@@ -210,7 +210,7 @@ export const AdvancedFilters = ({ onFiltersChange }: AdvancedFiltersProps) => {
             </Select>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Start Date</label>
+              <label className="text-sm font-medium">{t('tickets.startDate')}</label>
               <Input
                 type="date"
                 value={filters.dateFrom}
@@ -219,7 +219,7 @@ export const AdvancedFilters = ({ onFiltersChange }: AdvancedFiltersProps) => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">End Date</label>
+              <label className="text-sm font-medium">{t('tickets.endDate')}</label>
               <Input
                 type="date"
                 value={filters.dateTo}
@@ -229,13 +229,13 @@ export const AdvancedFilters = ({ onFiltersChange }: AdvancedFiltersProps) => {
 
             <Select value={filters.slaStatus} onValueChange={(value) => updateFilter("slaStatus", value)}>
               <SelectTrigger>
-                <SelectValue placeholder="SLA Status" />
+                <SelectValue placeholder={t('tickets.slaStatus')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All</SelectItem>
-                <SelectItem value="ok">✅ Within SLA</SelectItem>
-                <SelectItem value="warning">⚠️ Close to deadline</SelectItem>
-                <SelectItem value="overdue">🔴 Overdue</SelectItem>
+                <SelectItem value="all">{t('common.all')}</SelectItem>
+                <SelectItem value="ok">{t('tickets.withinSla')}</SelectItem>
+                <SelectItem value="warning">{t('tickets.closeToDeadline')}</SelectItem>
+                <SelectItem value="overdue">{t('tickets.overdue')}</SelectItem>
               </SelectContent>
             </Select>
           </div>

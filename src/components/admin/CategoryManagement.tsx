@@ -23,6 +23,7 @@ import {
   WifiOff
 } from "lucide-react";
 import SubcategoriesSection from './SubcategoriesSection';
+import { SafeTranslation } from '@/components/ui/SafeTranslation';
 
 // Enhanced types for the new features
 interface CategoryWithSubcategories extends Category {
@@ -480,7 +481,9 @@ export const CategoryManagement = () => {
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Category Management</h2>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
+              <SafeTranslation i18nKey="admin.categoryManagement.title" fallback="Category Management" />
+            </h2>
             {/* Network Status Indicator */}
             <div className="flex items-center gap-2">
               {isOnline ? (
@@ -497,7 +500,7 @@ export const CategoryManagement = () => {
             </div>
           </div>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
-            Manage ticket categories and subcategories with advanced features
+            <SafeTranslation i18nKey="admin.categoryManagement.description" fallback="Manage ticket categories and subcategories with advanced features" />
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -515,7 +518,7 @@ export const CategoryManagement = () => {
             disabled={!isOnline}
           >
             <Plus className="h-4 w-4 mr-2" />
-            Add Category
+            <SafeTranslation i18nKey="admin.categoryManagement.addCategory" fallback="Add Category" />
           </Button>
         </div>
       </div>
@@ -565,12 +568,19 @@ export const CategoryManagement = () => {
                           : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
                         } text-xs px-2 py-1`}
                     >
-                      {category.is_enabled ? "Active" : "Inactive"}
+                      <SafeTranslation 
+                        i18nKey={category.is_enabled ? "admin.categoryManagement.active" : "admin.categoryManagement.inactive"} 
+                        fallback={category.is_enabled ? "Active" : "Inactive"} 
+                      />
                     </Badge>
 
                     {category.subcategories.length > 0 && (
                       <Badge variant="outline" className="text-xs px-2 py-1">
-                        {category.subcategories.length} subcategories
+                        <SafeTranslation 
+                          i18nKey="admin.categoryManagement.subcategoriesCount" 
+                          fallback="{{count}} subcategories"
+                          values={{ count: category.subcategories.length }}
+                        />
                       </Badge>
                     )}
                   </div>
@@ -615,7 +625,7 @@ export const CategoryManagement = () => {
                     <Plus className="h-8 w-8 mx-auto mb-2 opacity-50" />
                   </div>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
-                    No subcategories yet
+                    <SafeTranslation i18nKey="admin.categoryManagement.noSubcategories" fallback="No subcategories yet" />
                   </p>
                   <Button
                     variant="outline"
@@ -623,7 +633,7 @@ export const CategoryManagement = () => {
                     className="text-xs"
                     disabled={!isOnline}
                   >
-                    Add Subcategory
+                    <SafeTranslation i18nKey="admin.categoryManagement.addSubcategory" fallback="Add Subcategory" />
                   </Button>
                 </div>
               )}
@@ -637,7 +647,7 @@ export const CategoryManagement = () => {
                         {category.subcategories.length}
                       </div>
                       <div className="text-xs text-gray-500 dark:text-gray-400">
-                        Subcategories
+                        <SafeTranslation i18nKey="admin.categoryManagement.subcategories" fallback="Subcategories" />
                       </div>
                     </div>
                     <div>
@@ -645,7 +655,7 @@ export const CategoryManagement = () => {
                         {category.subcategories.reduce((acc, sub) => acc + (sub.dynamic_form_fields?.length || 0), 0)}
                       </div>
                       <div className="text-xs text-gray-500 dark:text-gray-400">
-                        Custom Fields
+                        <SafeTranslation i18nKey="admin.categoryManagement.customFields" fallback="Custom Fields" />
                       </div>
                     </div>
                   </div>
@@ -668,10 +678,10 @@ export const CategoryManagement = () => {
             <Grid3X3 className="h-12 w-12 text-gray-400 dark:text-gray-500" />
           </div>
           <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-            No categories yet
+            <SafeTranslation i18nKey="admin.categoryManagement.noCategoriesYet" fallback="No categories yet" />
           </h3>
           <p className="text-gray-500 dark:text-gray-400 mb-6 max-w-md mx-auto">
-            Get started by creating your first category to organize support tickets effectively.
+            <SafeTranslation i18nKey="admin.categoryManagement.noCategoriesDesc" fallback="Get started by creating your first category to organize support tickets effectively." />
           </p>
           <Button
             onClick={() => setIsCategoryDialogOpen(true)}
@@ -679,7 +689,7 @@ export const CategoryManagement = () => {
             disabled={!isOnline}
           >
             <Plus className="h-4 w-4 mr-2" />
-            Create First Category
+            <SafeTranslation i18nKey="admin.categoryManagement.createFirstCategory" fallback="Create First Category" />
           </Button>
         </div>
       )}

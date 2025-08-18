@@ -1,0 +1,176 @@
+{
+  "timestamp": "2025-07-31T13:55:04.687Z",
+  "audit": {
+    "filesScanned": 258,
+    "totalFiles": 258,
+    "hardcodedStrings": 2793,
+    "uniqueStrings": 1431
+  },
+  "priorityBreakdown": {
+    "high": 2137,
+    "medium": 656,
+    "low": 0
+  },
+  "categoryBreakdown": [
+    {
+      "category": "ui_text",
+      "count": 931,
+      "percentage": 33
+    },
+    {
+      "category": "feedback",
+      "count": 746,
+      "percentage": 27
+    },
+    {
+      "category": "errors",
+      "count": 549,
+      "percentage": 20
+    },
+    {
+      "category": "interactive",
+      "count": 159,
+      "percentage": 6
+    },
+    {
+      "category": "accessibility",
+      "count": 143,
+      "percentage": 5
+    },
+    {
+      "category": "forms",
+      "count": 82,
+      "percentage": 3
+    },
+    {
+      "category": "headings",
+      "count": 76,
+      "percentage": 3
+    },
+    {
+      "category": "status",
+      "count": 67,
+      "percentage": 2
+    },
+    {
+      "category": "validation",
+      "count": 40,
+      "percentage": 1
+    }
+  ],
+  "topFiles": [
+    {
+      "file": "lib\\database.ts",
+      "count": 204
+    },
+    {
+      "file": "components\\admin\\AssignmentRulesManager.tsx",
+      "count": 111
+    },
+    {
+      "file": "components\\tickets\\TaskManagement.tsx",
+      "count": 66
+    },
+    {
+      "file": "components\\admin\\CategoryExpertiseManager.tsx",
+      "count": 63
+    },
+    {
+      "file": "contexts\\AuthContext.tsx",
+      "count": 61
+    },
+    {
+      "file": "lib\\enhancedChatService.ts",
+      "count": 57
+    },
+    {
+      "file": "lib\\notificationService.ts",
+      "count": 56
+    },
+    {
+      "file": "components\\tickets\\dialogs\\TicketDialog.tsx",
+      "count": 55
+    },
+    {
+      "file": "components\\knowledge\\KnowledgeArticleView.tsx",
+      "count": 52
+    },
+    {
+      "file": "components\\admin\\CategoryManagement.tsx",
+      "count": 49
+    },
+    {
+      "file": "components\\dashboard\\DetailedAnalytics.tsx",
+      "count": 48
+    },
+    {
+      "file": "components\\debug\\NotificationDebugger.tsx",
+      "count": 48
+    },
+    {
+      "file": "components\\tickets\\AgentResponseInterface.tsx",
+      "count": 48
+    },
+    {
+      "file": "hooks\\useChat.ts",
+      "count": 47
+    },
+    {
+      "file": "lib\\uploadService.ts",
+      "count": 47
+    },
+    {
+      "file": "components\\admin\\SLANotificationSettings.tsx",
+      "count": 46
+    },
+    {
+      "file": "lib\\emailService.ts",
+      "count": 46
+    },
+    {
+      "file": "components\\debug\\ToastTester.tsx",
+      "count": 43
+    },
+    {
+      "file": "components\\tickets\\AttachmentViewer.tsx",
+      "count": 41
+    },
+    {
+      "file": "lib\\chatService.ts",
+      "count": 41
+    }
+  ],
+  "recommendations": [
+    {
+      "type": "high_priority_strings",
+      "priority": "critical",
+      "message": "Found 2137 high-priority hardcoded strings that need immediate attention",
+      "action": "Start with the top 50 highest visibility score strings for maximum user impact",
+      "estimatedTime": "1-2 weeks"
+    },
+    {
+      "type": "interactive_elements",
+      "priority": "high",
+      "message": "Found 159 hardcoded strings in interactive elements (buttons, forms)",
+      "action": "Focus on buttons and form elements as they directly impact user interaction",
+      "estimatedTime": "1 week"
+    },
+    {
+      "type": "accessibility_strings",
+      "priority": "high",
+      "message": "Found 143 hardcoded accessibility strings (aria-labels, alt text)",
+      "action": "Prioritize accessibility strings to ensure inclusive user experience",
+      "estimatedTime": "3-5 days"
+    }
+  ],
+  "estimatedEffort": {
+    "totalStrings": 2793,
+    "estimatedDays": 56,
+    "estimatedWeeks": 12,
+    "breakdown": {
+      "phase1": 43,
+      "phase2": 14,
+      "phase3": 0
+    }
+  }
+}

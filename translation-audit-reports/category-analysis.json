@@ -1,0 +1,649 @@
+{
+  "timestamp": "2025-07-31T13:55:04.673Z",
+  "summary": {
+    "totalCategories": 9,
+    "categoryBreakdown": [
+      {
+        "category": "interactive",
+        "count": 159,
+        "averageVisibilityScore": 23.7
+      },
+      {
+        "category": "ui_text",
+        "count": 931,
+        "averageVisibilityScore": 21.07
+      },
+      {
+        "category": "accessibility",
+        "count": 143,
+        "averageVisibilityScore": 19.25
+      },
+      {
+        "category": "feedback",
+        "count": 746,
+        "averageVisibilityScore": 19.04
+      },
+      {
+        "category": "forms",
+        "count": 82,
+        "averageVisibilityScore": 18.94
+      },
+      {
+        "category": "headings",
+        "count": 76,
+        "averageVisibilityScore": 18.25
+      },
+      {
+        "category": "validation",
+        "count": 40,
+        "averageVisibilityScore": 12.6
+      },
+      {
+        "category": "errors",
+        "count": 549,
+        "averageVisibilityScore": 12.29
+      },
+      {
+        "category": "status",
+        "count": 67,
+        "averageVisibilityScore": 9.61
+      }
+    ]
+  },
+  "categoryDetails": {
+    "ui_text": {
+      "count": 931,
+      "averageVisibilityScore": 21.065520945220193,
+      "topItems": [
+        {
+          "file": "components\\tickets\\dialogs\\TicketDialog.tsx",
+          "text": "Cancel",
+          "suggestedKey": "dialogs.ticketdialog.cancel",
+          "visibilityScore": 25
+        },
+        {
+          "file": "components\\tickets\\TaskManagement.tsx",
+          "text": "Cancel",
+          "suggestedKey": "tickets.taskmanagement.cancel",
+          "visibilityScore": 25
+        },
+        {
+          "file": "components\\ui\\LoadingFallback.tsx",
+          "text": "Cancel",
+          "suggestedKey": "ui.loadingfallback.cancel",
+          "visibilityScore": 25
+        },
+        {
+          "file": "components\\ui\\LoadingFallback.tsx",
+          "text": "Cancel",
+          "suggestedKey": "ui.loadingfallback.cancel",
+          "visibilityScore": 25
+        },
+        {
+          "file": "hooks\\useConsolidatedLoading.ts",
+          "text": "Promise",
+          "suggestedKey": "hooks.useconsolidatedloading.promise",
+          "visibilityScore": 25
+        },
+        {
+          "file": "hooks\\useErrorRecovery.ts",
+          "text": "Promise",
+          "suggestedKey": "hooks.useerrorrecovery.promise",
+          "visibilityScore": 25
+        },
+        {
+          "file": "hooks\\useErrorRecovery.ts",
+          "text": "Promise",
+          "suggestedKey": "hooks.useerrorrecovery.promise",
+          "visibilityScore": 25
+        },
+        {
+          "file": "hooks\\useRetryableAction.ts",
+          "text": "Promise",
+          "suggestedKey": "hooks.useretryableaction.promise",
+          "visibilityScore": 25
+        },
+        {
+          "file": "hooks\\useRetryableAction.ts",
+          "text": "Promise",
+          "suggestedKey": "hooks.useretryableaction.promise",
+          "visibilityScore": 25
+        },
+        {
+          "file": "hooks\\useRetryableAction.ts",
+          "text": "Promise",
+          "suggestedKey": "hooks.useretryableaction.promise",
+          "visibilityScore": 25
+        }
+      ]
+    },
+    "accessibility": {
+      "count": 143,
+      "averageVisibilityScore": 19.251748251748253,
+      "topItems": [
+        {
+          "file": "components\\notifications\\NotificationDemo.tsx",
+          "text": "Digite o título do chamado para contextualizar a notificação...",
+          "suggestedKey": "notifications.notificationdemo.digite_o_ttulo_do_chamado_para",
+          "visibilityScore": 21
+        },
+        {
+          "file": "components\\tickets\\AdvancedFilters.tsx",
+          "text": "Category",
+          "suggestedKey": "tickets.advancedfilters.category",
+          "visibilityScore": 21
+        },
+        {
+          "file": "components\\tickets\\dialogs\\TicketDialog.tsx",
+          "text": "Describe the issue in detail, including steps to reproduce, error messages, etc.",
+          "suggestedKey": "dialogs.ticketdialog.describe_the_issue_in_detail_i",
+          "visibilityScore": 21
+        },
+        {
+          "file": "components\\admin\\AssignmentRulesManager.tsx",
+          "text": "Describe what this rule does",
+          "suggestedKey": "admin.assignmentrulesmanager.describe_what_this_rule_does",
+          "visibilityScore": 20
+        },
+        {
+          "file": "components\\admin\\AssignmentRulesManager.tsx",
+          "text": "server, network, urgent",
+          "suggestedKey": "admin.assignmentrulesmanager.server_network_urgent",
+          "visibilityScore": 20
+        },
+        {
+          "file": "components\\admin\\AssignmentRulesManager.tsx",
+          "text": "Select agent (optional)",
+          "suggestedKey": "admin.assignmentrulesmanager.select_agent_optional",
+          "visibilityScore": 20
+        },
+        {
+          "file": "components\\admin\\CategoryExpertiseManager.tsx",
+          "text": "Select a category first",
+          "suggestedKey": "admin.categoryexpertisemanager.select_a_category_first",
+          "visibilityScore": 20
+        },
+        {
+          "file": "components\\admin\\CategoryManagement.tsx",
+          "text": "Option 1, Option 2, Option 3",
+          "suggestedKey": "admin.categorymanagement.option_1_option_2_option_3",
+          "visibilityScore": 20
+        },
+        {
+          "file": "components\\admin\\CategoryManagement.tsx",
+          "text": "Enter placeholder text",
+          "suggestedKey": "admin.categorymanagement.enter_placeholder_text",
+          "visibilityScore": 20
+        },
+        {
+          "file": "components\\admin\\knowledge\\ArticleEditor.tsx",
+          "text": "Enter article title...",
+          "suggestedKey": "knowledge.articleeditor.enter_article_title",
+          "visibilityScore": 20
+        }
+      ]
+    },
+    "interactive": {
+      "count": 159,
+      "averageVisibilityScore": 23.70440251572327,
+      "topItems": [
+        {
+          "file": "components\\admin\\CategoryManagement.tsx",
+          "text": "Button",
+          "suggestedKey": "admin.categorymanagement.button",
+          "visibilityScore": 24
+        },
+        {
+          "file": "components\\admin\\CategoryManagement.tsx",
+          "text": "Button",
+          "suggestedKey": "admin.categorymanagement.button",
+          "visibilityScore": 24
+        },
+        {
+          "file": "components\\admin\\CategoryManagement.tsx",
+          "text": "Button",
+          "suggestedKey": "admin.categorymanagement.button",
+          "visibilityScore": 24
+        },
+        {
+          "file": "components\\admin\\CategoryManagement.tsx",
+          "text": "Button",
+          "suggestedKey": "admin.categorymanagement.button",
+          "visibilityScore": 24
+        },
+        {
+          "file": "components\\admin\\knowledge\\ArticleEditor.tsx",
+          "text": "Button",
+          "suggestedKey": "knowledge.articleeditor.button",
+          "visibilityScore": 24
+        },
+        {
+          "file": "components\\admin\\knowledge\\ArticleList.tsx",
+          "text": "Button",
+          "suggestedKey": "knowledge.articlelist.button",
+          "visibilityScore": 24
+        },
+        {
+          "file": "components\\admin\\knowledge\\CategoryManager.tsx",
+          "text": "Button",
+          "suggestedKey": "knowledge.categorymanager.button",
+          "visibilityScore": 24
+        },
+        {
+          "file": "components\\admin\\knowledge\\CategoryManager.tsx",
+          "text": "Button",
+          "suggestedKey": "knowledge.categorymanager.button",
+          "visibilityScore": 24
+        },
+        {
+          "file": "components\\admin\\knowledge\\KnowledgeBaseAdmin.tsx",
+          "text": "Button",
+          "suggestedKey": "knowledge.knowledgebaseadmin.button",
+          "visibilityScore": 24
+        },
+        {
+          "file": "components\\admin\\SubcategoriesSection.tsx",
+          "text": "Button",
+          "suggestedKey": "admin.subcategoriessection.button",
+          "visibilityScore": 24
+        }
+      ]
+    },
+    "forms": {
+      "count": 82,
+      "averageVisibilityScore": 18.9390243902439,
+      "topItems": [
+        {
+          "file": "components\\tickets\\TaskManagement.tsx",
+          "text": "Description",
+          "suggestedKey": "tickets.taskmanagement.description",
+          "visibilityScore": 22
+        },
+        {
+          "file": "components\\admin\\AssignmentRulesManager.tsx",
+          "text": "Max Concurrent Tickets per Agent",
+          "suggestedKey": "admin.assignmentrulesmanager.max_concurrent_tickets_per_age",
+          "visibilityScore": 21
+        },
+        {
+          "file": "components\\admin\\AssignmentRulesManager.tsx",
+          "text": "Enable automatic workload rebalancing",
+          "suggestedKey": "admin.assignmentrulesmanager.enable_automatic_workload_reba",
+          "visibilityScore": 21
+        },
+        {
+          "file": "components\\admin\\AssignmentRulesManager.tsx",
+          "text": "Max Concurrent Tickets per Agent",
+          "suggestedKey": "admin.assignmentrulesmanager.max_concurrent_tickets_per_age",
+          "visibilityScore": 20
+        },
+        {
+          "file": "components\\admin\\AssignmentRulesManager.tsx",
+          "text": "Enable automatic workload rebalancing",
+          "suggestedKey": "admin.assignmentrulesmanager.enable_automatic_workload_reba",
+          "visibilityScore": 20
+        },
+        {
+          "file": "components\\admin\\AssignmentRulesManager.tsx",
+          "text": "Assign to Specific Agent",
+          "suggestedKey": "admin.assignmentrulesmanager.assign_to_specific_agent",
+          "visibilityScore": 20
+        },
+        {
+          "file": "components\\admin\\AssignmentRulesManager.tsx",
+          "text": "Notify manager when rule is triggered",
+          "suggestedKey": "admin.assignmentrulesmanager.notify_manager_when_rule_is_tr",
+          "visibilityScore": 20
+        },
+        {
+          "file": "components\\admin\\CategoryExpertiseManager.tsx",
+          "text": "Subcategory",
+          "suggestedKey": "admin.categoryexpertisemanager.subcategory",
+          "visibilityScore": 20
+        },
+        {
+          "file": "components\\admin\\CategoryExpertiseManager.tsx",
+          "text": "Expertise Level",
+          "suggestedKey": "admin.categoryexpertisemanager.expertise_level",
+          "visibilityScore": 20
+        },
+        {
+          "file": "components\\admin\\CategoryExpertiseManager.tsx",
+          "text": "Primary specialist for this category",
+          "suggestedKey": "admin.categoryexpertisemanager.primary_specialist_for_this_ca",
+          "visibilityScore": 20
+        }
+      ]
+    },
+    "feedback": {
+      "count": 746,
+      "averageVisibilityScore": 19.040214477211798,
+      "topItems": [
+        {
+          "file": "hooks\\useAssignment.ts",
+          "text": "Error loading agents:",
+          "suggestedKey": "hooks.useassignment.error_loading_agents",
+          "visibilityScore": 24
+        },
+        {
+          "file": "components\\chat\\TicketChat.tsx",
+          "text": "Error sending message:",
+          "suggestedKey": "chat.ticketchat.error_sending_message",
+          "visibilityScore": 22
+        },
+        {
+          "file": "components\\chat\\TicketChat.tsx",
+          "text": "Error uploading file:",
+          "suggestedKey": "chat.ticketchat.error_uploading_file",
+          "visibilityScore": 22
+        },
+        {
+          "file": "components\\tickets\\dialogs\\TicketDialog.tsx",
+          "text": "Error loading agents:",
+          "suggestedKey": "dialogs.ticketdialog.error_loading_agents",
+          "visibilityScore": 22
+        },
+        {
+          "file": "components\\tickets\\dialogs\\TicketDialog.tsx",
+          "text": "Error uploading file:",
+          "suggestedKey": "dialogs.ticketdialog.error_uploading_file",
+          "visibilityScore": 22
+        },
+        {
+          "file": "components\\tickets\\dialogs\\TicketTransferDialog.tsx",
+          "text": "Error loading agents:",
+          "suggestedKey": "dialogs.tickettransferdialog.error_loading_agents",
+          "visibilityScore": 22
+        },
+        {
+          "file": "components\\tickets\\FeedbackPopup.tsx",
+          "text": "Error submitting feedback:",
+          "suggestedKey": "tickets.feedbackpopup.error_submitting_feedback",
+          "visibilityScore": 22
+        },
+        {
+          "file": "components\\tickets\\TaskManagement.tsx",
+          "text": "Error loading agents:",
+          "suggestedKey": "tickets.taskmanagement.error_loading_agents",
+          "visibilityScore": 22
+        },
+        {
+          "file": "components\\tickets\\TicketFeedback.tsx",
+          "text": "Error submitting feedback:",
+          "suggestedKey": "tickets.ticketfeedback.error_submitting_feedback",
+          "visibilityScore": 22
+        },
+        {
+          "file": "hooks\\useChat.ts",
+          "text": "Error sending message:",
+          "suggestedKey": "hooks.usechat.error_sending_message",
+          "visibilityScore": 22
+        }
+      ]
+    },
+    "errors": {
+      "count": 549,
+      "averageVisibilityScore": 12.289617486338798,
+      "topItems": [
+        {
+          "file": "components\\tickets\\TaskManagement.tsx",
+          "text": "Error loading agents:",
+          "suggestedKey": "tickets.taskmanagement.error_loading_agents",
+          "visibilityScore": 17
+        },
+        {
+          "file": "hooks\\useAssignment.ts",
+          "text": "Error loading agents:",
+          "suggestedKey": "hooks.useassignment.error_loading_agents",
+          "visibilityScore": 17
+        },
+        {
+          "file": "hooks\\useChat.ts",
+          "text": "Error uploading file:",
+          "suggestedKey": "hooks.usechat.error_uploading_file",
+          "visibilityScore": 17
+        },
+        {
+          "file": "lib\\enhancedChatService.ts",
+          "text": "Error removing reaction:",
+          "suggestedKey": "lib.enhancedchatservice.error_removing_reaction",
+          "visibilityScore": 17
+        },
+        {
+          "file": "components\\chat\\TicketChat.tsx",
+          "text": "Error sending message:",
+          "suggestedKey": "chat.ticketchat.error_sending_message",
+          "visibilityScore": 15
+        },
+        {
+          "file": "components\\chat\\TicketChat.tsx",
+          "text": "Error uploading file:",
+          "suggestedKey": "chat.ticketchat.error_uploading_file",
+          "visibilityScore": 15
+        },
+        {
+          "file": "components\\tickets\\dialogs\\TicketDialog.tsx",
+          "text": "Error loading agents:",
+          "suggestedKey": "dialogs.ticketdialog.error_loading_agents",
+          "visibilityScore": 15
+        },
+        {
+          "file": "components\\tickets\\dialogs\\TicketDialog.tsx",
+          "text": "Error uploading file:",
+          "suggestedKey": "dialogs.ticketdialog.error_uploading_file",
+          "visibilityScore": 15
+        },
+        {
+          "file": "components\\tickets\\dialogs\\TicketTransferDialog.tsx",
+          "text": "Error loading agents:",
+          "suggestedKey": "dialogs.tickettransferdialog.error_loading_agents",
+          "visibilityScore": 15
+        },
+        {
+          "file": "components\\tickets\\FeedbackPopup.tsx",
+          "text": "Error submitting feedback:",
+          "suggestedKey": "tickets.feedbackpopup.error_submitting_feedback",
+          "visibilityScore": 15
+        }
+      ]
+    },
+    "headings": {
+      "count": 76,
+      "averageVisibilityScore": 18.25,
+      "topItems": [
+        {
+          "file": "components\\tickets\\TaskManagement.tsx",
+          "text": "Description",
+          "suggestedKey": "tickets.taskmanagement.description",
+          "visibilityScore": 21
+        },
+        {
+          "file": "components\\chat\\ModernTicketChat.tsx",
+          "text": "Start the conversation",
+          "suggestedKey": "chat.modernticketchat.start_the_conversation",
+          "visibilityScore": 20
+        },
+        {
+          "file": "components\\tickets\\TicketChat.tsx",
+          "text": "Start the conversation",
+          "suggestedKey": "tickets.ticketchat.start_the_conversation",
+          "visibilityScore": 20
+        },
+        {
+          "file": "components\\admin\\AssignmentRulesManager.tsx",
+          "text": "Assignment Rules Manager",
+          "suggestedKey": "admin.assignmentrulesmanager.assignment_rules_manager",
+          "visibilityScore": 19
+        },
+        {
+          "file": "components\\admin\\CategoryExpertiseManager.tsx",
+          "text": "Category Expertise Manager",
+          "suggestedKey": "admin.categoryexpertisemanager.category_expertise_manager",
+          "visibilityScore": 19
+        },
+        {
+          "file": "components\\admin\\CategoryManagement.tsx",
+          "text": "Category Management",
+          "suggestedKey": "admin.categorymanagement.category_management",
+          "visibilityScore": 19
+        },
+        {
+          "file": "components\\admin\\knowledge\\CategoryManager.tsx",
+          "text": "No categories yet",
+          "suggestedKey": "knowledge.categorymanager.no_categories_yet",
+          "visibilityScore": 19
+        },
+        {
+          "file": "components\\admin\\SLANotificationSettings.tsx",
+          "text": "Admin Access Required",
+          "suggestedKey": "admin.slanotificationsettings.admin_access_required",
+          "visibilityScore": 19
+        },
+        {
+          "file": "components\\admin\\UserManagementErrorBoundary.tsx",
+          "text": "Limited Functionality Mode",
+          "suggestedKey": "admin.usermanagementerrorboundary.limited_functionality_mode",
+          "visibilityScore": 19
+        },
+        {
+          "file": "components\\admin\\UserManagementLoadingIndicator.tsx",
+          "text": "Authentication Required",
+          "suggestedKey": "admin.usermanagementloadingindicator.authentication_required",
+          "visibilityScore": 19
+        }
+      ]
+    },
+    "status": {
+      "count": 67,
+      "averageVisibilityScore": 9.611940298507463,
+      "topItems": [
+        {
+          "file": "components\\debug\\TestRunner.tsx",
+          "text": "passed",
+          "suggestedKey": "debug.testrunner.passed",
+          "visibilityScore": 12
+        },
+        {
+          "file": "components\\debug\\TestRunner.tsx",
+          "text": "passed",
+          "suggestedKey": "debug.testrunner.passed",
+          "visibilityScore": 12
+        },
+        {
+          "file": "lib\\chatService.ts",
+          "text": "sent",
+          "suggestedKey": "lib.chatservice.sent",
+          "visibilityScore": 12
+        },
+        {
+          "file": "lib\\chatService.ts",
+          "text": "sent",
+          "suggestedKey": "lib.chatservice.sent",
+          "visibilityScore": 12
+        },
+        {
+          "file": "lib\\enhancedChatService.ts",
+          "text": "sent",
+          "suggestedKey": "lib.enhancedchatservice.sent",
+          "visibilityScore": 12
+        },
+        {
+          "file": "lib\\enhancedChatService.ts",
+          "text": "sent",
+          "suggestedKey": "lib.enhancedchatservice.sent",
+          "visibilityScore": 12
+        },
+        {
+          "file": "lib\\enhancedChatService.ts",
+          "text": "sent",
+          "suggestedKey": "lib.enhancedchatservice.sent",
+          "visibilityScore": 12
+        },
+        {
+          "file": "types\\supabase.ts",
+          "text": "open",
+          "suggestedKey": "types.supabase.open",
+          "visibilityScore": 12
+        },
+        {
+          "file": "components\\chat\\TicketChat.tsx",
+          "text": "sent",
+          "suggestedKey": "chat.ticketchat.sent",
+          "visibilityScore": 10
+        },
+        {
+          "file": "components\\debug\\TestRunner.tsx",
+          "text": "passed",
+          "suggestedKey": "debug.testrunner.passed",
+          "visibilityScore": 10
+        }
+      ]
+    },
+    "validation": {
+      "count": 40,
+      "averageVisibilityScore": 12.6,
+      "topItems": [
+        {
+          "file": "components\\admin\\UserManagement.tsx",
+          "text": ", error);\r\n    },\r\n    onAccessDenied: (userRole) => {\r\n      console.warn(",
+          "suggestedKey": "admin.usermanagement._error_onaccessdenied_userrole",
+          "visibilityScore": 13
+        },
+        {
+          "file": "components\\admin\\UserManagement.tsx",
+          "text": ", error);\r\n        throw new Error(`Failed to delete user: ${error.message}`);\r\n      }\r\n\r\n      // Remove from local state\r\n      setUsers(prev => prev.filter(user => user.id !== deleteUserId));\r\n      \r\n      toast({\r\n        title: t(",
+          "suggestedKey": "admin.usermanagement._error_throw_new_errorfailed_t",
+          "visibilityScore": 13
+        },
+        {
+          "file": "components\\admin\\UserManagementErrorBoundary.tsx",
+          "text": ", error, errorInfo);\r\n    \r\n    // Log additional context for debugging\r\n    console.error(",
+          "suggestedKey": "admin.usermanagementerrorboundary._error_errorinfo_log_additiona",
+          "visibilityScore": 13
+        },
+        {
+          "file": "components\\debug\\TestRunner.tsx",
+          "text": "Expected user to be authenticated, but received null",
+          "suggestedKey": "debug.testrunner.expected_user_to_be_authentica",
+          "visibilityScore": 13
+        },
+        {
+          "file": "components\\debug\\TestRunner.tsx",
+          "text": "TypeError: Cannot read properties of undefined (reading",
+          "suggestedKey": "debug.testrunner.typeerror_cannot_read_properti",
+          "visibilityScore": 13
+        },
+        {
+          "file": "components\\ui\\ErrorBoundary.tsx",
+          "text": ", error, errorInfo);\r\n  }\r\n\r\n  handleRetry = () => {\r\n    this.setState({ hasError: false, error: undefined });\r\n    if (this.props.onRetry) {\r\n      this.props.onRetry();\r\n    }\r\n  };\r\n\r\n  render() {\r\n    if (this.state.hasError) {\r\n      if (this.props.fallback) {\r\n        return this.props.fallback;\r\n      }\r\n\r\n      return (\r\n        <Card className=",
+          "suggestedKey": "ui.errorboundary._error_errorinfo_handleretry_t",
+          "visibilityScore": 13
+        },
+        {
+          "file": "contexts\\AuthContext.tsx",
+          "text": ", typedError);\r\n      setAuthError(typedError);\r\n      return { error: typedError };\r\n    } finally {\r\n      setLoading(false);\r\n    }\r\n  };\r\n\r\n  // Sign up implementation\r\n  const signUp = async (email: string, password: string, name: string, role: string =",
+          "suggestedKey": "contexts.authcontext._typederror_setautherrortypede",
+          "visibilityScore": 13
+        },
+        {
+          "file": "contexts\\AuthContext.tsx",
+          "text": ", error);\r\n      setAuthError(error as Error);\r\n      return { error: error as Error };\r\n    } finally {\r\n      setLoading(false);\r\n    }\r\n  };\r\n\r\n  // Sign out implementation\r\n  const signOut = async () => {\r\n    try {\r\n      console.log(",
+          "suggestedKey": "contexts.authcontext._error_setautherrorerror_as_er",
+          "visibilityScore": 13
+        },
+        {
+          "file": "contexts\\AuthContext.tsx",
+          "text": ", error);\r\n        throw error;\r\n      }\r\n      \r\n      // Clear local state\r\n      setUser(null);\r\n      setUserProfile(null);\r\n      setSession(null);\r\n      setAuthError(null);\r\n      \r\n      // Force clear any remaining auth tokens from localStorage\r\n      try {\r\n        // Clear all possible Supabase auth keys\r\n        const authStorageKey =",
+          "suggestedKey": "contexts.authcontext._error_throw_error_clear_local",
+          "visibilityScore": 13
+        },
+        {
+          "file": "contexts\\AuthContext.tsx",
+          "text": ", error);\r\n      setAuthError(error as Error);\r\n      \r\n      // Even if there",
+          "suggestedKey": "contexts.authcontext._error_setautherrorerror_as_er",
+          "visibilityScore": 13
+        }
+      ]
+    }
+  }
+}

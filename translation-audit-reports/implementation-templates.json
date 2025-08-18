@@ -1,0 +1,90 @@
+{
+  "timestamp": "2025-07-31T14:19:06.424Z",
+  "templates": {
+    "translationFiles": {
+      "common": {
+        "button": "Button",
+        "promise": "Promise",
+        "cancel": "Cancel",
+        "error_loading_agents": "Error loading agents:",
+        "error_uploading_file": "Error uploading file:",
+        "error_removing_reaction": "Error removing reaction:",
+        "sent": "sent",
+        "category": "Category",
+        "error_sending_message": "Error sending message:",
+        "error_adding_reaction": "Error adding reaction:",
+        "error_submitting_feedback": "Error submitting feedback:",
+        "passed": "passed",
+        "error_marking_all_notification": "Error marking all notifications as read:",
+        "error_deleting_notification": "Error deleting notification:",
+        "error_creating_task": "Error creating task:",
+        "_failed_url": "🔗 Failed URL:",
+        "error_assigning_ticket": "Error assigning ticket:",
+        "retry": "Retry",
+        "actions": "Actions",
+        "refresh": "Refresh",
+        "avg_resolution": "Avg Resolution",
+        "error_loading_session_timeout": "Error loading session timeout settings:",
+        "chat": "Chat",
+        "start_the_conversation": "Start the conversation",
+        "export": "Export",
+        "close": "Close",
+        "error_creating_notification": "Error creating notification:",
+        "error_marking_notification_as": "Error marking notification as read:",
+        "ticket_no_encontrado": "Ticket não encontrado",
+        "error_getting_chat_messages": "Error getting chat messages:",
+        "error_sending_chat_message": "Error sending chat message:",
+        "error_uploading_chat_file": "Error uploading chat file:",
+        "error_marking_chat_as_read": "Error marking chat as read:",
+        "error_getting_chat_participant": "Error getting chat participants:",
+        "error_getting_unread_count": "Error getting unread count:",
+        "_validation_error": "🔧 Validation error:",
+        "todo_tasks_functionality_requi": "Todo tasks functionality requires database migration to be applied",
+        "error_creating_signed_url": "Error creating signed URL:",
+        "agent": "Agent",
+        "featured": "Featured",
+        "back": "Back",
+        "status": "Status",
+        "priority": "Priority",
+        "apply": "Apply",
+        "pending": "pending",
+        "conditions": "Conditions",
+        "max_concurrent_tickets_per_age": "Max Concurrent Tickets per Agent"
+      },
+      "forms": {
+        "description": "Description",
+        "email": "Email"
+      },
+      "dialogs": {},
+      "admin": {},
+      "tickets": {},
+      "dashboard": {},
+      "auth": {},
+      "accessibility": {
+        "open": "open"
+      }
+    },
+    "componentExamples": {
+      "button": {
+        "before": "<Button onClick={handleSave}>Save</Button>",
+        "after": "<Button onClick={handleSave}><SafeTranslation i18nKey=\"common.save\" fallback=\"Save\" /></Button>"
+      },
+      "input": {
+        "before": "<Input placeholder=\"Enter your name\" />",
+        "after": "<Input placeholder={useSafeTranslation(\"forms.name_placeholder\", \"Enter your name\")} />"
+      },
+      "heading": {
+        "before": "<h2>User Management</h2>",
+        "after": "<h2><SafeTranslation i18nKey=\"admin.users.title\" fallback=\"User Management\" /></h2>"
+      },
+      "accessibility": {
+        "before": "<button aria-label=\"Close dialog\">×</button>",
+        "after": "<button aria-label={useSafeTranslation(\"accessibility.close_dialog\", \"Close dialog\")}>×</button>"
+      }
+    },
+    "testExamples": {
+      "component": "\ndescribe('Translation Integration', () => {\n  it('should display translated text', () => {\n    render(<Component />, { wrapper: I18nWrapper });\n    expect(screen.getByText('Translated Text')).toBeInTheDocument();\n  });\n  \n  it('should fallback when translation missing', () => {\n    render(<Component />, { wrapper: I18nWrapperWithMissingKeys });\n    expect(screen.getByText('Fallback Text')).toBeInTheDocument();\n  });\n});",
+      "hook": "\nconst { result } = renderHook(() => \n  useSafeTranslation('common.save', 'Save')\n);\nexpect(result.current).toBe('Save');"
+    }
+  }
+}

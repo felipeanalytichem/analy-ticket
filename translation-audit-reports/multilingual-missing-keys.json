@@ -1,0 +1,4204 @@
+{
+  "timestamp": "2025-07-31T16:36:01.800Z",
+  "summary": {
+    "totalMissingKeys": 833,
+    "affectedLanguages": 5
+  },
+  "missingKeysByLanguage": {
+    "de-DE": {
+      "name": "German (Germany)",
+      "missingCount": 41,
+      "missingKeys": [
+        {
+          "key": "common.button",
+          "namespace": "common",
+          "section": "common.button"
+        },
+        {
+          "key": "common.promise",
+          "namespace": "common",
+          "section": "common.promise"
+        },
+        {
+          "key": "common.retry",
+          "namespace": "common",
+          "section": "common.retry"
+        },
+        {
+          "key": "common.actions",
+          "namespace": "common",
+          "section": "common.actions"
+        },
+        {
+          "key": "common.avgResolution",
+          "namespace": "common",
+          "section": "common.avgResolution"
+        },
+        {
+          "key": "common.chat",
+          "namespace": "common",
+          "section": "common.chat"
+        },
+        {
+          "key": "common.startTheConversation",
+          "namespace": "common",
+          "section": "common.startTheConversation"
+        },
+        {
+          "key": "common.sent",
+          "namespace": "common",
+          "section": "common.sent"
+        },
+        {
+          "key": "common.category",
+          "namespace": "common",
+          "section": "common.category"
+        },
+        {
+          "key": "common.passed",
+          "namespace": "common",
+          "section": "common.passed"
+        },
+        {
+          "key": "common.featured",
+          "namespace": "common",
+          "section": "common.featured"
+        },
+        {
+          "key": "common.status",
+          "namespace": "common",
+          "section": "common.status"
+        },
+        {
+          "key": "common.priority",
+          "namespace": "common",
+          "section": "common.priority"
+        },
+        {
+          "key": "common.apply",
+          "namespace": "common",
+          "section": "common.apply"
+        },
+        {
+          "key": "common.pending",
+          "namespace": "common",
+          "section": "common.pending"
+        },
+        {
+          "key": "common.conditions",
+          "namespace": "common",
+          "section": "common.conditions"
+        },
+        {
+          "key": "common.maxConcurrentTicketsPerAgent",
+          "namespace": "common",
+          "section": "common.maxConcurrentTicketsPerAgent"
+        },
+        {
+          "key": "common.ticketNotFound",
+          "namespace": "common",
+          "section": "common.ticketNotFound"
+        },
+        {
+          "key": "errors.errorLoadingAgents",
+          "namespace": "errors",
+          "section": "errors.errorLoadingAgents"
+        },
+        {
+          "key": "errors.errorUploadingFile",
+          "namespace": "errors",
+          "section": "errors.errorUploadingFile"
+        },
+        {
+          "key": "errors.errorRemovingReaction",
+          "namespace": "errors",
+          "section": "errors.errorRemovingReaction"
+        },
+        {
+          "key": "errors.errorSendingMessage",
+          "namespace": "errors",
+          "section": "errors.errorSendingMessage"
+        },
+        {
+          "key": "errors.errorAddingReaction",
+          "namespace": "errors",
+          "section": "errors.errorAddingReaction"
+        },
+        {
+          "key": "errors.errorSubmittingFeedback",
+          "namespace": "errors",
+          "section": "errors.errorSubmittingFeedback"
+        },
+        {
+          "key": "errors.errorMarkingAllNotifications",
+          "namespace": "errors",
+          "section": "errors.errorMarkingAllNotifications"
+        },
+        {
+          "key": "errors.errorDeletingNotification",
+          "namespace": "errors",
+          "section": "errors.errorDeletingNotification"
+        },
+        {
+          "key": "errors.errorCreatingTask",
+          "namespace": "errors",
+          "section": "errors.errorCreatingTask"
+        },
+        {
+          "key": "errors.failedUrl",
+          "namespace": "errors",
+          "section": "errors.failedUrl"
+        },
+        {
+          "key": "errors.errorAssigningTicket",
+          "namespace": "errors",
+          "section": "errors.errorAssigningTicket"
+        },
+        {
+          "key": "errors.errorLoadingSessionTimeout",
+          "namespace": "errors",
+          "section": "errors.errorLoadingSessionTimeout"
+        },
+        {
+          "key": "errors.errorCreatingNotification",
+          "namespace": "errors",
+          "section": "errors.errorCreatingNotification"
+        },
+        {
+          "key": "errors.errorMarkingNotificationAsRead",
+          "namespace": "errors",
+          "section": "errors.errorMarkingNotificationAsRead"
+        },
+        {
+          "key": "errors.errorGettingChatMessages",
+          "namespace": "errors",
+          "section": "errors.errorGettingChatMessages"
+        },
+        {
+          "key": "errors.errorSendingChatMessage",
+          "namespace": "errors",
+          "section": "errors.errorSendingChatMessage"
+        },
+        {
+          "key": "errors.errorUploadingChatFile",
+          "namespace": "errors",
+          "section": "errors.errorUploadingChatFile"
+        },
+        {
+          "key": "errors.errorMarkingChatAsRead",
+          "namespace": "errors",
+          "section": "errors.errorMarkingChatAsRead"
+        },
+        {
+          "key": "errors.errorGettingChatParticipants",
+          "namespace": "errors",
+          "section": "errors.errorGettingChatParticipants"
+        },
+        {
+          "key": "errors.errorGettingUnreadCount",
+          "namespace": "errors",
+          "section": "errors.errorGettingUnreadCount"
+        },
+        {
+          "key": "errors.validationError",
+          "namespace": "errors",
+          "section": "errors.validationError"
+        },
+        {
+          "key": "errors.todoTasksFunctionalityRequired",
+          "namespace": "errors",
+          "section": "errors.todoTasksFunctionalityRequired"
+        },
+        {
+          "key": "errors.errorCreatingSignedUrl",
+          "namespace": "errors",
+          "section": "errors.errorCreatingSignedUrl"
+        }
+      ]
+    },
+    "nl-NL": {
+      "name": "Dutch (Netherlands)",
+      "missingCount": 41,
+      "missingKeys": [
+        {
+          "key": "common.button",
+          "namespace": "common",
+          "section": "common.button"
+        },
+        {
+          "key": "common.promise",
+          "namespace": "common",
+          "section": "common.promise"
+        },
+        {
+          "key": "common.retry",
+          "namespace": "common",
+          "section": "common.retry"
+        },
+        {
+          "key": "common.actions",
+          "namespace": "common",
+          "section": "common.actions"
+        },
+        {
+          "key": "common.avgResolution",
+          "namespace": "common",
+          "section": "common.avgResolution"
+        },
+        {
+          "key": "common.chat",
+          "namespace": "common",
+          "section": "common.chat"
+        },
+        {
+          "key": "common.startTheConversation",
+          "namespace": "common",
+          "section": "common.startTheConversation"
+        },
+        {
+          "key": "common.sent",
+          "namespace": "common",
+          "section": "common.sent"
+        },
+        {
+          "key": "common.category",
+          "namespace": "common",
+          "section": "common.category"
+        },
+        {
+          "key": "common.passed",
+          "namespace": "common",
+          "section": "common.passed"
+        },
+        {
+          "key": "common.featured",
+          "namespace": "common",
+          "section": "common.featured"
+        },
+        {
+          "key": "common.status",
+          "namespace": "common",
+          "section": "common.status"
+        },
+        {
+          "key": "common.priority",
+          "namespace": "common",
+          "section": "common.priority"
+        },
+        {
+          "key": "common.apply",
+          "namespace": "common",
+          "section": "common.apply"
+        },
+        {
+          "key": "common.pending",
+          "namespace": "common",
+          "section": "common.pending"
+        },
+        {
+          "key": "common.conditions",
+          "namespace": "common",
+          "section": "common.conditions"
+        },
+        {
+          "key": "common.maxConcurrentTicketsPerAgent",
+          "namespace": "common",
+          "section": "common.maxConcurrentTicketsPerAgent"
+        },
+        {
+          "key": "common.ticketNotFound",
+          "namespace": "common",
+          "section": "common.ticketNotFound"
+        },
+        {
+          "key": "errors.errorLoadingAgents",
+          "namespace": "errors",
+          "section": "errors.errorLoadingAgents"
+        },
+        {
+          "key": "errors.errorUploadingFile",
+          "namespace": "errors",
+          "section": "errors.errorUploadingFile"
+        },
+        {
+          "key": "errors.errorRemovingReaction",
+          "namespace": "errors",
+          "section": "errors.errorRemovingReaction"
+        },
+        {
+          "key": "errors.errorSendingMessage",
+          "namespace": "errors",
+          "section": "errors.errorSendingMessage"
+        },
+        {
+          "key": "errors.errorAddingReaction",
+          "namespace": "errors",
+          "section": "errors.errorAddingReaction"
+        },
+        {
+          "key": "errors.errorSubmittingFeedback",
+          "namespace": "errors",
+          "section": "errors.errorSubmittingFeedback"
+        },
+        {
+          "key": "errors.errorMarkingAllNotifications",
+          "namespace": "errors",
+          "section": "errors.errorMarkingAllNotifications"
+        },
+        {
+          "key": "errors.errorDeletingNotification",
+          "namespace": "errors",
+          "section": "errors.errorDeletingNotification"
+        },
+        {
+          "key": "errors.errorCreatingTask",
+          "namespace": "errors",
+          "section": "errors.errorCreatingTask"
+        },
+        {
+          "key": "errors.failedUrl",
+          "namespace": "errors",
+          "section": "errors.failedUrl"
+        },
+        {
+          "key": "errors.errorAssigningTicket",
+          "namespace": "errors",
+          "section": "errors.errorAssigningTicket"
+        },
+        {
+          "key": "errors.errorLoadingSessionTimeout",
+          "namespace": "errors",
+          "section": "errors.errorLoadingSessionTimeout"
+        },
+        {
+          "key": "errors.errorCreatingNotification",
+          "namespace": "errors",
+          "section": "errors.errorCreatingNotification"
+        },
+        {
+          "key": "errors.errorMarkingNotificationAsRead",
+          "namespace": "errors",
+          "section": "errors.errorMarkingNotificationAsRead"
+        },
+        {
+          "key": "errors.errorGettingChatMessages",
+          "namespace": "errors",
+          "section": "errors.errorGettingChatMessages"
+        },
+        {
+          "key": "errors.errorSendingChatMessage",
+          "namespace": "errors",
+          "section": "errors.errorSendingChatMessage"
+        },
+        {
+          "key": "errors.errorUploadingChatFile",
+          "namespace": "errors",
+          "section": "errors.errorUploadingChatFile"
+        },
+        {
+          "key": "errors.errorMarkingChatAsRead",
+          "namespace": "errors",
+          "section": "errors.errorMarkingChatAsRead"
+        },
+        {
+          "key": "errors.errorGettingChatParticipants",
+          "namespace": "errors",
+          "section": "errors.errorGettingChatParticipants"
+        },
+        {
+          "key": "errors.errorGettingUnreadCount",
+          "namespace": "errors",
+          "section": "errors.errorGettingUnreadCount"
+        },
+        {
+          "key": "errors.validationError",
+          "namespace": "errors",
+          "section": "errors.validationError"
+        },
+        {
+          "key": "errors.todoTasksFunctionalityRequired",
+          "namespace": "errors",
+          "section": "errors.todoTasksFunctionalityRequired"
+        },
+        {
+          "key": "errors.errorCreatingSignedUrl",
+          "namespace": "errors",
+          "section": "errors.errorCreatingSignedUrl"
+        }
+      ]
+    },
+    "fr-FR": {
+      "name": "French (France)",
+      "missingCount": 41,
+      "missingKeys": [
+        {
+          "key": "common.button",
+          "namespace": "common",
+          "section": "common.button"
+        },
+        {
+          "key": "common.promise",
+          "namespace": "common",
+          "section": "common.promise"
+        },
+        {
+          "key": "common.retry",
+          "namespace": "common",
+          "section": "common.retry"
+        },
+        {
+          "key": "common.actions",
+          "namespace": "common",
+          "section": "common.actions"
+        },
+        {
+          "key": "common.avgResolution",
+          "namespace": "common",
+          "section": "common.avgResolution"
+        },
+        {
+          "key": "common.chat",
+          "namespace": "common",
+          "section": "common.chat"
+        },
+        {
+          "key": "common.startTheConversation",
+          "namespace": "common",
+          "section": "common.startTheConversation"
+        },
+        {
+          "key": "common.sent",
+          "namespace": "common",
+          "section": "common.sent"
+        },
+        {
+          "key": "common.category",
+          "namespace": "common",
+          "section": "common.category"
+        },
+        {
+          "key": "common.passed",
+          "namespace": "common",
+          "section": "common.passed"
+        },
+        {
+          "key": "common.featured",
+          "namespace": "common",
+          "section": "common.featured"
+        },
+        {
+          "key": "common.status",
+          "namespace": "common",
+          "section": "common.status"
+        },
+        {
+          "key": "common.priority",
+          "namespace": "common",
+          "section": "common.priority"
+        },
+        {
+          "key": "common.apply",
+          "namespace": "common",
+          "section": "common.apply"
+        },
+        {
+          "key": "common.pending",
+          "namespace": "common",
+          "section": "common.pending"
+        },
+        {
+          "key": "common.conditions",
+          "namespace": "common",
+          "section": "common.conditions"
+        },
+        {
+          "key": "common.maxConcurrentTicketsPerAgent",
+          "namespace": "common",
+          "section": "common.maxConcurrentTicketsPerAgent"
+        },
+        {
+          "key": "common.ticketNotFound",
+          "namespace": "common",
+          "section": "common.ticketNotFound"
+        },
+        {
+          "key": "errors.errorLoadingAgents",
+          "namespace": "errors",
+          "section": "errors.errorLoadingAgents"
+        },
+        {
+          "key": "errors.errorUploadingFile",
+          "namespace": "errors",
+          "section": "errors.errorUploadingFile"
+        },
+        {
+          "key": "errors.errorRemovingReaction",
+          "namespace": "errors",
+          "section": "errors.errorRemovingReaction"
+        },
+        {
+          "key": "errors.errorSendingMessage",
+          "namespace": "errors",
+          "section": "errors.errorSendingMessage"
+        },
+        {
+          "key": "errors.errorAddingReaction",
+          "namespace": "errors",
+          "section": "errors.errorAddingReaction"
+        },
+        {
+          "key": "errors.errorSubmittingFeedback",
+          "namespace": "errors",
+          "section": "errors.errorSubmittingFeedback"
+        },
+        {
+          "key": "errors.errorMarkingAllNotifications",
+          "namespace": "errors",
+          "section": "errors.errorMarkingAllNotifications"
+        },
+        {
+          "key": "errors.errorDeletingNotification",
+          "namespace": "errors",
+          "section": "errors.errorDeletingNotification"
+        },
+        {
+          "key": "errors.errorCreatingTask",
+          "namespace": "errors",
+          "section": "errors.errorCreatingTask"
+        },
+        {
+          "key": "errors.failedUrl",
+          "namespace": "errors",
+          "section": "errors.failedUrl"
+        },
+        {
+          "key": "errors.errorAssigningTicket",
+          "namespace": "errors",
+          "section": "errors.errorAssigningTicket"
+        },
+        {
+          "key": "errors.errorLoadingSessionTimeout",
+          "namespace": "errors",
+          "section": "errors.errorLoadingSessionTimeout"
+        },
+        {
+          "key": "errors.errorCreatingNotification",
+          "namespace": "errors",
+          "section": "errors.errorCreatingNotification"
+        },
+        {
+          "key": "errors.errorMarkingNotificationAsRead",
+          "namespace": "errors",
+          "section": "errors.errorMarkingNotificationAsRead"
+        },
+        {
+          "key": "errors.errorGettingChatMessages",
+          "namespace": "errors",
+          "section": "errors.errorGettingChatMessages"
+        },
+        {
+          "key": "errors.errorSendingChatMessage",
+          "namespace": "errors",
+          "section": "errors.errorSendingChatMessage"
+        },
+        {
+          "key": "errors.errorUploadingChatFile",
+          "namespace": "errors",
+          "section": "errors.errorUploadingChatFile"
+        },
+        {
+          "key": "errors.errorMarkingChatAsRead",
+          "namespace": "errors",
+          "section": "errors.errorMarkingChatAsRead"
+        },
+        {
+          "key": "errors.errorGettingChatParticipants",
+          "namespace": "errors",
+          "section": "errors.errorGettingChatParticipants"
+        },
+        {
+          "key": "errors.errorGettingUnreadCount",
+          "namespace": "errors",
+          "section": "errors.errorGettingUnreadCount"
+        },
+        {
+          "key": "errors.validationError",
+          "namespace": "errors",
+          "section": "errors.validationError"
+        },
+        {
+          "key": "errors.todoTasksFunctionalityRequired",
+          "namespace": "errors",
+          "section": "errors.todoTasksFunctionalityRequired"
+        },
+        {
+          "key": "errors.errorCreatingSignedUrl",
+          "namespace": "errors",
+          "section": "errors.errorCreatingSignedUrl"
+        }
+      ]
+    },
+    "pt-BR": {
+      "name": "Portuguese (Brazil)",
+      "missingCount": 359,
+      "missingKeys": [
+        {
+          "key": "common.searchPlaceholder",
+          "namespace": "common",
+          "section": "common.searchPlaceholder"
+        },
+        {
+          "key": "common.remove",
+          "namespace": "common",
+          "section": "common.remove"
+        },
+        {
+          "key": "common.send",
+          "namespace": "common",
+          "section": "common.send"
+        },
+        {
+          "key": "common.submit",
+          "namespace": "common",
+          "section": "common.submit"
+        },
+        {
+          "key": "common.create",
+          "namespace": "common",
+          "section": "common.create"
+        },
+        {
+          "key": "common.update",
+          "namespace": "common",
+          "section": "common.update"
+        },
+        {
+          "key": "common.preview",
+          "namespace": "common",
+          "section": "common.preview"
+        },
+        {
+          "key": "common.titlePlaceholder",
+          "namespace": "common",
+          "section": "common.titlePlaceholder"
+        },
+        {
+          "key": "common.descriptionPlaceholder",
+          "namespace": "common",
+          "section": "common.descriptionPlaceholder"
+        },
+        {
+          "key": "common.button",
+          "namespace": "common",
+          "section": "common.button"
+        },
+        {
+          "key": "common.promise",
+          "namespace": "common",
+          "section": "common.promise"
+        },
+        {
+          "key": "common.retry",
+          "namespace": "common",
+          "section": "common.retry"
+        },
+        {
+          "key": "common.actions",
+          "namespace": "common",
+          "section": "common.actions"
+        },
+        {
+          "key": "common.avgResolution",
+          "namespace": "common",
+          "section": "common.avgResolution"
+        },
+        {
+          "key": "common.chat",
+          "namespace": "common",
+          "section": "common.chat"
+        },
+        {
+          "key": "common.startTheConversation",
+          "namespace": "common",
+          "section": "common.startTheConversation"
+        },
+        {
+          "key": "common.sent",
+          "namespace": "common",
+          "section": "common.sent"
+        },
+        {
+          "key": "common.category",
+          "namespace": "common",
+          "section": "common.category"
+        },
+        {
+          "key": "common.passed",
+          "namespace": "common",
+          "section": "common.passed"
+        },
+        {
+          "key": "common.featured",
+          "namespace": "common",
+          "section": "common.featured"
+        },
+        {
+          "key": "common.status",
+          "namespace": "common",
+          "section": "common.status"
+        },
+        {
+          "key": "common.priority",
+          "namespace": "common",
+          "section": "common.priority"
+        },
+        {
+          "key": "common.apply",
+          "namespace": "common",
+          "section": "common.apply"
+        },
+        {
+          "key": "common.pending",
+          "namespace": "common",
+          "section": "common.pending"
+        },
+        {
+          "key": "common.conditions",
+          "namespace": "common",
+          "section": "common.conditions"
+        },
+        {
+          "key": "common.maxConcurrentTicketsPerAgent",
+          "namespace": "common",
+          "section": "common.maxConcurrentTicketsPerAgent"
+        },
+        {
+          "key": "common.ticketNotFound",
+          "namespace": "common",
+          "section": "common.ticketNotFound"
+        },
+        {
+          "key": "header.searchPlaceholder",
+          "namespace": "header",
+          "section": "header.searchPlaceholder"
+        },
+        {
+          "key": "header.filter",
+          "namespace": "header",
+          "section": "header.filter"
+        },
+        {
+          "key": "header.clear",
+          "namespace": "header",
+          "section": "header.clear"
+        },
+        {
+          "key": "header.refresh",
+          "namespace": "header",
+          "section": "header.refresh"
+        },
+        {
+          "key": "header.export",
+          "namespace": "header",
+          "section": "header.export"
+        },
+        {
+          "key": "header.import",
+          "namespace": "header",
+          "section": "header.import"
+        },
+        {
+          "key": "header.download",
+          "namespace": "header",
+          "section": "header.download"
+        },
+        {
+          "key": "header.upload",
+          "namespace": "header",
+          "section": "header.upload"
+        },
+        {
+          "key": "header.share",
+          "namespace": "header",
+          "section": "header.share"
+        },
+        {
+          "key": "header.print",
+          "namespace": "header",
+          "section": "header.print"
+        },
+        {
+          "key": "header.totalTickets",
+          "namespace": "header",
+          "section": "header.totalTickets"
+        },
+        {
+          "key": "header.agent",
+          "namespace": "header",
+          "section": "header.agent"
+        },
+        {
+          "key": "header.unknownUser",
+          "namespace": "header",
+          "section": "header.unknownUser"
+        },
+        {
+          "key": "header.not_available",
+          "namespace": "header",
+          "section": "header.not_available"
+        },
+        {
+          "key": "header.all",
+          "namespace": "header",
+          "section": "header.all"
+        },
+        {
+          "key": "header.copyright",
+          "namespace": "header",
+          "section": "header.copyright"
+        },
+        {
+          "key": "header.pageNotFound",
+          "namespace": "header",
+          "section": "header.pageNotFound"
+        },
+        {
+          "key": "header.returnToHome",
+          "namespace": "header",
+          "section": "header.returnToHome"
+        },
+        {
+          "key": "header.admin",
+          "namespace": "header",
+          "section": "header.admin"
+        },
+        {
+          "key": "tickets.newTicket",
+          "namespace": "tickets",
+          "section": "tickets.newTicket"
+        },
+        {
+          "key": "tickets.ticketNumber",
+          "namespace": "tickets",
+          "section": "tickets.ticketNumber"
+        },
+        {
+          "key": "tickets.title",
+          "namespace": "tickets",
+          "section": "tickets.title"
+        },
+        {
+          "key": "tickets.description",
+          "namespace": "tickets",
+          "section": "tickets.description"
+        },
+        {
+          "key": "tickets.status.open",
+          "namespace": "tickets",
+          "section": "tickets.status"
+        },
+        {
+          "key": "tickets.status.pending",
+          "namespace": "tickets",
+          "section": "tickets.status"
+        },
+        {
+          "key": "tickets.status.inProgress",
+          "namespace": "tickets",
+          "section": "tickets.status"
+        },
+        {
+          "key": "tickets.status.resolved",
+          "namespace": "tickets",
+          "section": "tickets.status"
+        },
+        {
+          "key": "tickets.status.closed",
+          "namespace": "tickets",
+          "section": "tickets.status"
+        },
+        {
+          "key": "tickets.priority",
+          "namespace": "tickets",
+          "section": "tickets.priority"
+        },
+        {
+          "key": "tickets.category",
+          "namespace": "tickets",
+          "section": "tickets.category"
+        },
+        {
+          "key": "tickets.assignedTo",
+          "namespace": "tickets",
+          "section": "tickets.assignedTo"
+        },
+        {
+          "key": "tickets.createdBy",
+          "namespace": "tickets",
+          "section": "tickets.createdBy"
+        },
+        {
+          "key": "tickets.createdAt",
+          "namespace": "tickets",
+          "section": "tickets.createdAt"
+        },
+        {
+          "key": "tickets.updatedAt",
+          "namespace": "tickets",
+          "section": "tickets.updatedAt"
+        },
+        {
+          "key": "tickets.resolvedAt",
+          "namespace": "tickets",
+          "section": "tickets.resolvedAt"
+        },
+        {
+          "key": "tickets.closedAt",
+          "namespace": "tickets",
+          "section": "tickets.closedAt"
+        },
+        {
+          "key": "tickets.resolution",
+          "namespace": "tickets",
+          "section": "tickets.resolution"
+        },
+        {
+          "key": "tickets.comments",
+          "namespace": "tickets",
+          "section": "tickets.comments"
+        },
+        {
+          "key": "tickets.addComment",
+          "namespace": "tickets",
+          "section": "tickets.addComment"
+        },
+        {
+          "key": "tickets.untitled",
+          "namespace": "tickets",
+          "section": "tickets.untitled"
+        },
+        {
+          "key": "tickets.resolve.title",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.resolve.currentStatus",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.resolve.resolutionNotes",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.resolve.resolutionNotesPlaceholder",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.resolve.resolutionNotesRequired",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.resolve.tip",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.resolve.tipText",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.resolve.resolving",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.resolve.resolveButton",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.resolve.successTitle",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.resolve.successDescription",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.resolve.error",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.resolve.errorDefault",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.close.title",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.infoTitle",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.infoDesc",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.statusLabel",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.closing",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.confirm",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.errors.title",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.errors.generic",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.errors.notResolved",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.errors.emptyResolution",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.errors.noResolvedDate",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.errors.cannotClose",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.errors.statusMustBeResolved",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.errors.resolutionRequired",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.errors.resolvedDateRequired",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.success.title",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.success.description",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.reopen.title",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.infoTitle",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.infoDesc",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.ticketLabel",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.statusLabel",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.previousResolutionLabel",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.closedOnly",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.creatorOnly",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.reasonLabel",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.reasonPlaceholder",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.reasonHelper",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.reasonRequired",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.noPermission",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.sending",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.sendButton",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.sentTitle",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.sentDesc",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.descriptionSr",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.transfer.title",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.descriptionSr",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.transferToLabel",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.loadingAgents",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.selectAgentPlaceholder",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.noAgents",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.reasonLabel",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.reasonPlaceholder",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.reasonRequired",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.selectAgentError",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.loadAgentsError",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.transferring",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.transferredTitle",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.transferredDesc",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.transferError",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.workloadTitle",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.workloadHint",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.requester",
+          "namespace": "tickets",
+          "section": "tickets.requester"
+        },
+        {
+          "key": "tickets.created_on",
+          "namespace": "tickets",
+          "section": "tickets.created_on"
+        },
+        {
+          "key": "tickets.updated_on",
+          "namespace": "tickets",
+          "section": "tickets.updated_on"
+        },
+        {
+          "key": "tickets.created_by",
+          "namespace": "tickets",
+          "section": "tickets.created_by"
+        },
+        {
+          "key": "tickets.assigned_to",
+          "namespace": "tickets",
+          "section": "tickets.assigned_to"
+        },
+        {
+          "key": "tickets.attachments",
+          "namespace": "tickets",
+          "section": "tickets.attachments"
+        },
+        {
+          "key": "tickets.resolved_on",
+          "namespace": "tickets",
+          "section": "tickets.resolved_on"
+        },
+        {
+          "key": "tickets.customer_feedback",
+          "namespace": "tickets",
+          "section": "tickets.customer_feedback"
+        },
+        {
+          "key": "tickets.activity_log",
+          "namespace": "tickets",
+          "section": "tickets.activity_log"
+        },
+        {
+          "key": "tickets.tasks",
+          "namespace": "tickets",
+          "section": "tickets.tasks"
+        },
+        {
+          "key": "tickets.account_information",
+          "namespace": "tickets",
+          "section": "tickets.account_information"
+        },
+        {
+          "key": "tickets.username",
+          "namespace": "tickets",
+          "section": "tickets.username"
+        },
+        {
+          "key": "tickets.license_type",
+          "namespace": "tickets",
+          "section": "tickets.license_type"
+        },
+        {
+          "key": "tickets.mfa_setup",
+          "namespace": "tickets",
+          "section": "tickets.mfa_setup"
+        },
+        {
+          "key": "tickets.job_information",
+          "namespace": "tickets",
+          "section": "tickets.job_information"
+        },
+        {
+          "key": "tickets.job_title",
+          "namespace": "tickets",
+          "section": "tickets.job_title"
+        },
+        {
+          "key": "tickets.manager",
+          "namespace": "tickets",
+          "section": "tickets.manager"
+        },
+        {
+          "key": "tickets.start_date",
+          "namespace": "tickets",
+          "section": "tickets.start_date"
+        },
+        {
+          "key": "tickets.company_information",
+          "namespace": "tickets",
+          "section": "tickets.company_information"
+        },
+        {
+          "key": "tickets.company",
+          "namespace": "tickets",
+          "section": "tickets.company"
+        },
+        {
+          "key": "tickets.department",
+          "namespace": "tickets",
+          "section": "tickets.department"
+        },
+        {
+          "key": "tickets.office_location",
+          "namespace": "tickets",
+          "section": "tickets.office_location"
+        },
+        {
+          "key": "tickets.contact_information",
+          "namespace": "tickets",
+          "section": "tickets.contact_information"
+        },
+        {
+          "key": "tickets.business_phone",
+          "namespace": "tickets",
+          "section": "tickets.business_phone"
+        },
+        {
+          "key": "tickets.mobile_phone",
+          "namespace": "tickets",
+          "section": "tickets.mobile_phone"
+        },
+        {
+          "key": "tickets.additional_information",
+          "namespace": "tickets",
+          "section": "tickets.additional_information"
+        },
+        {
+          "key": "tickets.signature_group",
+          "namespace": "tickets",
+          "section": "tickets.signature_group"
+        },
+        {
+          "key": "tickets.usage_location",
+          "namespace": "tickets",
+          "section": "tickets.usage_location"
+        },
+        {
+          "key": "tickets.distribution_list",
+          "namespace": "tickets",
+          "section": "tickets.distribution_list"
+        },
+        {
+          "key": "tickets.attached_form",
+          "namespace": "tickets",
+          "section": "tickets.attached_form"
+        },
+        {
+          "key": "tickets.by",
+          "namespace": "tickets",
+          "section": "tickets.by"
+        },
+        {
+          "key": "tickets.assigned",
+          "namespace": "tickets",
+          "section": "tickets.assigned"
+        },
+        {
+          "key": "tickets.feedbackReceived",
+          "namespace": "tickets",
+          "section": "tickets.feedbackReceived"
+        },
+        {
+          "key": "tickets.userRatedService",
+          "namespace": "tickets",
+          "section": "tickets.userRatedService"
+        },
+        {
+          "key": "tickets.clickToViewRating",
+          "namespace": "tickets",
+          "section": "tickets.clickToViewRating"
+        },
+        {
+          "key": "tickets.assign.title",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.currentStatus",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.aboutToAssign",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.responsibility1",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.responsibility2",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.responsibility3",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.responsibility4",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.assignToMe",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.assignToAgent",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.selectAgent",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.selectAgentPlaceholder",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.loadAgentsError",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.successTitle",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.successDescription",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.error",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.errorDefault",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.assigning",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.assignButton",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.loading",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.actions.assign",
+          "namespace": "tickets",
+          "section": "tickets.actions"
+        },
+        {
+          "key": "tickets.actions.assignToMe",
+          "namespace": "tickets",
+          "section": "tickets.actions"
+        },
+        {
+          "key": "tickets.actions.reassign",
+          "namespace": "tickets",
+          "section": "tickets.actions"
+        },
+        {
+          "key": "tickets.actions.edit",
+          "namespace": "tickets",
+          "section": "tickets.actions"
+        },
+        {
+          "key": "tickets.actions.resolve",
+          "namespace": "tickets",
+          "section": "tickets.actions"
+        },
+        {
+          "key": "tickets.actions.close",
+          "namespace": "tickets",
+          "section": "tickets.actions"
+        },
+        {
+          "key": "tickets.actions.reopen",
+          "namespace": "tickets",
+          "section": "tickets.actions"
+        },
+        {
+          "key": "tickets.actions.delete",
+          "namespace": "tickets",
+          "section": "tickets.actions"
+        },
+        {
+          "key": "tickets.actions.viewDetails",
+          "namespace": "tickets",
+          "section": "tickets.actions"
+        },
+        {
+          "key": "tickets.actions.transfer",
+          "namespace": "tickets",
+          "section": "tickets.actions"
+        },
+        {
+          "key": "tickets.fields.title",
+          "namespace": "tickets",
+          "section": "tickets.fields"
+        },
+        {
+          "key": "tickets.fields.description",
+          "namespace": "tickets",
+          "section": "tickets.fields"
+        },
+        {
+          "key": "tickets.fields.priority",
+          "namespace": "tickets",
+          "section": "tickets.fields"
+        },
+        {
+          "key": "tickets.fields.category",
+          "namespace": "tickets",
+          "section": "tickets.fields"
+        },
+        {
+          "key": "tickets.fields.subcategory",
+          "namespace": "tickets",
+          "section": "tickets.fields"
+        },
+        {
+          "key": "tickets.fields.country",
+          "namespace": "tickets",
+          "section": "tickets.fields"
+        },
+        {
+          "key": "tickets.fields.status",
+          "namespace": "tickets",
+          "section": "tickets.fields"
+        },
+        {
+          "key": "tickets.fields.assignedTo",
+          "namespace": "tickets",
+          "section": "tickets.fields"
+        },
+        {
+          "key": "tickets.fields.createdAt",
+          "namespace": "tickets",
+          "section": "tickets.fields"
+        },
+        {
+          "key": "tickets.fields.updatedAt",
+          "namespace": "tickets",
+          "section": "tickets.fields"
+        },
+        {
+          "key": "tickets.fields.resolvedAt",
+          "namespace": "tickets",
+          "section": "tickets.fields"
+        },
+        {
+          "key": "tickets.fields.closedAt",
+          "namespace": "tickets",
+          "section": "tickets.fields"
+        },
+        {
+          "key": "tickets.placeholders.title",
+          "namespace": "tickets",
+          "section": "tickets.placeholders"
+        },
+        {
+          "key": "tickets.placeholders.description",
+          "namespace": "tickets",
+          "section": "tickets.placeholders"
+        },
+        {
+          "key": "tickets.placeholders.selectPriority",
+          "namespace": "tickets",
+          "section": "tickets.placeholders"
+        },
+        {
+          "key": "tickets.placeholders.selectCategory",
+          "namespace": "tickets",
+          "section": "tickets.placeholders"
+        },
+        {
+          "key": "tickets.placeholders.selectSubcategory",
+          "namespace": "tickets",
+          "section": "tickets.placeholders"
+        },
+        {
+          "key": "tickets.placeholders.selectCountry",
+          "namespace": "tickets",
+          "section": "tickets.placeholders"
+        },
+        {
+          "key": "tickets.placeholders.selectStatus",
+          "namespace": "tickets",
+          "section": "tickets.placeholders"
+        },
+        {
+          "key": "tickets.placeholders.selectAssignee",
+          "namespace": "tickets",
+          "section": "tickets.placeholders"
+        },
+        {
+          "key": "profile.user",
+          "namespace": "profile",
+          "section": "profile.user"
+        },
+        {
+          "key": "profile.agent",
+          "namespace": "profile",
+          "section": "profile.agent"
+        },
+        {
+          "key": "profile.admin",
+          "namespace": "profile",
+          "section": "profile.admin"
+        },
+        {
+          "key": "admin.categoryManagement.subcategoriesCount",
+          "namespace": "admin",
+          "section": "admin.categoryManagement"
+        },
+        {
+          "key": "admin.workloadDashboard.title",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.description",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.refresh",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.rebalance",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.totalActiveTickets",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.acrossAllAgents",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.teamUtilization",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.availableAgents",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.outOfTotal",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.overview",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.performance",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.categories",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.loadingAgentData",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.noAgentsFound",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.currentWorkload",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.tickets",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.avgResolution",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.resolutionRate",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.satisfaction",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.overloaded",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.busy",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.moderate",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.light",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.available",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.away",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.offline",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.subcategories",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.expertLevel",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.categoryExpertise",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.expert",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.advanced",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.intermediate",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.basic",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.specializations",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.more",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.customersServed",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.repeatRate",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.avgSatisfaction",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.lastUpdated",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.accessDenied",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.workloadRebalanced",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.rebalancingFailed",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.rebalancingError",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.assignmentRules.title",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.description",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.configuration",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.addRule",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.assignmentRules",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.systemConfiguration",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.analytics",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.noAssignmentRules",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.createFirstRule",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.createRule",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.active",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.disabled",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.conditions",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.actions",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.notifyManager",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.algorithmConfiguration",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.maxConcurrentTickets",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.enableAutoRebalancing",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.saveConfiguration",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.activeRules",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.autoAssignments",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.ofTicketsAssigned",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.avgAssignmentTime",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.averageTimeToAssign",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.ruleName",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.enableRule",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.ticketPriorities",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.assignToSpecificAgent",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.noSpecificAgent",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.notifyManagerWhenTriggered",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.cancel",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.systemConfigurationTitle",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.scoringWeights",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.workloadWeight",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.performanceWeight",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.availabilityWeight",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.capacitySettings",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.maxTicketsPerAgent",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.rebalancingThreshold",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.businessHours",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.startTime",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.endTime",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.timezone",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.easternTime",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.centralTime",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "auth.login",
+          "namespace": "auth",
+          "section": "auth.login"
+        },
+        {
+          "key": "auth.register",
+          "namespace": "auth",
+          "section": "auth.register"
+        },
+        {
+          "key": "auth.logout",
+          "namespace": "auth",
+          "section": "auth.logout"
+        },
+        {
+          "key": "auth.confirmPassword",
+          "namespace": "auth",
+          "section": "auth.confirmPassword"
+        },
+        {
+          "key": "auth.dontHaveAccount",
+          "namespace": "auth",
+          "section": "auth.dontHaveAccount"
+        },
+        {
+          "key": "auth.signUp",
+          "namespace": "auth",
+          "section": "auth.signUp"
+        },
+        {
+          "key": "auth.signOut",
+          "namespace": "auth",
+          "section": "auth.signOut"
+        },
+        {
+          "key": "todo.actions.complete",
+          "namespace": "todo",
+          "section": "todo.actions"
+        },
+        {
+          "key": "todo.actions.start",
+          "namespace": "todo",
+          "section": "todo.actions"
+        },
+        {
+          "key": "todo.actions.pause",
+          "namespace": "todo",
+          "section": "todo.actions"
+        },
+        {
+          "key": "todo.actions.save",
+          "namespace": "todo",
+          "section": "todo.actions"
+        },
+        {
+          "key": "todo.actions.cancel",
+          "namespace": "todo",
+          "section": "todo.actions"
+        },
+        {
+          "key": "chat.attachFile",
+          "namespace": "chat",
+          "section": "chat.attachFile"
+        },
+        {
+          "key": "chat.attachImage",
+          "namespace": "chat",
+          "section": "chat.attachImage"
+        },
+        {
+          "key": "chat.searchMessages",
+          "namespace": "chat",
+          "section": "chat.searchMessages"
+        },
+        {
+          "key": "chat.addReaction",
+          "namespace": "chat",
+          "section": "chat.addReaction"
+        },
+        {
+          "key": "chat.replyingTo",
+          "namespace": "chat",
+          "section": "chat.replyingTo"
+        },
+        {
+          "key": "chat.fileTooLarge",
+          "namespace": "chat",
+          "section": "chat.fileTooLarge"
+        },
+        {
+          "key": "chat.fileTypeNotAllowed",
+          "namespace": "chat",
+          "section": "chat.fileTypeNotAllowed"
+        },
+        {
+          "key": "chat.fileUploaded",
+          "namespace": "chat",
+          "section": "chat.fileUploaded"
+        },
+        {
+          "key": "chat.uploadFailed",
+          "namespace": "chat",
+          "section": "chat.uploadFailed"
+        },
+        {
+          "key": "chat.failedToSend",
+          "namespace": "chat",
+          "section": "chat.failedToSend"
+        },
+        {
+          "key": "chat.imagePreview",
+          "namespace": "chat",
+          "section": "chat.imagePreview"
+        },
+        {
+          "key": "chat.cancel",
+          "namespace": "chat",
+          "section": "chat.cancel"
+        },
+        {
+          "key": "chat.sendImage",
+          "namespace": "chat",
+          "section": "chat.sendImage"
+        },
+        {
+          "key": "chat.isTyping",
+          "namespace": "chat",
+          "section": "chat.isTyping"
+        },
+        {
+          "key": "chat.areTyping",
+          "namespace": "chat",
+          "section": "chat.areTyping"
+        },
+        {
+          "key": "chat.internal",
+          "namespace": "chat",
+          "section": "chat.internal"
+        },
+        {
+          "key": "errors.errorLoadingAgents",
+          "namespace": "errors",
+          "section": "errors.errorLoadingAgents"
+        },
+        {
+          "key": "errors.errorUploadingFile",
+          "namespace": "errors",
+          "section": "errors.errorUploadingFile"
+        },
+        {
+          "key": "errors.errorRemovingReaction",
+          "namespace": "errors",
+          "section": "errors.errorRemovingReaction"
+        },
+        {
+          "key": "errors.errorSendingMessage",
+          "namespace": "errors",
+          "section": "errors.errorSendingMessage"
+        },
+        {
+          "key": "errors.errorAddingReaction",
+          "namespace": "errors",
+          "section": "errors.errorAddingReaction"
+        },
+        {
+          "key": "errors.errorSubmittingFeedback",
+          "namespace": "errors",
+          "section": "errors.errorSubmittingFeedback"
+        },
+        {
+          "key": "errors.errorMarkingAllNotifications",
+          "namespace": "errors",
+          "section": "errors.errorMarkingAllNotifications"
+        },
+        {
+          "key": "errors.errorDeletingNotification",
+          "namespace": "errors",
+          "section": "errors.errorDeletingNotification"
+        },
+        {
+          "key": "errors.errorCreatingTask",
+          "namespace": "errors",
+          "section": "errors.errorCreatingTask"
+        },
+        {
+          "key": "errors.failedUrl",
+          "namespace": "errors",
+          "section": "errors.failedUrl"
+        },
+        {
+          "key": "errors.errorAssigningTicket",
+          "namespace": "errors",
+          "section": "errors.errorAssigningTicket"
+        },
+        {
+          "key": "errors.errorLoadingSessionTimeout",
+          "namespace": "errors",
+          "section": "errors.errorLoadingSessionTimeout"
+        },
+        {
+          "key": "errors.errorCreatingNotification",
+          "namespace": "errors",
+          "section": "errors.errorCreatingNotification"
+        },
+        {
+          "key": "errors.errorMarkingNotificationAsRead",
+          "namespace": "errors",
+          "section": "errors.errorMarkingNotificationAsRead"
+        },
+        {
+          "key": "errors.errorGettingChatMessages",
+          "namespace": "errors",
+          "section": "errors.errorGettingChatMessages"
+        },
+        {
+          "key": "errors.errorSendingChatMessage",
+          "namespace": "errors",
+          "section": "errors.errorSendingChatMessage"
+        },
+        {
+          "key": "errors.errorUploadingChatFile",
+          "namespace": "errors",
+          "section": "errors.errorUploadingChatFile"
+        },
+        {
+          "key": "errors.errorMarkingChatAsRead",
+          "namespace": "errors",
+          "section": "errors.errorMarkingChatAsRead"
+        },
+        {
+          "key": "errors.errorGettingChatParticipants",
+          "namespace": "errors",
+          "section": "errors.errorGettingChatParticipants"
+        },
+        {
+          "key": "errors.errorGettingUnreadCount",
+          "namespace": "errors",
+          "section": "errors.errorGettingUnreadCount"
+        },
+        {
+          "key": "errors.validationError",
+          "namespace": "errors",
+          "section": "errors.validationError"
+        },
+        {
+          "key": "errors.todoTasksFunctionalityRequired",
+          "namespace": "errors",
+          "section": "errors.todoTasksFunctionalityRequired"
+        },
+        {
+          "key": "errors.errorCreatingSignedUrl",
+          "namespace": "errors",
+          "section": "errors.errorCreatingSignedUrl"
+        }
+      ]
+    },
+    "es-ES": {
+      "name": "Spanish (Spain)",
+      "missingCount": 351,
+      "missingKeys": [
+        {
+          "key": "common.button",
+          "namespace": "common",
+          "section": "common.button"
+        },
+        {
+          "key": "common.promise",
+          "namespace": "common",
+          "section": "common.promise"
+        },
+        {
+          "key": "common.retry",
+          "namespace": "common",
+          "section": "common.retry"
+        },
+        {
+          "key": "common.actions",
+          "namespace": "common",
+          "section": "common.actions"
+        },
+        {
+          "key": "common.avgResolution",
+          "namespace": "common",
+          "section": "common.avgResolution"
+        },
+        {
+          "key": "common.chat",
+          "namespace": "common",
+          "section": "common.chat"
+        },
+        {
+          "key": "common.startTheConversation",
+          "namespace": "common",
+          "section": "common.startTheConversation"
+        },
+        {
+          "key": "common.sent",
+          "namespace": "common",
+          "section": "common.sent"
+        },
+        {
+          "key": "common.category",
+          "namespace": "common",
+          "section": "common.category"
+        },
+        {
+          "key": "common.passed",
+          "namespace": "common",
+          "section": "common.passed"
+        },
+        {
+          "key": "common.featured",
+          "namespace": "common",
+          "section": "common.featured"
+        },
+        {
+          "key": "common.status",
+          "namespace": "common",
+          "section": "common.status"
+        },
+        {
+          "key": "common.priority",
+          "namespace": "common",
+          "section": "common.priority"
+        },
+        {
+          "key": "common.apply",
+          "namespace": "common",
+          "section": "common.apply"
+        },
+        {
+          "key": "common.pending",
+          "namespace": "common",
+          "section": "common.pending"
+        },
+        {
+          "key": "common.conditions",
+          "namespace": "common",
+          "section": "common.conditions"
+        },
+        {
+          "key": "common.maxConcurrentTicketsPerAgent",
+          "namespace": "common",
+          "section": "common.maxConcurrentTicketsPerAgent"
+        },
+        {
+          "key": "common.ticketNotFound",
+          "namespace": "common",
+          "section": "common.ticketNotFound"
+        },
+        {
+          "key": "header.share",
+          "namespace": "header",
+          "section": "header.share"
+        },
+        {
+          "key": "header.print",
+          "namespace": "header",
+          "section": "header.print"
+        },
+        {
+          "key": "header.not_available",
+          "namespace": "header",
+          "section": "header.not_available"
+        },
+        {
+          "key": "header.all",
+          "namespace": "header",
+          "section": "header.all"
+        },
+        {
+          "key": "header.copyright",
+          "namespace": "header",
+          "section": "header.copyright"
+        },
+        {
+          "key": "tickets.newTicket",
+          "namespace": "tickets",
+          "section": "tickets.newTicket"
+        },
+        {
+          "key": "tickets.ticketNumber",
+          "namespace": "tickets",
+          "section": "tickets.ticketNumber"
+        },
+        {
+          "key": "tickets.title",
+          "namespace": "tickets",
+          "section": "tickets.title"
+        },
+        {
+          "key": "tickets.description",
+          "namespace": "tickets",
+          "section": "tickets.description"
+        },
+        {
+          "key": "tickets.status.open",
+          "namespace": "tickets",
+          "section": "tickets.status"
+        },
+        {
+          "key": "tickets.status.pending",
+          "namespace": "tickets",
+          "section": "tickets.status"
+        },
+        {
+          "key": "tickets.status.inProgress",
+          "namespace": "tickets",
+          "section": "tickets.status"
+        },
+        {
+          "key": "tickets.status.resolved",
+          "namespace": "tickets",
+          "section": "tickets.status"
+        },
+        {
+          "key": "tickets.status.closed",
+          "namespace": "tickets",
+          "section": "tickets.status"
+        },
+        {
+          "key": "tickets.priority",
+          "namespace": "tickets",
+          "section": "tickets.priority"
+        },
+        {
+          "key": "tickets.category",
+          "namespace": "tickets",
+          "section": "tickets.category"
+        },
+        {
+          "key": "tickets.assignedTo",
+          "namespace": "tickets",
+          "section": "tickets.assignedTo"
+        },
+        {
+          "key": "tickets.createdBy",
+          "namespace": "tickets",
+          "section": "tickets.createdBy"
+        },
+        {
+          "key": "tickets.createdAt",
+          "namespace": "tickets",
+          "section": "tickets.createdAt"
+        },
+        {
+          "key": "tickets.updatedAt",
+          "namespace": "tickets",
+          "section": "tickets.updatedAt"
+        },
+        {
+          "key": "tickets.resolvedAt",
+          "namespace": "tickets",
+          "section": "tickets.resolvedAt"
+        },
+        {
+          "key": "tickets.closedAt",
+          "namespace": "tickets",
+          "section": "tickets.closedAt"
+        },
+        {
+          "key": "tickets.resolution",
+          "namespace": "tickets",
+          "section": "tickets.resolution"
+        },
+        {
+          "key": "tickets.comments",
+          "namespace": "tickets",
+          "section": "tickets.comments"
+        },
+        {
+          "key": "tickets.addComment",
+          "namespace": "tickets",
+          "section": "tickets.addComment"
+        },
+        {
+          "key": "tickets.untitled",
+          "namespace": "tickets",
+          "section": "tickets.untitled"
+        },
+        {
+          "key": "tickets.resolve.title",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.resolve.currentStatus",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.resolve.resolutionNotes",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.resolve.resolutionNotesPlaceholder",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.resolve.resolutionNotesRequired",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.resolve.tip",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.resolve.tipText",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.resolve.resolving",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.resolve.resolveButton",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.resolve.successTitle",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.resolve.successDescription",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.resolve.error",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.resolve.errorDefault",
+          "namespace": "tickets",
+          "section": "tickets.resolve"
+        },
+        {
+          "key": "tickets.close.title",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.infoTitle",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.infoDesc",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.statusLabel",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.closing",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.confirm",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.errors.title",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.errors.generic",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.errors.notResolved",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.errors.emptyResolution",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.errors.noResolvedDate",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.errors.cannotClose",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.errors.statusMustBeResolved",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.errors.resolutionRequired",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.errors.resolvedDateRequired",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.success.title",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.close.success.description",
+          "namespace": "tickets",
+          "section": "tickets.close"
+        },
+        {
+          "key": "tickets.reopen.title",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.infoTitle",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.infoDesc",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.ticketLabel",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.statusLabel",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.previousResolutionLabel",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.closedOnly",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.creatorOnly",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.reasonLabel",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.reasonPlaceholder",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.reasonHelper",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.reasonRequired",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.noPermission",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.sending",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.sendButton",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.sentTitle",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.sentDesc",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.reopen.descriptionSr",
+          "namespace": "tickets",
+          "section": "tickets.reopen"
+        },
+        {
+          "key": "tickets.transfer.title",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.descriptionSr",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.transferToLabel",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.loadingAgents",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.selectAgentPlaceholder",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.noAgents",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.reasonLabel",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.reasonPlaceholder",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.reasonRequired",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.selectAgentError",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.loadAgentsError",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.transferring",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.transferredTitle",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.transferredDesc",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.transferError",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.workloadTitle",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.transfer.workloadHint",
+          "namespace": "tickets",
+          "section": "tickets.transfer"
+        },
+        {
+          "key": "tickets.requester",
+          "namespace": "tickets",
+          "section": "tickets.requester"
+        },
+        {
+          "key": "tickets.created_on",
+          "namespace": "tickets",
+          "section": "tickets.created_on"
+        },
+        {
+          "key": "tickets.updated_on",
+          "namespace": "tickets",
+          "section": "tickets.updated_on"
+        },
+        {
+          "key": "tickets.created_by",
+          "namespace": "tickets",
+          "section": "tickets.created_by"
+        },
+        {
+          "key": "tickets.assigned_to",
+          "namespace": "tickets",
+          "section": "tickets.assigned_to"
+        },
+        {
+          "key": "tickets.attachments",
+          "namespace": "tickets",
+          "section": "tickets.attachments"
+        },
+        {
+          "key": "tickets.resolved_on",
+          "namespace": "tickets",
+          "section": "tickets.resolved_on"
+        },
+        {
+          "key": "tickets.customer_feedback",
+          "namespace": "tickets",
+          "section": "tickets.customer_feedback"
+        },
+        {
+          "key": "tickets.activity_log",
+          "namespace": "tickets",
+          "section": "tickets.activity_log"
+        },
+        {
+          "key": "tickets.tasks",
+          "namespace": "tickets",
+          "section": "tickets.tasks"
+        },
+        {
+          "key": "tickets.account_information",
+          "namespace": "tickets",
+          "section": "tickets.account_information"
+        },
+        {
+          "key": "tickets.username",
+          "namespace": "tickets",
+          "section": "tickets.username"
+        },
+        {
+          "key": "tickets.license_type",
+          "namespace": "tickets",
+          "section": "tickets.license_type"
+        },
+        {
+          "key": "tickets.mfa_setup",
+          "namespace": "tickets",
+          "section": "tickets.mfa_setup"
+        },
+        {
+          "key": "tickets.job_information",
+          "namespace": "tickets",
+          "section": "tickets.job_information"
+        },
+        {
+          "key": "tickets.job_title",
+          "namespace": "tickets",
+          "section": "tickets.job_title"
+        },
+        {
+          "key": "tickets.manager",
+          "namespace": "tickets",
+          "section": "tickets.manager"
+        },
+        {
+          "key": "tickets.start_date",
+          "namespace": "tickets",
+          "section": "tickets.start_date"
+        },
+        {
+          "key": "tickets.company_information",
+          "namespace": "tickets",
+          "section": "tickets.company_information"
+        },
+        {
+          "key": "tickets.company",
+          "namespace": "tickets",
+          "section": "tickets.company"
+        },
+        {
+          "key": "tickets.department",
+          "namespace": "tickets",
+          "section": "tickets.department"
+        },
+        {
+          "key": "tickets.office_location",
+          "namespace": "tickets",
+          "section": "tickets.office_location"
+        },
+        {
+          "key": "tickets.contact_information",
+          "namespace": "tickets",
+          "section": "tickets.contact_information"
+        },
+        {
+          "key": "tickets.business_phone",
+          "namespace": "tickets",
+          "section": "tickets.business_phone"
+        },
+        {
+          "key": "tickets.mobile_phone",
+          "namespace": "tickets",
+          "section": "tickets.mobile_phone"
+        },
+        {
+          "key": "tickets.additional_information",
+          "namespace": "tickets",
+          "section": "tickets.additional_information"
+        },
+        {
+          "key": "tickets.signature_group",
+          "namespace": "tickets",
+          "section": "tickets.signature_group"
+        },
+        {
+          "key": "tickets.usage_location",
+          "namespace": "tickets",
+          "section": "tickets.usage_location"
+        },
+        {
+          "key": "tickets.distribution_list",
+          "namespace": "tickets",
+          "section": "tickets.distribution_list"
+        },
+        {
+          "key": "tickets.attached_form",
+          "namespace": "tickets",
+          "section": "tickets.attached_form"
+        },
+        {
+          "key": "tickets.by",
+          "namespace": "tickets",
+          "section": "tickets.by"
+        },
+        {
+          "key": "tickets.assigned",
+          "namespace": "tickets",
+          "section": "tickets.assigned"
+        },
+        {
+          "key": "tickets.feedbackReceived",
+          "namespace": "tickets",
+          "section": "tickets.feedbackReceived"
+        },
+        {
+          "key": "tickets.userRatedService",
+          "namespace": "tickets",
+          "section": "tickets.userRatedService"
+        },
+        {
+          "key": "tickets.clickToViewRating",
+          "namespace": "tickets",
+          "section": "tickets.clickToViewRating"
+        },
+        {
+          "key": "tickets.assign.title",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.currentStatus",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.aboutToAssign",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.responsibility1",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.responsibility2",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.responsibility3",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.responsibility4",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.assignToMe",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.assignToAgent",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.selectAgent",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.selectAgentPlaceholder",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.loadAgentsError",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.successTitle",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.successDescription",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.error",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.errorDefault",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.assigning",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.assignButton",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.assign.loading",
+          "namespace": "tickets",
+          "section": "tickets.assign"
+        },
+        {
+          "key": "tickets.actions.assign",
+          "namespace": "tickets",
+          "section": "tickets.actions"
+        },
+        {
+          "key": "tickets.actions.assignToMe",
+          "namespace": "tickets",
+          "section": "tickets.actions"
+        },
+        {
+          "key": "tickets.actions.reassign",
+          "namespace": "tickets",
+          "section": "tickets.actions"
+        },
+        {
+          "key": "tickets.actions.edit",
+          "namespace": "tickets",
+          "section": "tickets.actions"
+        },
+        {
+          "key": "tickets.actions.resolve",
+          "namespace": "tickets",
+          "section": "tickets.actions"
+        },
+        {
+          "key": "tickets.actions.close",
+          "namespace": "tickets",
+          "section": "tickets.actions"
+        },
+        {
+          "key": "tickets.actions.reopen",
+          "namespace": "tickets",
+          "section": "tickets.actions"
+        },
+        {
+          "key": "tickets.actions.delete",
+          "namespace": "tickets",
+          "section": "tickets.actions"
+        },
+        {
+          "key": "tickets.actions.viewDetails",
+          "namespace": "tickets",
+          "section": "tickets.actions"
+        },
+        {
+          "key": "tickets.actions.transfer",
+          "namespace": "tickets",
+          "section": "tickets.actions"
+        },
+        {
+          "key": "tickets.fields.title",
+          "namespace": "tickets",
+          "section": "tickets.fields"
+        },
+        {
+          "key": "tickets.fields.description",
+          "namespace": "tickets",
+          "section": "tickets.fields"
+        },
+        {
+          "key": "tickets.fields.priority",
+          "namespace": "tickets",
+          "section": "tickets.fields"
+        },
+        {
+          "key": "tickets.fields.category",
+          "namespace": "tickets",
+          "section": "tickets.fields"
+        },
+        {
+          "key": "tickets.fields.subcategory",
+          "namespace": "tickets",
+          "section": "tickets.fields"
+        },
+        {
+          "key": "tickets.fields.country",
+          "namespace": "tickets",
+          "section": "tickets.fields"
+        },
+        {
+          "key": "tickets.fields.status",
+          "namespace": "tickets",
+          "section": "tickets.fields"
+        },
+        {
+          "key": "tickets.fields.assignedTo",
+          "namespace": "tickets",
+          "section": "tickets.fields"
+        },
+        {
+          "key": "tickets.fields.createdAt",
+          "namespace": "tickets",
+          "section": "tickets.fields"
+        },
+        {
+          "key": "tickets.fields.updatedAt",
+          "namespace": "tickets",
+          "section": "tickets.fields"
+        },
+        {
+          "key": "tickets.fields.resolvedAt",
+          "namespace": "tickets",
+          "section": "tickets.fields"
+        },
+        {
+          "key": "tickets.fields.closedAt",
+          "namespace": "tickets",
+          "section": "tickets.fields"
+        },
+        {
+          "key": "tickets.placeholders.title",
+          "namespace": "tickets",
+          "section": "tickets.placeholders"
+        },
+        {
+          "key": "tickets.placeholders.description",
+          "namespace": "tickets",
+          "section": "tickets.placeholders"
+        },
+        {
+          "key": "tickets.placeholders.selectPriority",
+          "namespace": "tickets",
+          "section": "tickets.placeholders"
+        },
+        {
+          "key": "tickets.placeholders.selectCategory",
+          "namespace": "tickets",
+          "section": "tickets.placeholders"
+        },
+        {
+          "key": "tickets.placeholders.selectSubcategory",
+          "namespace": "tickets",
+          "section": "tickets.placeholders"
+        },
+        {
+          "key": "tickets.placeholders.selectCountry",
+          "namespace": "tickets",
+          "section": "tickets.placeholders"
+        },
+        {
+          "key": "tickets.placeholders.selectStatus",
+          "namespace": "tickets",
+          "section": "tickets.placeholders"
+        },
+        {
+          "key": "tickets.placeholders.selectAssignee",
+          "namespace": "tickets",
+          "section": "tickets.placeholders"
+        },
+        {
+          "key": "sla.monitor",
+          "namespace": "sla",
+          "section": "sla.monitor"
+        },
+        {
+          "key": "sla.response_time",
+          "namespace": "sla",
+          "section": "sla.response_time"
+        },
+        {
+          "key": "sla.resolution_time",
+          "namespace": "sla",
+          "section": "sla.resolution_time"
+        },
+        {
+          "key": "sla.first_response_target",
+          "namespace": "sla",
+          "section": "sla.first_response_target"
+        },
+        {
+          "key": "sla.resolution_target",
+          "namespace": "sla",
+          "section": "sla.resolution_target"
+        },
+        {
+          "key": "sla.target_met",
+          "namespace": "sla",
+          "section": "sla.target_met"
+        },
+        {
+          "key": "sla.overdue",
+          "namespace": "sla",
+          "section": "sla.overdue"
+        },
+        {
+          "key": "sla.resolved_late",
+          "namespace": "sla",
+          "section": "sla.resolved_late"
+        },
+        {
+          "key": "sla.responded_at",
+          "namespace": "sla",
+          "section": "sla.responded_at"
+        },
+        {
+          "key": "sla.resolved_at",
+          "namespace": "sla",
+          "section": "sla.resolved_at"
+        },
+        {
+          "key": "sla.waiting_first_response",
+          "namespace": "sla",
+          "section": "sla.waiting_first_response"
+        },
+        {
+          "key": "sla.in_progress",
+          "namespace": "sla",
+          "section": "sla.in_progress"
+        },
+        {
+          "key": "sla.time_elapsed",
+          "namespace": "sla",
+          "section": "sla.time_elapsed"
+        },
+        {
+          "key": "sla.total_time",
+          "namespace": "sla",
+          "section": "sla.total_time"
+        },
+        {
+          "key": "sla.target",
+          "namespace": "sla",
+          "section": "sla.target"
+        },
+        {
+          "key": "sla.elapsed",
+          "namespace": "sla",
+          "section": "sla.elapsed"
+        },
+        {
+          "key": "sla.remaining",
+          "namespace": "sla",
+          "section": "sla.remaining"
+        },
+        {
+          "key": "sla.minutes_short",
+          "namespace": "sla",
+          "section": "sla.minutes_short"
+        },
+        {
+          "key": "sla.hours_short",
+          "namespace": "sla",
+          "section": "sla.hours_short"
+        },
+        {
+          "key": "sla.days_short",
+          "namespace": "sla",
+          "section": "sla.days_short"
+        },
+        {
+          "key": "sla.status.met",
+          "namespace": "sla",
+          "section": "sla.status"
+        },
+        {
+          "key": "sla.status.overdue",
+          "namespace": "sla",
+          "section": "sla.status"
+        },
+        {
+          "key": "sla.status.warning",
+          "namespace": "sla",
+          "section": "sla.status"
+        },
+        {
+          "key": "sla.status.in_progress",
+          "namespace": "sla",
+          "section": "sla.status"
+        },
+        {
+          "key": "sla.status.completed_late",
+          "namespace": "sla",
+          "section": "sla.status"
+        },
+        {
+          "key": "sla.status.missed",
+          "namespace": "sla",
+          "section": "sla.status"
+        },
+        {
+          "key": "sla.active",
+          "namespace": "sla",
+          "section": "sla.active"
+        },
+        {
+          "key": "sla.completed",
+          "namespace": "sla",
+          "section": "sla.completed"
+        },
+        {
+          "key": "sla.stopped",
+          "namespace": "sla",
+          "section": "sla.stopped"
+        },
+        {
+          "key": "sla.status_label",
+          "namespace": "sla",
+          "section": "sla.status_label"
+        },
+        {
+          "key": "admin.categoryManagement.subcategoriesCount",
+          "namespace": "admin",
+          "section": "admin.categoryManagement"
+        },
+        {
+          "key": "admin.workloadDashboard.title",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.description",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.refresh",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.rebalance",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.totalActiveTickets",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.acrossAllAgents",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.teamUtilization",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.availableAgents",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.outOfTotal",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.overview",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.performance",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.categories",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.loadingAgentData",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.noAgentsFound",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.currentWorkload",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.tickets",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.avgResolution",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.resolutionRate",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.satisfaction",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.overloaded",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.busy",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.moderate",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.light",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.available",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.away",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.offline",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.subcategories",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.expertLevel",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.categoryExpertise",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.expert",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.advanced",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.intermediate",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.basic",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.specializations",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.more",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.customersServed",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.repeatRate",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.avgSatisfaction",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.lastUpdated",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.accessDenied",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.workloadRebalanced",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.rebalancingFailed",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.workloadDashboard.rebalancingError",
+          "namespace": "admin",
+          "section": "admin.workloadDashboard"
+        },
+        {
+          "key": "admin.assignmentRules.title",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.description",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.configuration",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.addRule",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.assignmentRules",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.systemConfiguration",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.analytics",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.noAssignmentRules",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.createFirstRule",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.createRule",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.active",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.disabled",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.conditions",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.actions",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.notifyManager",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.algorithmConfiguration",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.maxConcurrentTickets",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.enableAutoRebalancing",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.saveConfiguration",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.activeRules",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.autoAssignments",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.ofTicketsAssigned",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.avgAssignmentTime",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.averageTimeToAssign",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.ruleName",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.enableRule",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.ticketPriorities",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.assignToSpecificAgent",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.noSpecificAgent",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.notifyManagerWhenTriggered",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.cancel",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.systemConfigurationTitle",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.scoringWeights",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.workloadWeight",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.performanceWeight",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.availabilityWeight",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.capacitySettings",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.maxTicketsPerAgent",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.rebalancingThreshold",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.businessHours",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.startTime",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.endTime",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.timezone",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.easternTime",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "admin.assignmentRules.centralTime",
+          "namespace": "admin",
+          "section": "admin.assignmentRules"
+        },
+        {
+          "key": "chat.attachFile",
+          "namespace": "chat",
+          "section": "chat.attachFile"
+        },
+        {
+          "key": "chat.attachImage",
+          "namespace": "chat",
+          "section": "chat.attachImage"
+        },
+        {
+          "key": "chat.searchMessages",
+          "namespace": "chat",
+          "section": "chat.searchMessages"
+        },
+        {
+          "key": "chat.addReaction",
+          "namespace": "chat",
+          "section": "chat.addReaction"
+        },
+        {
+          "key": "chat.replyingTo",
+          "namespace": "chat",
+          "section": "chat.replyingTo"
+        },
+        {
+          "key": "chat.fileTooLarge",
+          "namespace": "chat",
+          "section": "chat.fileTooLarge"
+        },
+        {
+          "key": "chat.fileTypeNotAllowed",
+          "namespace": "chat",
+          "section": "chat.fileTypeNotAllowed"
+        },
+        {
+          "key": "chat.fileUploaded",
+          "namespace": "chat",
+          "section": "chat.fileUploaded"
+        },
+        {
+          "key": "chat.uploadFailed",
+          "namespace": "chat",
+          "section": "chat.uploadFailed"
+        },
+        {
+          "key": "chat.failedToSend",
+          "namespace": "chat",
+          "section": "chat.failedToSend"
+        },
+        {
+          "key": "chat.imagePreview",
+          "namespace": "chat",
+          "section": "chat.imagePreview"
+        },
+        {
+          "key": "chat.cancel",
+          "namespace": "chat",
+          "section": "chat.cancel"
+        },
+        {
+          "key": "chat.sendImage",
+          "namespace": "chat",
+          "section": "chat.sendImage"
+        },
+        {
+          "key": "chat.isTyping",
+          "namespace": "chat",
+          "section": "chat.isTyping"
+        },
+        {
+          "key": "chat.areTyping",
+          "namespace": "chat",
+          "section": "chat.areTyping"
+        },
+        {
+          "key": "chat.internal",
+          "namespace": "chat",
+          "section": "chat.internal"
+        },
+        {
+          "key": "errors.errorLoadingAgents",
+          "namespace": "errors",
+          "section": "errors.errorLoadingAgents"
+        },
+        {
+          "key": "errors.errorUploadingFile",
+          "namespace": "errors",
+          "section": "errors.errorUploadingFile"
+        },
+        {
+          "key": "errors.errorRemovingReaction",
+          "namespace": "errors",
+          "section": "errors.errorRemovingReaction"
+        },
+        {
+          "key": "errors.errorSendingMessage",
+          "namespace": "errors",
+          "section": "errors.errorSendingMessage"
+        },
+        {
+          "key": "errors.errorAddingReaction",
+          "namespace": "errors",
+          "section": "errors.errorAddingReaction"
+        },
+        {
+          "key": "errors.errorSubmittingFeedback",
+          "namespace": "errors",
+          "section": "errors.errorSubmittingFeedback"
+        },
+        {
+          "key": "errors.errorMarkingAllNotifications",
+          "namespace": "errors",
+          "section": "errors.errorMarkingAllNotifications"
+        },
+        {
+          "key": "errors.errorDeletingNotification",
+          "namespace": "errors",
+          "section": "errors.errorDeletingNotification"
+        },
+        {
+          "key": "errors.errorCreatingTask",
+          "namespace": "errors",
+          "section": "errors.errorCreatingTask"
+        },
+        {
+          "key": "errors.failedUrl",
+          "namespace": "errors",
+          "section": "errors.failedUrl"
+        },
+        {
+          "key": "errors.errorAssigningTicket",
+          "namespace": "errors",
+          "section": "errors.errorAssigningTicket"
+        },
+        {
+          "key": "errors.errorLoadingSessionTimeout",
+          "namespace": "errors",
+          "section": "errors.errorLoadingSessionTimeout"
+        },
+        {
+          "key": "errors.errorCreatingNotification",
+          "namespace": "errors",
+          "section": "errors.errorCreatingNotification"
+        },
+        {
+          "key": "errors.errorMarkingNotificationAsRead",
+          "namespace": "errors",
+          "section": "errors.errorMarkingNotificationAsRead"
+        },
+        {
+          "key": "errors.errorGettingChatMessages",
+          "namespace": "errors",
+          "section": "errors.errorGettingChatMessages"
+        },
+        {
+          "key": "errors.errorSendingChatMessage",
+          "namespace": "errors",
+          "section": "errors.errorSendingChatMessage"
+        },
+        {
+          "key": "errors.errorUploadingChatFile",
+          "namespace": "errors",
+          "section": "errors.errorUploadingChatFile"
+        },
+        {
+          "key": "errors.errorMarkingChatAsRead",
+          "namespace": "errors",
+          "section": "errors.errorMarkingChatAsRead"
+        },
+        {
+          "key": "errors.errorGettingChatParticipants",
+          "namespace": "errors",
+          "section": "errors.errorGettingChatParticipants"
+        },
+        {
+          "key": "errors.errorGettingUnreadCount",
+          "namespace": "errors",
+          "section": "errors.errorGettingUnreadCount"
+        },
+        {
+          "key": "errors.validationError",
+          "namespace": "errors",
+          "section": "errors.validationError"
+        },
+        {
+          "key": "errors.todoTasksFunctionalityRequired",
+          "namespace": "errors",
+          "section": "errors.todoTasksFunctionalityRequired"
+        },
+        {
+          "key": "errors.errorCreatingSignedUrl",
+          "namespace": "errors",
+          "section": "errors.errorCreatingSignedUrl"
+        }
+      ]
+    }
+  }
+}

@@ -90,6 +90,59 @@ export type Database = {
           },
         ]
       }
+      notification_preferences: {
+        Row: {
+          created_at: string | null
+          email_notifications: boolean
+          language: string
+          quiet_hours_enabled: boolean
+          quiet_hours_end: string
+          quiet_hours_start: string
+          sound_notifications: boolean
+          timezone: string
+          toast_notifications: boolean
+          type_preferences: Json
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          email_notifications?: boolean
+          language?: string
+          quiet_hours_enabled?: boolean
+          quiet_hours_end?: string
+          quiet_hours_start?: string
+          sound_notifications?: boolean
+          timezone?: string
+          toast_notifications?: boolean
+          type_preferences?: Json
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          email_notifications?: boolean
+          language?: string
+          quiet_hours_enabled?: boolean
+          quiet_hours_end?: string
+          quiet_hours_start?: string
+          sound_notifications?: boolean
+          timezone?: string
+          toast_notifications?: boolean
+          type_preferences?: Json
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_preferences_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reopen_requests: {
         Row: {
           created_at: string | null
@@ -283,6 +336,60 @@ export type Database = {
           },
         ]
       }
+      security_audit_logs: {
+        Row: {
+          action: string
+          created_at: string | null
+          error_message: string | null
+          id: string
+          ip_address: string | null
+          metadata: Json | null
+          ticket_id: string | null
+          user_agent: string | null
+          user_id: string | null
+          user_role: string
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          ticket_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          user_role: string
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          ticket_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          user_role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_audit_logs_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets_new"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "security_audit_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       users: {
         Row: {
           avatar_url: string | null
@@ -325,6 +432,51 @@ export type Database = {
       get_unread_notification_count: {
         Args: { user_uuid: string }
         Returns: number
+      }
+      get_user_notification_preferences: {
+        Args: { user_uuid: string }
+        Returns: {
+          user_id: string
+          email_notifications: boolean
+          toast_notifications: boolean
+          sound_notifications: boolean
+          quiet_hours_enabled: boolean
+          quiet_hours_start: string
+          quiet_hours_end: string
+          type_preferences: Json
+          language: string
+          timezone: string
+          created_at: string
+          updated_at: string
+        }[]
+      }
+      upsert_user_notification_preferences: {
+        Args: {
+          user_uuid: string
+          p_email_notifications?: boolean
+          p_toast_notifications?: boolean
+          p_sound_notifications?: boolean
+          p_quiet_hours_enabled?: boolean
+          p_quiet_hours_start?: string
+          p_quiet_hours_end?: string
+          p_type_preferences?: Json
+          p_language?: string
+          p_timezone?: string
+        }
+        Returns: {
+          user_id: string
+          email_notifications: boolean
+          toast_notifications: boolean
+          sound_notifications: boolean
+          quiet_hours_enabled: boolean
+          quiet_hours_start: string
+          quiet_hours_end: string
+          type_preferences: Json
+          language: string
+          timezone: string
+          created_at: string
+          updated_at: string
+        }
       }
     }
     Enums: {
@@ -466,6 +618,8 @@ export const Constants = {
         "status_changed",
         "priority_changed",
         "assignment_changed",
+        "sla_warning",
+        "sla_breach",
       ],
       ticket_priority: ["low", "medium", "high", "urgent"],
       ticket_status: ["open", "pending", "in_progress", "resolved", "closed"],

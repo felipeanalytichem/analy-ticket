@@ -339,8 +339,11 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
     });
 
     // Show toast notification
-    toast.success("Category applied", {
-      description: `Applied ${suggestion.category.name}${suggestion.subcategory ? ` → ${suggestion.subcategory.name}` : ''}`
+    toast.success(t('tickets.categoryApplied'), {
+      description: t('tickets.appliedCategorySubcategory', { 
+        category: suggestion.category.name,
+        subcategory: suggestion.subcategory ? ` → ${suggestion.subcategory.name}` : ''
+      })
     });
   };
 
@@ -361,8 +364,8 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
         dialogContent.scrollTo({ top: 0, behavior: 'smooth' });
       }
       
-      toast.error("Campos obrigatórios faltando", {
-        description: `Por favor, preencha os campos obrigatórios no topo do formulário: ${missingBasicFields.join(", ")}`
+      toast.error(t('tickets.requiredFieldsMissing'), {
+        description: t('tickets.pleaseFillRequiredFields', { fields: missingBasicFields.join(", ") })
       });
       return;
     }
@@ -379,8 +382,8 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
     }
     
     if (missingDynamicFields.length > 0) {
-      toast.error("Required fields missing", {
-        description: `Please fill in the required fields: ${missingDynamicFields.join(", ")}`
+      toast.error(t('tickets.requiredFieldsMissingDynamic'), {
+        description: t('tickets.pleaseFillRequiredFieldsDynamic', { fields: missingDynamicFields.join(", ") })
       });
       return;
     }
@@ -393,8 +396,8 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
       const user = await supabase.auth.getUser();
       
       if (!user) {
-        toast.error("Erro ao obter usuário", {
-          description: "Você precisa estar logado para criar um ticket."
+        toast.error(t('tickets.errorGettingUser'), {
+          description: t('tickets.needToBeLoggedIn')
         });
         return;
       }
@@ -440,15 +443,15 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
           updated_at: new Date().toISOString()
         } as any);
         
-        toast.success("Ticket atualizado!", {
-          description: "O ticket foi atualizado com sucesso."
+        toast.success(t('tickets.ticketUpdated'), {
+          description: t('tickets.ticketUpdatedSuccessfully')
         });
       } else {
         // Create new ticket
         createdTicket = await DatabaseService.createTicket(ticketData as any, userProfile?.full_name);
         
-        toast.success("Ticket criado!", {
-          description: "O ticket foi criado com sucesso."
+        toast.success(t('tickets.ticketCreated'), {
+          description: t('tickets.ticketCreatedSuccessfully')
         });
 
         // Handle file attachments separately after ticket is created
@@ -465,8 +468,8 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
             console.log(`✅ Added ${uploadedUrls.length} attachments to ticket ${createdTicket.id}`);
           } catch (attachError) {
             console.error('Error adding attachments:', attachError);
-            toast.error("Aviso", {
-              description: "O ticket foi criado, mas houve um problema ao adicionar os anexos."
+            toast.error(t('tickets.warningAttachments'), {
+              description: t('tickets.ticketCreatedAttachmentIssue')
             });
           }
         }
@@ -494,8 +497,8 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
       triggerRefresh();
     } catch (error) {
       console.error('Error submitting ticket:', error);
-      toast.error("Erro ao salvar ticket", {
-        description: "Ocorreu um erro ao salvar o ticket. Por favor, tente novamente."
+      toast.error(t('tickets.errorSavingTicket'), {
+        description: t('tickets.errorSavingTicketMessage')
       });
     } finally {
       setIsSubmitting(false);
@@ -520,7 +523,7 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
     
     // Show errors if any
     if (errors.length > 0) {
-      toast.error("File validation errors", {
+      toast.error(t('tickets.fileValidationErrors'), {
         description: errors.join('\n')
       });
     }
@@ -560,7 +563,7 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
               id={field.id}
               value={value}
               onChange={(e) => updateValue(e.target.value)}
-              placeholder={field.placeholder || `Enter ${field.label.toLowerCase()}`}
+              placeholder={field.placeholder || t('tickets.enterValue', { value: field.label.toLowerCase() })}
               className="mt-1"
               required={field.required}
             />
@@ -580,7 +583,7 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
               id={field.id}
               value={value}
               onChange={(e) => updateValue(e.target.value)}
-              placeholder={field.placeholder || `Enter ${field.label.toLowerCase()}`}
+              placeholder={field.placeholder || t('tickets.enterValue', { value: field.label.toLowerCase() })}
               className="mt-1 min-h-[100px]"
               required={field.required}
             />
@@ -598,7 +601,7 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
             </Label>
             <Select value={value} onValueChange={updateValue} required={field.required}>
               <SelectTrigger className="mt-1">
-                <SelectValue placeholder={`Select ${field.label.toLowerCase()}`} />
+                <SelectValue placeholder={t('tickets.selectValue', { value: field.label.toLowerCase() })} />
               </SelectTrigger>
               <SelectContent>
                 {field.options?.map((option) => (
@@ -665,7 +668,7 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
               type="number"
               value={value}
               onChange={(e) => updateValue(e.target.value)}
-              placeholder={field.placeholder || `Enter ${field.label.toLowerCase()}`}
+              placeholder={field.placeholder || t('tickets.enterValue', { value: field.label.toLowerCase() })}
               className="mt-1"
               required={field.required}
             />
@@ -697,22 +700,22 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
-            {ticket ? "Edit Ticket" : "Create New Ticket"}
+            {ticket ? t('tickets.editTicket') : t('tickets.createNewTicket')}
           </DialogTitle>
           <DialogDescription>
-            {ticket ? "Update the ticket information below." : "Fill out the form below to create a new support ticket."}
+            {ticket ? t('tickets.updateTicketInformation') : t('tickets.fillFormToCreateTicket')}
           </DialogDescription>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
-              <Label htmlFor="title">Title *</Label>
+              <Label htmlFor="title">{t('tickets.fields.title')} *</Label>
               <Input
                 id="title"
                 value={formData.title}
                 onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                placeholder="Briefly describe the issue..."
+                placeholder={t('tickets.brieflyDescribeIssue')}
                 className="mt-1"
                 disabled={!canEditField('title')}
                 title={getFieldDisabledMessage('title') || undefined}
@@ -761,7 +764,7 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
             </div>
 
             <div>
-              <Label htmlFor="category">Category *</Label>
+              <Label htmlFor="category">{t('tickets.fields.category')} *</Label>
               <Select
                 value={formData.category_id}
                 onValueChange={(value) => {
@@ -773,20 +776,20 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
                 <SelectTrigger className="mt-1">
                   <SelectValue placeholder={
                     categoriesLoading 
-                      ? "Loading categories..." 
+                      ? t('tickets.loadingCategories')
                       : getEnabledCategories().length === 0
-                        ? "No categories available"
-                        : "Select category"
+                        ? t('tickets.noCategoriesAvailable')
+                        : t('tickets.selectCategory')
                   } />
                 </SelectTrigger>
                 <SelectContent>
                   {categoriesLoading ? (
                     <SelectItem value="loading" disabled>
-                      Loading categories...
+                      {t('tickets.loadingCategories')}
                     </SelectItem>
                   ) : getEnabledCategories().length === 0 ? (
                     <SelectItem value="no-categories" disabled>
-                      No categories available
+                      {t('tickets.noCategoriesAvailable')}
                     </SelectItem>
                   ) : (
                     getEnabledCategories().map((category) => (
@@ -806,7 +809,7 @@ export const TicketDialog = ({ open, onOpenChange, ticket, onTicketCreated }: Ti
             </div>
 
             <div>
-              <Label htmlFor="subcategory">Subcategory</Label>
+              <Label htmlFor="subcategory">{t('tickets.subcategory')}</Label>
               <Select
                 key={`subcategory-${formData.category_id}-${formData.subcategory_id}-${subcategories.length}`}
                 value={formData.subcategory_id || ""}

@@ -7,19 +7,21 @@ import { DetailedAnalytics } from "@/components/dashboard/DetailedAnalytics";
 import { TicketList } from "@/components/tickets/TicketList";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Clock } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const DashboardPage = () => {
   const { userProfile } = useAuth();
+  const { t } = useTranslation();
   const userRole = userProfile?.role as "user" | "agent" | "admin" || "user";
 
   return (
     <div className="space-y-4 md:space-y-8 p-4 md:p-6">
       <div>
         <h1 className="text-2xl md:text-4xl font-bold mb-2 text-gray-900 dark:text-white">
-          Dashboard & Analytics
+          {t('dashboard.title')}
         </h1>
         <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mb-4 md:mb-6">
-          Welcome, {userProfile?.full_name?.split(' ')[0] || 'User'}
+          {t('dashboard.welcome', { name: userProfile?.full_name?.split(' ')[0] || 'User' })}
         </p>
         <StatsCards />
       </div>
@@ -33,7 +35,7 @@ const DashboardPage = () => {
           {/* Legacy Analytics - keeping for comparison */}
           <div className="space-y-4 md:space-y-6">
             <div>
-              <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-gray-900 dark:text-white">Legacy Analytics & KPIs</h2>
+              <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-gray-900 dark:text-white">{t('dashboard.legacyAnalyticsTitle')}</h2>
               <AdvancedStatsCards />
             </div>
             <TicketCharts />
@@ -56,12 +58,12 @@ const DashboardPage = () => {
                   className="h-4 w-4 md:h-5 md:w-5 text-orange-500" 
                   aria-hidden="true"
                 />
-                {userRole === "user" ? "My Active Tickets" : "Unassigned Tickets"}
+                {userRole === "user" ? t('dashboard.myActiveTickets') : t('dashboard.unassignedTickets')}
               </CardTitle>
               <CardDescription>
                 {userRole === "user" 
-                  ? "Your tickets that are currently open or in progress"
-                  : "Tickets that are currently unassigned and awaiting assignment"
+                  ? t('dashboard.yourTicketsDescription')
+                  : t('dashboard.unassignedTicketsDescription')
                 }
               </CardDescription>
             </CardHeader>
@@ -76,8 +78,8 @@ const DashboardPage = () => {
                   className="sr-only"
                 >
                   {userRole === "user" 
-                    ? "List of your active tickets showing up to 5 most recent items. Use keyboard navigation to browse through tickets."
-                    : "List of unassigned tickets requiring attention, showing up to 5 most recent items. Use keyboard navigation to browse and assign tickets."
+                    ? t('dashboard.activeTicketsAriaDescription')
+                    : t('dashboard.unassignedTicketsAriaDescription')
                   }
                 </div>
                 {userRole === "user" ? (

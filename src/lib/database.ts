@@ -412,7 +412,7 @@ export interface SecurityAuditLog {
 export class DatabaseService {
   // Helper function to calculate if a closed ticket is within the 7-day visibility window
   static isClosedTicketVisible(closedAt: string | null): boolean {
-    if (!closedAt) return true; // Not closed, so visible
+    if (!closedAt || closedAt.trim() === '') return true; // Not closed or empty string, so visible
     
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
@@ -480,7 +480,97 @@ export class DatabaseService {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     
+    // Return proper PostgREST syntax using and() function for combining conditions
     return `and(status.eq.closed,closed_at.gte.${sevenDaysAgo.toISOString()})`;
+  }
+
+  // Query validation helper to prevent malformed queries
+  static validateQuerySyntax(query: string): boolean {
+    try {
+      // Handle null/undefined/non-string inputs
+      if (!query || typeof query !== 'string') {
+        return query === ''; // Empty string is valid, null/undefined are not
+      }
+
+      // Basic validation for common PostgREST syntax issues
+      const hasUnbalancedParentheses = (query.match(/\(/g) || []).length !== (query.match(/\)/g) || []).length;
+      const hasInvalidAndOr = /and\([^)]*or\(|or\([^)]*and\(/.test(query);
+      const hasEmptyOperators = /\.\./.test(query); // Any double dots are invalid
+      const hasInvalidChars = /[<>;"'\\]/.test(query);
+      
+      // Allow and() function when used properly (not as standalone query)
+      // Only reject and() or or() when they appear to be malformed standalone usage
+      const hasInvalidStandaloneFunctionSyntax = /^\s*(and|or)\s*\([^)]*\)\s*$/.test(query);
+      
+      // Check for problematic chained conditions that would cause enum errors
+      // Pattern: status.eq.value.and.other_field - this causes PostgREST to interpret the whole thing as a status value
+      const hasProblematicStatusChaining = /status\.eq\.[^,\s]+\.and\./i.test(query);
+      
+      return !hasUnbalancedParentheses && !hasInvalidAndOr && !hasEmptyOperators && !hasInvalidChars && !hasInvalidStandaloneFunctionSyntax && !hasProblematicStatusChaining;
+    } catch (error) {
+      console.error('Query validation error:', error);
+      return false;
+    }
+  }
+
+  // Query parameter sanitization helper
+  static sanitizeQueryParameter(param: string): string {
+    if (!param || typeof param !== 'string') {
+      return '';
+    }
+    
+    // Remove potentially dangerous characters and normalize
+    return param
+      .replace(/[<>;"'\\]/g, '') // Remove dangerous chars
+      .replace(/\s+/g, ' ') // Normalize whitespace
+      .trim()
+      .substring(0, 1000); // Limit length to prevent abuse
+  }
+
+  // Enhanced query builder for ticket filtering
+  static buildTicketFilterQuery(options: {
+    userRole?: 'user' | 'agent' | 'admin';
+    userId?: string;
+    statusFilter?: string;
+    includeClosedTickets?: boolean;
+  }): { query: string; isValid: boolean } {
+    try {
+      // Validate inputs
+      if (!options || typeof options !== 'object') {
+        return { query: '', isValid: false };
+      }
+
+      const filters: string[] = [];
+      
+      // Build status filter
+      if (options.statusFilter && options.statusFilter !== 'all') {
+        if (options.statusFilter === 'active') {
+          filters.push('status.in.(open,in_progress)');
+        } else if (['open', 'in_progress', 'resolved', 'closed'].includes(options.statusFilter)) {
+          filters.push(`status.eq.${options.statusFilter}`);
+        }
+      }
+      
+      // Add closed ticket time filter for users
+      if (options.userRole === 'user' && !options.includeClosedTickets) {
+        // For now, just exclude closed tickets for users to avoid PostgREST enum errors
+        // TODO: Implement proper closed ticket time filtering once we resolve the query syntax
+        
+        if (filters.length === 0) {
+          // If no other filters, just show non-closed tickets
+          filters.push('status.in.(open,in_progress,resolved)');
+        }
+        // If there are other filters, they will be combined and closed tickets will be excluded by default
+      }
+      
+      const query = filters.length > 0 ? filters.join(',') : '';
+      const isValid = this.validateQuerySyntax(query);
+      
+      return { query, isValid };
+    } catch (error) {
+      console.error('Error building ticket filter query:', error);
+      return { query: '', isValid: false };
+    }
   }
   // User operations
   static async getUsers(): Promise<User[]> {
@@ -1229,12 +1319,16 @@ export class DatabaseService {
         
         // Apply time-based filtering for closed tickets (7-day visibility window)
         if (options.statusFilter !== 'all') {
-          // Include open, in_progress, resolved tickets
-          // Include closed tickets only if closed within 7 days using the utility function
-          query = query.or(`
-            status.in.("open","in_progress","resolved"),
-            ${DatabaseService.buildClosedTicketFilter()}
-          `);
+          // For users, we need to show:
+          // 1. All open, in_progress, resolved tickets
+          // 2. Only closed tickets that were closed within the last 7 days
+          
+          // Due to PostgREST limitations with complex OR+AND queries,
+          // we'll get all tickets here and filter closed tickets in post-processing
+          // This avoids the PostgREST enum error while maintaining the 7-day rule
+          
+          // Get all tickets (including closed) - filtering happens in post-processing
+          // No status filter applied here for users
         }
       } else {
         // Agent and Admin filtering logic
@@ -1255,7 +1349,16 @@ export class DatabaseService {
           if (!options.showAll && options.userId) {
             if (options.userRole === 'agent' && !options.searchTerm && !options.assignedOnly && !options.unassignedOnly && !options.showAllAgentTickets) {
               // Agents can see: unassigned tickets OR tickets assigned to them
-              query = query.or(`assigned_to.is.null,assigned_to.eq.${options.userId}`);
+              const sanitizedUserId = DatabaseService.sanitizeQueryParameter(options.userId || '');
+              if (sanitizedUserId) {
+                const agentQuery = `assigned_to.is.null,assigned_to.eq.${sanitizedUserId}`;
+                if (DatabaseService.validateQuerySyntax(agentQuery)) {
+                  query = query.or(agentQuery);
+                } else {
+                  console.error('Invalid agent visibility query, falling back to assigned tickets only');
+                  query = query.eq('assigned_to', sanitizedUserId);
+                }
+              }
             }
             // Admins with showAll=false will see all tickets (no additional filter)
           }
@@ -1275,7 +1378,16 @@ export class DatabaseService {
             // Apply agent visibility rules for "active" tickets
             if (options.userRole === 'agent' && options.userId && !options.searchTerm && !options.showAll && !options.showAllAgentTickets) {
               // For agents without search: show unassigned tickets OR tickets assigned to them
-              query = query.or(`assigned_to.is.null,assigned_to.eq.${options.userId}`);
+              const sanitizedUserId = DatabaseService.sanitizeQueryParameter(options.userId);
+              if (sanitizedUserId) {
+                const agentQuery = `assigned_to.is.null,assigned_to.eq.${sanitizedUserId}`;
+                if (DatabaseService.validateQuerySyntax(agentQuery)) {
+                  query = query.or(agentQuery);
+                } else {
+                  console.error('Invalid agent visibility query, falling back to assigned tickets only');
+                  query = query.eq('assigned_to', sanitizedUserId);
+                }
+              }
             }
           } else {
             // Standard status filter
@@ -1284,10 +1396,20 @@ export class DatabaseService {
         }
       }
 
-      // Add search functionality
+      // Add search functionality with validation and sanitization
       if (options.searchTerm) {
-        const searchPattern = `%${options.searchTerm}%`;
-        query = query.or(`title.ilike.${searchPattern},description.ilike.${searchPattern}`);
+        const sanitizedSearchTerm = DatabaseService.sanitizeQueryParameter(options.searchTerm);
+        if (sanitizedSearchTerm) {
+          const searchPattern = `%${sanitizedSearchTerm}%`;
+          const searchQuery = `title.ilike.${searchPattern},description.ilike.${searchPattern}`;
+          
+          // Validate search query syntax
+          if (DatabaseService.validateQuerySyntax(searchQuery)) {
+            query = query.or(searchQuery);
+          } else {
+            console.error('Invalid search query syntax, skipping search filter');
+          }
+        }
       }
 
       // Add ordering and limit
@@ -1297,14 +1419,98 @@ export class DatabaseService {
         query = query.limit(options.limit);
       }
 
-      const { data, error } = await query;
+      let data, error;
+      
+      try {
+        // Execute query with comprehensive error handling
+        const result = await query;
+        data = result.data;
+        error = result.error;
+      } catch (queryError: any) {
+        console.error('Database query execution failed:', {
+          error: queryError,
+          options,
+          timestamp: new Date().toISOString()
+        });
+        
+        // Attempt fallback query with simpler filters
+        try {
+          console.log('Attempting fallback query...');
+          let fallbackQuery = db.from('tickets_new').select('*');
+          
+          // Apply only basic user filtering for fallback
+          if (options.userRole === 'user' && options.userId) {
+            fallbackQuery = fallbackQuery.eq('user_id', options.userId);
+          }
+          
+          fallbackQuery = fallbackQuery.order('created_at', { ascending: false });
+          
+          if (options.limit) {
+            fallbackQuery = fallbackQuery.limit(options.limit);
+          }
+          
+          const fallbackResult = await fallbackQuery;
+          data = fallbackResult.data;
+          error = fallbackResult.error;
+          
+          if (!error) {
+            console.log('Fallback query succeeded');
+          }
+        } catch (fallbackError) {
+          console.error('Fallback query also failed:', fallbackError);
+          throw new Error(`Database query failed: ${queryError.message}. Fallback also failed: ${fallbackError}`);
+        }
+      }
 
       if (error) {
-        throw new Error(`Failed to fetch tickets: ${error.message}`);
+        console.error('Database query error details:', {
+          error,
+          code: error.code,
+          details: error.details,
+          hint: error.hint,
+          message: error.message,
+          options,
+          timestamp: new Date().toISOString()
+        });
+        
+        // Provide more informative error messages based on error type
+        if (error.code === '42601') {
+          throw new Error('Invalid query syntax. Please try again or contact support if the problem persists.');
+        } else if (error.code === '42P01') {
+          throw new Error('Database table not found. Please contact support.');
+        } else if (error.message?.includes('syntax error')) {
+          throw new Error('Query syntax error. Please try simplifying your search or filters.');
+        } else {
+          throw new Error(`Failed to fetch tickets: ${error.message}`);
+        }
       }
 
       if (!data || data.length === 0) {
         return [];
+      }
+
+      // Apply post-query filtering for closed tickets (7-day visibility window)
+      // This handles the complex logic that PostgREST can't handle well in OR queries
+      // Apply to users regardless of statusFilter to ensure consistent behavior
+      if (options.userRole === 'user') {
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        
+        data = data.filter(ticket => {
+          // Always include non-closed tickets
+          if (ticket.status !== 'closed') {
+            return true;
+          }
+          
+          // For closed tickets, only include if closed within 7 days
+          if (ticket.closed_at) {
+            const closedDate = new Date(ticket.closed_at);
+            return !isNaN(closedDate.getTime()) && closedDate >= sevenDaysAgo;
+          }
+          
+          // If no closed_at date, exclude the ticket
+          return false;
+        });
       }
 
       // Get all unique user IDs from tickets
