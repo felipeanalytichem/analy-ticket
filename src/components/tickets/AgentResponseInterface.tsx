@@ -36,7 +36,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { InternalComments } from "./InternalComments";
 import { ActivityLog } from "./ActivityLog";
 import { SLAMonitor } from "./SLAMonitor";
-import { TicketTransferDialog } from "./dialogs/TicketTransferDialog";
+// TicketTransferDialog removed - functionality moved to UnifiedTicketDetail
 import { TicketClosureDialog } from "./dialogs/TicketClosureDialog";
 import { supabase } from "@/lib/supabase";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -64,7 +64,7 @@ export const AgentResponseInterface = ({
   const [currentTicket, setCurrentTicket] = useState<TicketWithDetails>(ticket);
   const [refreshKey, setRefreshKey] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isTransferDialogOpen, setIsTransferDialogOpen] = useState(false);
+  // Transfer dialog state removed - functionality moved to UnifiedTicketDetail
   const [isClosureDialogOpen, setIsClosureDialogOpen] = useState(false);
   const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
   const [isResponseFormCollapsed, setIsResponseFormCollapsed] = useState(false);
@@ -771,17 +771,7 @@ export const AgentResponseInterface = ({
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <Button 
-                variant="outline" 
-                className="w-full justify-start gap-3 h-12 border-gray-200 dark:border-gray-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-200"
-                onClick={() => setIsTransferDialogOpen(true)}
-                disabled={currentTicket.status === 'closed' || currentTicket.status === 'resolved'}
-              >
-                <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30">
-                  <UserCheck className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                </div>
-                <span className="font-medium">Transferir Ticket</span>
-              </Button>
+              {/* Transfer button removed - functionality moved to UnifiedTicketDetail */}
               
               {canCloseTicket() && (
                 <Button 
@@ -831,13 +821,7 @@ export const AgentResponseInterface = ({
         </div>
       </div>
 
-      {/* Transfer Dialog */}
-      <TicketTransferDialog
-        open={isTransferDialogOpen}
-        onOpenChange={setIsTransferDialogOpen}
-        ticket={currentTicket}
-        onTransferred={refreshTicketData}
-      />
+      {/* Transfer functionality moved to UnifiedTicketDetail */}
 
       {/* Closure Dialog */}
       <TicketClosureDialog

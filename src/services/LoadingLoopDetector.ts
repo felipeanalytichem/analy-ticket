@@ -42,7 +42,9 @@ export class LoadingLoopDetector {
   };
 
   constructor() {
-    this.setupMonitoring();
+    // Do not automatically start monitoring to prevent infinite loops
+    // Monitoring must be explicitly started via startMonitoring()
+    console.log('🔍 LoadingLoopDetector: Initialized (monitoring disabled by default)');
   }
 
   /**
@@ -155,251 +157,34 @@ export class LoadingLoopDetector {
   }
 
   private setupConsoleInterception(): void {
-    const originalLog = console.log;
-    const originalError = console.error;
-    const originalWarn = console.warn;
-
-    // Intercept console.log for auth-related messages
-    console.log = (...args) => {
-      const message = args.join(' ');
-      
-      if (message.includes('🔐') || message.includes('SessionManager') || message.includes('auth')) {
-        this.authCallCount++;
-        this.detectPattern('auth-console-activity', {
-          name: 'Authentication Console Activity',
-          description: 'High frequency of authentication-related console messages',
-          severity: this.authCallCount > this.THRESHOLDS.AUTH_CALLS_PER_MINUTE ? 'critical' : 'medium',
-          pattern: message,
-          recommendations: [
-            'Check for authentication loops',
-            'Verify session management logic',
-            'Clear browser storage if needed'
-          ]
-        });
-      }
-
-      if (message.includes('Session') || message.includes('session')) {
-        this.sessionCheckCount++;
-      }
-
-      originalLog.apply(console, args);
-    };
-
-    // Intercept console.error for error patterns
-    console.error = (...args) => {
-      const message = args.join(' ');
-      this.errorCount++;
-
-      if (message.includes('JWT') || message.includes('token') || message.includes('auth')) {
-        this.detectPattern('auth-error-loop', {
-          name: 'Authentication Error Loop',
-          description: 'Repeated authentication errors detected',
-          severity: 'critical',
-          pattern: message,
-          recommendations: [
-            'Clear authentication tokens',
-            'Log out and log back in',
-            'Check token refresh logic'
-          ]
-        });
-      }
-
-      if (message.includes('PGRST301') || message.includes('database')) {
-        this.detectPattern('database-error-loop', {
-          name: 'Database Error Loop',
-          description: 'Repeated database connection errors',
-          severity: 'high',
-          pattern: message,
-          recommendations: [
-            'Check database connectivity',
-            'Verify authentication status',
-            'Refresh the page'
-          ]
-        });
-      }
-
-      originalError.apply(console, args);
-    };
-
-    // Intercept console.warn for warning patterns
-    console.warn = (...args) => {
-      const message = args.join(' ');
-      
-      if (message.includes('session') || message.includes('token')) {
-        this.detectPattern('session-warning-pattern', {
-          name: 'Session Warning Pattern',
-          description: 'Repeated session-related warnings',
-          severity: 'medium',
-          pattern: message,
-          recommendations: [
-            'Monitor session health',
-            'Check session timeout settings'
-          ]
-        });
-      }
-
-      originalWarn.apply(console, args);
-    };
+    // DISABLED: Console interception was causing feedback loops
+    // when the LoadingLoopDetector itself logs messages
+    console.log('⚠️ Console interception disabled to prevent infinite feedback loops');
+    return;
   }
 
   private setupFetchInterception(): void {
-    const originalFetch = window.fetch;
-    
-    window.fetch = async (...args) => {
-      this.apiCallCount++;
-      
-      const url = args[0]?.toString() || '';
-      
-      // Detect excessive API calls
-      if (this.apiCallCount > this.THRESHOLDS.API_CALLS_PER_MINUTE) {
-        this.detectPattern('excessive-api-calls', {
-          name: 'Excessive API Calls',
-          description: `High frequency of API calls detected: ${this.apiCallCount} calls per minute`,
-          severity: 'high',
-          pattern: `API call to: ${url}`,
-          recommendations: [
-            'Check for API request loops',
-            'Verify request caching',
-            'Monitor network tab in browser'
-          ]
-        });
-      }
-
-      // Detect auth-related API loops
-      if (url.includes('auth') || url.includes('session') || url.includes('token')) {
-        this.authCallCount++;
-        
-        if (this.authCallCount > this.THRESHOLDS.AUTH_CALLS_PER_MINUTE) {
-          this.detectPattern('auth-api-loop', {
-            name: 'Authentication API Loop',
-            description: 'Excessive authentication API calls detected',
-            severity: 'critical',
-            pattern: `Auth API call: ${url}`,
-            recommendations: [
-              'Check authentication flow logic',
-              'Verify token refresh implementation',
-              'Clear browser storage'
-            ]
-          });
-        }
-      }
-
-      try {
-        const response = await originalFetch.apply(window, args);
-        
-        // Check for repeated 401 errors (auth loops)
-        if (response.status === 401) {
-          this.detectPattern('repeated-401-errors', {
-            name: 'Repeated 401 Errors',
-            description: 'Multiple authentication failures detected',
-            severity: 'critical',
-            pattern: `401 error on: ${url}`,
-            recommendations: [
-              'Clear authentication tokens',
-              'Log out and log back in',
-              'Check server authentication status'
-            ]
-          });
-        }
-
-        return response;
-      } catch (error) {
-        this.errorCount++;
-        throw error;
-      }
-    };
+    // DISABLED: Fetch interception was causing performance issues and potential loops
+    console.log('⚠️ Fetch interception disabled to prevent infinite loops');
+    return;
   }
 
   private setupAuthStateMonitoring(): void {
-    let authStateChangeCount = 0;
-    
-    supabase.auth.onAuthStateChange((event, session) => {
-      authStateChangeCount++;
-      
-      console.log(`🔍 Auth state change: ${event} (count: ${authStateChangeCount})`);
-      
-      if (authStateChangeCount > 10) {
-        this.detectPattern('auth-state-loop', {
-          name: 'Authentication State Loop',
-          description: `Excessive auth state changes: ${authStateChangeCount} changes`,
-          severity: 'critical',
-          pattern: `Auth event: ${event}`,
-          recommendations: [
-            'Check auth state management logic',
-            'Verify session initialization',
-            'Clear browser storage and refresh'
-          ]
-        });
-      }
-
-      // Reset counter every 2 minutes
-      setTimeout(() => {
-        authStateChangeCount = Math.max(0, authStateChangeCount - 1);
-      }, 120000);
-    });
+    // DISABLED: Auth state monitoring was triggering during normal auth flows
+    console.log('⚠️ Auth state monitoring disabled to prevent interference with normal auth flows');
+    return;
   }
 
   private setupPerformanceMonitoring(): void {
-    // Monitor memory usage growth
-    setInterval(() => {
-      // @ts-ignore
-      const memory = performance.memory;
-      if (memory) {
-        const usedMB = Math.round(memory.usedJSHeapSize / 1024 / 1024);
-        const limitMB = Math.round(memory.jsHeapSizeLimit / 1024 / 1024);
-        const usagePercent = (usedMB / limitMB) * 100;
-        
-        if (usagePercent > 90) {
-          this.detectPattern('memory-leak', {
-            name: 'Memory Leak Detection',
-            description: `High memory usage: ${usagePercent.toFixed(1)}%`,
-            severity: 'critical',
-            pattern: `Memory usage: ${usedMB}MB / ${limitMB}MB`,
-            recommendations: [
-              'Refresh the page to free memory',
-              'Close other browser tabs',
-              'Check for memory leaks in console'
-            ]
-          });
-        }
-      }
-    }, 30000); // Check every 30 seconds
+    // DISABLED: Performance monitoring was causing additional overhead
+    console.log('⚠️ Performance monitoring disabled to reduce overhead');
+    return;
   }
 
   private setupReactDevToolsMonitoring(): void {
-    // Monitor for excessive re-renders (simplified)
-    let renderCount = 0;
-    
-    // This is a simplified approach - in a real implementation,
-    // you'd use React DevTools Profiler API
-    const originalSetState = React.Component.prototype.setState;
-    
-    if (originalSetState) {
-      React.Component.prototype.setState = function(...args) {
-        renderCount++;
-        
-        if (renderCount > this.THRESHOLDS.RENDERS_PER_MINUTE) {
-          this.detectPattern('excessive-renders', {
-            name: 'Excessive Re-renders',
-            description: `High frequency of component re-renders: ${renderCount}`,
-            severity: 'high',
-            pattern: 'Component re-render',
-            recommendations: [
-              'Check for unnecessary state updates',
-              'Verify useEffect dependencies',
-              'Use React DevTools Profiler'
-            ]
-          });
-        }
-        
-        return originalSetState.apply(this, args);
-      };
-    }
-
-    // Reset render count every minute
-    setInterval(() => {
-      renderCount = 0;
-    }, 60000);
+    // DISABLED: React monitoring was interfering with normal React operations
+    console.log('⚠️ React DevTools monitoring disabled to prevent interference');
+    return;
   }
 
   /**
@@ -442,28 +227,32 @@ export class LoadingLoopDetector {
   }
 
   private detectSessionValidationLoops(): void {
-    let validationCount = 0;
-    const originalGetSession = supabase.auth.getSession;
+    // DISABLED: This monkey-patching was causing _acquireLock errors
+    // by interfering with Supabase's internal auth methods
+    console.log('⚠️ Session validation loop detection disabled to prevent _acquireLock errors');
     
-    supabase.auth.getSession = async function() {
-      validationCount++;
-      
-      if (validationCount > 20) {
-        this.detectPattern('session-validation-loop', {
-          name: 'Session Validation Loop',
-          description: `Excessive session validation calls: ${validationCount}`,
-          severity: 'critical',
-          pattern: 'getSession() call',
-          recommendations: [
-            'Check session validation logic',
-            'Verify session caching',
-            'Review session management flow'
-          ]
-        });
+    // Alternative: Monitor through event listeners instead of monkey-patching
+    let validationCount = 0;
+    
+    // Listen to auth state changes instead of patching methods
+    supabase.auth.onAuthStateChange((event) => {
+      if (event === 'TOKEN_REFRESHED' || event === 'SIGNED_IN') {
+        validationCount++;
+        
+        if (validationCount > 10) {
+          this.detectPattern('session-validation-loop', {
+            name: 'Session Validation Loop',
+            description: `Excessive session validation events: ${validationCount}`,
+            severity: 'medium', // Reduced severity since we're not interfering
+            pattern: `auth event: ${event}`,
+            recommendations: [
+              'Check session validation logic',
+              'Review session management flow'
+            ]
+          });
+        }
       }
-      
-      return originalGetSession.apply(this);
-    }.bind(this);
+    });
 
     // Reset counter every minute
     setInterval(() => {
@@ -472,37 +261,12 @@ export class LoadingLoopDetector {
   }
 
   private detectInfiniteRenderLoops(): void {
-    // Monitor for rapid DOM changes
-    let domChangeCount = 0;
+    // COMPLETELY DISABLED: DOM mutation monitoring was causing infinite feedback loops
+    console.log('⚠️ DOM mutation monitoring completely disabled to prevent infinite loops');
     
-    const observer = new MutationObserver((mutations) => {
-      domChangeCount += mutations.length;
-      
-      if (domChangeCount > 1000) {
-        this.detectPattern('infinite-render-loop', {
-          name: 'Infinite Render Loop',
-          description: `Excessive DOM changes detected: ${domChangeCount}`,
-          severity: 'critical',
-          pattern: 'DOM mutation',
-          recommendations: [
-            'Check for infinite re-render loops',
-            'Verify useEffect dependencies',
-            'Use React DevTools to identify problematic components'
-          ]
-        });
-      }
-    });
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      attributes: true
-    });
-
-    // Reset counter every minute
-    setInterval(() => {
-      domChangeCount = 0;
-    }, 60000);
+    // No DOM monitoring to prevent infinite loops
+    // This method is now a no-op to prevent performance issues
+    return;
   }
 
   private detectApiRequestLoops(): void {

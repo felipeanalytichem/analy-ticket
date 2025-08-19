@@ -26,7 +26,7 @@ export function LoadingLoopFixer() {
   const [isFixing, setIsFixing] = useState(false);
   const [fixProgress, setFixProgress] = useState(0);
   const [fixActions, setFixActions] = useState<FixAction[]>([]);
-  const [autoFixEnabled, setAutoFixEnabled] = useState(false);
+  const [autoFixEnabled] = useState(false); // Disabled to prevent automatic fixes
 
   // Initialize fix actions
   useEffect(() => {
@@ -88,18 +88,24 @@ export function LoadingLoopFixer() {
   const analyzeLoadingLoops = async () => {
     setIsAnalyzing(true);
     try {
-      // Start monitoring if not already started
-      loadingLoopDetector.startMonitoring();
+      // DISABLED: LoadingLoopDetector monitoring disabled to prevent infinite loops
+      console.log('⚠️ LoadingLoopDetector monitoring disabled - returning safe report');
       
-      // Wait a bit to collect data
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Return a safe mock report instead of starting problematic monitoring
+      const mockReport: LoadingLoopReport = {
+        isLoopDetected: false,
+        severity: 'none',
+        patterns: [],
+        summary: 'Loading loop monitoring disabled to prevent performance issues',
+        recommendations: ['Monitoring has been disabled for system stability'],
+        timestamp: new Date()
+      };
       
-      const currentReport = loadingLoopDetector.analyzeNow();
-      setReport(currentReport);
+      setReport(mockReport);
       
       // Auto-fix if enabled and critical issues detected
-      if (autoFixEnabled && currentReport.severity === 'critical') {
-        await performAutoFix(currentReport);
+      if (autoFixEnabled && mockReport.severity === 'critical') {
+        await performAutoFix(mockReport);
       }
     } catch (error) {
       console.error('Analysis failed:', error);
@@ -357,17 +363,10 @@ export function LoadingLoopFixer() {
     }
   }
 
-  // Auto-start analysis on mount
+  // DISABLED: Auto-analysis disabled to prevent performance issues
   useEffect(() => {
-    analyzeLoadingLoops();
-    
-    // Set up periodic analysis
-    const interval = setInterval(analyzeLoadingLoops, 30000); // Every 30 seconds
-    
-    return () => {
-      clearInterval(interval);
-      loadingLoopDetector.stopMonitoring();
-    };
+    console.log('⚠️ LoadingLoopFixer: Auto-analysis disabled for system stability');
+    // No automatic analysis to prevent infinite loops
   }, []);
 
   const getSeverityColor = (severity: string) => {

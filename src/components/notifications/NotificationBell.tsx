@@ -30,7 +30,7 @@ import { ptBR } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
-import { TicketDetailsDialog } from '@/components/tickets/dialogs/TicketDetailsDialog';
+// TicketDetailsDialog removed - using navigation to UnifiedTicketDetail instead
 import DatabaseService, { TicketWithDetails } from '@/lib/database';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -46,8 +46,7 @@ export const NotificationBell: React.FC = () => {
   const { t } = useTranslation();
   const { userProfile } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
-  const [isTicketDialogOpen, setIsTicketDialogOpen] = useState(false);
-  const [selectedTicket, setSelectedTicket] = useState<TicketWithDetails | null>(null);
+  // Ticket dialog state removed - using navigation to UnifiedTicketDetail instead
   const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>({
     isConnected: true,
     isReconnecting: false,
@@ -184,15 +183,13 @@ export const NotificationBell: React.FC = () => {
           console.log('🔔 NotificationBell: Opening notifications page for feedback');
           navigate(`/notifications?feedback=${ticketId}`);
         } else {
-          // For regular tickets, open the dialog
-          console.log('🔔 NotificationBell: Fetching ticket details for dialog');
+          // For regular tickets, navigate to unified ticket detail page
+          console.log('🔔 NotificationBell: Navigating to unified ticket detail page');
+          navigate(`/ticket/${ticketId}`);
           try {
+            // Still mark notification as read when navigating
             const ticketDetails = await DatabaseService.getTicketById(ticketId);
-            if (ticketDetails) {
-              setSelectedTicket(ticketDetails);
-              setIsTicketDialogOpen(true);
-              console.log('🔔 NotificationBell: Opening ticket details dialog');
-            } else {
+            if (!ticketDetails) {
               console.error('🔔 NotificationBell: Ticket not found:', ticketId);
               toast.error(t('notifications.errors.ticketNotFound'));
             }
@@ -561,16 +558,7 @@ export const NotificationBell: React.FC = () => {
         </DropdownMenu>
       </TooltipProvider>
 
-      {/* Ticket Details Dialog */}
-      <TicketDetailsDialog
-        open={isTicketDialogOpen}
-        onOpenChange={setIsTicketDialogOpen}
-        ticket={selectedTicket}
-        onTicketUpdate={() => {
-          // Refresh notifications if needed
-          console.log('🔔 NotificationBell: Ticket updated, could refresh notifications here');
-        }}
-      />
+      {/* Ticket Details Dialog removed - using navigation to UnifiedTicketDetail instead */}
     </>
   );
 }; 

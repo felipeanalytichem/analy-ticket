@@ -33,7 +33,7 @@ import UserManagementPage from '@/pages/UserManagementPage';
 import CategoryManagementPage from '@/pages/CategoryManagementPage';
 import SLAConfigPage from '@/pages/SLAConfigPage';
 import { SLANotificationSettings } from '@/components/admin/SLANotificationSettings';
-import SessionTimeoutConfigPage from '@/pages/SessionTimeoutConfigPage';
+
 import WorkloadDashboardPage from '@/pages/WorkloadDashboardPage';
 import AssignmentRulesPage from '@/pages/AssignmentRulesPage';
 import CategoryExpertisePage from '@/pages/CategoryExpertisePage';
@@ -44,7 +44,7 @@ import { ReopenRequests } from '@/pages/ReopenRequests';
 import { DebugPage } from '@/pages/DebugPage';
 import UpdateCategoriesPage from '@/pages/UpdateCategoriesPage';
 import DiagnosticsPage from '@/pages/DiagnosticsPage';
-import TicketDetail from '@/pages/TicketDetail';
+import { TicketDetailPage } from '@/pages/TicketDetailPage';
 import AgentDashboard from '@/pages/AgentDashboard';
 
 // Lazy-loaded heavy pages
@@ -245,7 +245,7 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <AppLayout>
-                      <TicketDetail />
+                      <TicketDetailPage />
                     </AppLayout>
                   </ProtectedRoute>
                 }
@@ -356,16 +356,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              <Route
-                path="/admin/session-timeout"
-                element={
-                  <ProtectedRoute>
-                    <AppLayout>
-                      <SessionTimeoutConfigPage />
-                    </AppLayout>
-                  </ProtectedRoute>
-                }
-              />
+
               <Route
                 path="/admin/knowledge"
                 element={

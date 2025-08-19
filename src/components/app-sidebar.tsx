@@ -12,7 +12,6 @@ import {
   BarChart3,
   Plug,
   Clock,
-  Timer,
   RotateCcw,
   CheckCircle,
   XCircle,
@@ -344,13 +343,7 @@ export function AppSidebar({ userRole, activeTab, onTabChange, onCreateTicket }:
             count: null,
             roles: ["admin"]
           },
-          {
-            title: t('sidebar.sessionTimeout'),
-            tab: "session-timeout-config",
-            icon: Timer,
-            count: null,
-            roles: ["admin"]
-          },
+
           {
             title: t('sidebar.knowledgeAdmin'),
             tab: "knowledge-admin",

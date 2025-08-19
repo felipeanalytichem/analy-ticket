@@ -17,10 +17,7 @@ vi.mock('@/contexts/AuthContext');
 vi.mock('@/services/ReconnectionManager');
 vi.mock('sonner');
 vi.mock('@/lib/database');
-vi.mock('@/components/tickets/dialogs/TicketDetailsDialog', () => ({
-  TicketDetailsDialog: ({ open, onOpenChange }: any) => 
-    open ? <div data-testid="ticket-dialog">Ticket Dialog</div> : null
-}));
+// TicketDetailsDialog mock removed - component now uses navigation instead
 
 const mockUseNotifications = vi.mocked(useNotifications);
 const mockUseAuth = vi.mocked(useAuth);

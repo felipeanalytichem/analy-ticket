@@ -52,7 +52,7 @@ const TicketsPage = () => {
   useEffect(() => {
     const loadTicketsAndStats = async () => {
       if (!userProfile) {
-        setError("User profile not loaded. Please log in to view tickets.");
+        setError(t('tickets.pleaseLoginToViewTickets', 'Please log in to view tickets'));
         setIsLoadingStats(false);
         return;
       }
@@ -83,7 +83,7 @@ const TicketsPage = () => {
         const loadedTickets = await DatabaseService.getTickets(options);
         
         if (!Array.isArray(loadedTickets)) {
-          throw new Error("Invalid ticket data received from server");
+          throw new Error(t('tickets.error', 'Invalid ticket data received from server'));
         }
         
         setTickets(loadedTickets);
@@ -179,33 +179,33 @@ const TicketsPage = () => {
         });
         
       } catch (error: unknown) {
-        const errorMessage = error instanceof Error ? error.message : "Failed to load tickets";
+        const errorMessage = error instanceof Error ? error.message : t('tickets.errorLoadingTickets', 'Failed to load tickets');
         console.error('Error loading tickets and statistics:', error);
         
         // Handle specific error types
         if (error instanceof Error) {
           if (error.name === 'UnauthorizedAccess') {
-            setError("Access denied: You can only view your own tickets");
+            setError(t('tickets.accessDeniedMessage', 'Access denied: You can only view your own tickets'));
             toast({
-              title: "Access Denied",
-              description: "You can only view tickets that belong to you",
+              title: t('common.accessDenied', 'Access Denied'),
+              description: t('tickets.canOnlyViewOwnTickets', 'You can only view tickets that belong to you'),
               variant: "destructive",
             });
           } else if (error.name === 'NotFound') {
-            setError("No tickets found matching your criteria");
+            setError(t('tickets.noTicketsMessage', 'No tickets are available at the moment'));
           } else {
             setError(errorMessage);
             toast({
-              title: "Error loading tickets",
+              title: t('tickets.errorLoadingTickets', 'Error loading tickets'),
               description: errorMessage,
               variant: "destructive",
             });
           }
         } else {
-          setError("An unexpected error occurred while loading tickets");
+          setError(t('common.unexpectedError', 'An unexpected error occurred. Please try again.'));
           toast({
-            title: "Error loading tickets",
-            description: "An unexpected error occurred. Please try again.",
+            title: t('tickets.errorLoadingTickets', 'Error loading tickets'),
+            description: t('common.unexpectedError', 'An unexpected error occurred. Please try again.'),
             variant: "destructive",
           });
         }
@@ -257,7 +257,7 @@ const TicketsPage = () => {
       const loadedTickets = await DatabaseService.getTickets(options);
       
       if (!Array.isArray(loadedTickets)) {
-        throw new Error("Invalid ticket data received from server");
+        throw new Error(t('tickets.error', 'Invalid ticket data received from server'));
       }
 
       setTickets(loadedTickets);
@@ -265,17 +265,17 @@ const TicketsPage = () => {
       triggerRefresh();
 
       toast({
-        title: "Tickets refreshed",
-        description: "Your ticket list has been updated successfully",
+        title: t('tickets.ticketsRefreshedSuccessfully', 'Tickets refreshed successfully'),
+        description: t('tickets.ticketsRefreshedSuccessfully', 'Your ticket list has been updated successfully'),
       });
 
     } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : "Failed to refresh tickets";
+      const errorMessage = error instanceof Error ? error.message : t('tickets.errorRefreshingTickets', 'Failed to refresh tickets');
       console.error('Error refreshing tickets:', error);
       
       setError(errorMessage);
       toast({
-        title: "Error refreshing tickets",
+        title: t('tickets.errorRefreshingTickets', 'Error refreshing tickets'),
         description: errorMessage,
         variant: "destructive",
       });
@@ -293,7 +293,7 @@ const TicketsPage = () => {
           borderColor: "border-orange-200 dark:border-orange-800",
           textColor: "text-orange-700 dark:text-orange-300",
           icon: "🔥",
-          name: "Open Tickets"
+          name: t('navigation.openTickets', 'Open Tickets')
         };
       case "in-progress":
         return {
@@ -302,7 +302,7 @@ const TicketsPage = () => {
           borderColor: "border-blue-200 dark:border-blue-800",
           textColor: "text-blue-700 dark:text-blue-300",
           icon: "⚡",
-          name: "In Progress"
+          name: t('navigation.inProgressTickets', 'In Progress')
         };
       case "resolved":
         return {
@@ -311,7 +311,7 @@ const TicketsPage = () => {
           borderColor: "border-green-200 dark:border-green-800",
           textColor: "text-green-700 dark:text-green-300",
           icon: "✅",
-          name: "Resolved"
+          name: t('navigation.resolvedTickets', 'Resolved')
         };
       case "closed":
         return {
@@ -320,7 +320,7 @@ const TicketsPage = () => {
           borderColor: "border-gray-200 dark:border-gray-800",
           textColor: "text-gray-700 dark:text-gray-300",
           icon: "🔒",
-          name: "Closed"
+          name: t('navigation.closedTickets', 'Closed')
         };
       case "all":
         return {
@@ -338,7 +338,7 @@ const TicketsPage = () => {
           borderColor: "border-blue-200 dark:border-blue-800",
           textColor: "text-blue-700 dark:text-blue-300",
           icon: "🎫",
-          name: "My Tickets"
+          name: t('navigation.myTickets', 'My Tickets')
         };
     }
   };
@@ -412,10 +412,10 @@ const TicketsPage = () => {
                   {getPageTitle()}
                 </h1>
                 <p className={cn("text-xs md:text-sm", theme.textColor)}>
-                  {status === "open" && "Tickets waiting for assignment and initial response"}
-                  {status === "in-progress" && "Tickets currently being worked on by agents"}
-                  {status === "resolved" && "Tickets marked as resolved, awaiting closure"}
-                  {status === "closed" && "Completed tickets that have been closed"}
+                  {status === "open" && t('tickets.openTicketsDescription', 'Tickets waiting for assignment and initial response')}
+                  {status === "in-progress" && t('tickets.inProgressDescription', 'Tickets currently being worked on by agents')}
+                  {status === "resolved" && t('tickets.resolvedDescription', 'Tickets marked as resolved, awaiting closure')}
+                  {status === "closed" && t('tickets.closedDescription', 'Completed tickets that have been closed')}
                   {status === "all" && "All unassigned tickets requiring attention"}
                   {!status && "Your personal tickets and requests"}
                 </p>

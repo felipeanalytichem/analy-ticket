@@ -82,14 +82,7 @@ export class DiagnosticManager {
       check: this.checkSessionRecoveryState.bind(this)
     });
 
-    this.registerCheck({
-      id: 'session-timeout-config',
-      name: 'Session Timeout Configuration',
-      description: 'Validates session timeout settings and behavior',
-      category: 'session',
-      severity: 'medium',
-      check: this.checkSessionTimeoutConfig.bind(this)
-    });
+
 
     // Database checks
     this.registerCheck({
@@ -581,59 +574,7 @@ export class DiagnosticManager {
     }
   }
 
-  private async checkSessionTimeoutConfig(): Promise<DiagnosticResult> {
-    try {
-      // Check session timeout configuration
-      const timeoutConfig = localStorage.getItem('session-timeout-config');
-      
-      if (!timeoutConfig) {
-        return {
-          id: 'session-timeout-config',
-          name: 'Session Timeout Configuration',
-          status: 'warning',
-          message: 'No session timeout configuration found',
-          timestamp: new Date(),
-          recommendations: [
-            'Session timeout will use default values'
-          ]
-        };
-      }
 
-      const config = JSON.parse(timeoutConfig);
-      const hasValidConfig = config.timeout && config.warningTime;
-
-      if (!hasValidConfig) {
-        return {
-          id: 'session-timeout-config',
-          name: 'Session Timeout Configuration',
-          status: 'warning',
-          message: 'Invalid session timeout configuration',
-          details: config,
-          timestamp: new Date(),
-          recommendations: [
-            'Reset session timeout configuration'
-          ]
-        };
-      }
-
-      return {
-        id: 'session-timeout-config',
-        name: 'Session Timeout Configuration',
-        status: 'pass',
-        message: 'Session timeout configuration valid',
-        details: config,
-        timestamp: new Date()
-      };
-    } catch (error) {
-      return {
-        id: 'session-timeout-config',
-        name: 'Session Timeout Configuration',
-        status: 'fail',
-        message: `Timeout config check failed: ${error}`,
-        timestamp: new Date()
-      };
-    }
-  }
 
   private async checkDatabaseConnectionHealth(): Promise<DiagnosticResult> {
     try {

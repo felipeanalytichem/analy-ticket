@@ -1,161 +1,228 @@
-import { useEffect, useState } from 'react';
-import { supabase, isSessionReadyForRealtime } from '@/lib/supabase';
-import { useAuth } from '@/contexts/AuthContext';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Wifi, WifiOff, RefreshCw } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
+import { Wifi, WifiOff, AlertTriangle, RefreshCw, RotateCcw } from 'lucide-react';
 
-export const ConnectionMonitor = () => {
-  const { user, session } = useAuth();
-  const [showConnectionIssue, setShowConnectionIssue] = useState(false);
-  const [reconnecting, setReconnecting] = useState(false);
-  const [consecutiveFailures, setConsecutiveFailures] = useState(0);
+interface ConnectionStatus {
+  isOnline: boolean;
+  supabaseConnected: boolean;
+  lastCheck: Date;
+  isChecking: boolean;
+}
 
-  useEffect(() => {
-    if (!user || !session) {
-      setShowConnectionIssue(false);
-      return;
-    }
+export function ConnectionMonitor() {
+  const { user } = useAuth();
+  const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>({
+    isOnline: navigator.onLine,
+    supabaseConnected: false,
+    lastCheck: new Date(),
+    isChecking: false
+  });
+  const [showDetails, setShowDetails] = useState(false);
 
-    // Wait for auth to be fully established before monitoring
-    const monitoringDelay = setTimeout(() => {
-      const monitorConnection = async () => {
-        try {
-          // Check if session is ready for realtime
-          const sessionReady = await isSessionReadyForRealtime();
-          
-          if (!sessionReady) {
-            setConsecutiveFailures(prev => prev + 1);
-          } else {
-            // Check if realtime is actually connected
-            const isConnected = supabase.realtime.isConnected();
-            
-            if (!isConnected) {
-              setConsecutiveFailures(prev => prev + 1);
-            } else {
-              setConsecutiveFailures(0);
-              setShowConnectionIssue(false);
-            }
-          }
-
-          // Only show connection issue after 3 consecutive failures
-          if (consecutiveFailures >= 3) {
-            console.log('❌ Multiple connection failures detected, showing reconnect option');
-            setShowConnectionIssue(true);
-          }
-          
-        } catch (error) {
-          console.error('Error monitoring connection:', error);
-          setConsecutiveFailures(prev => prev + 1);
-        }
-      };
-
-      // Check connection status every 45 seconds (less frequent)
-      const connectionInterval = setInterval(monitorConnection, 45000);
-      
-      // Initial check after delay
-      setTimeout(monitorConnection, 10000); // Wait 10 seconds for initial check
-
-      return () => {
-        clearInterval(connectionInterval);
-      };
-    }, 8000); // Wait 8 seconds after auth is ready
-
-    return () => {
-      clearTimeout(monitoringDelay);
-    };
-  }, [user, session, consecutiveFailures]);
-
-  const handleReconnect = async () => {
-    setReconnecting(true);
-    setShowConnectionIssue(false);
-    setConsecutiveFailures(0);
+  // Check Supabase connection
+  const checkSupabaseConnection = useCallback(async (): Promise<boolean> => {
+    if (!user) return false;
     
     try {
-      console.log('🔄 Attempting to reconnect real-time connection...');
+      const { error } = await supabase
+        .from('users')
+        .select('id')
+        .eq('id', user.id)
+        .single();
       
-      // First check if session is ready
-      const sessionReady = await isSessionReadyForRealtime();
-      
-      if (!sessionReady) {
-        console.log('❌ Session not ready for reconnection');
-        setShowConnectionIssue(true);
-        return;
-      }
-      
-      // Disconnect and reconnect
-      supabase.realtime.disconnect();
-      
-      setTimeout(() => {
-        supabase.realtime.connect();
-        
-        // Check if reconnection was successful
-        setTimeout(() => {
-          const isConnected = supabase.realtime.isConnected();
-          if (!isConnected) {
-            console.log('❌ Reconnection failed');
-            setShowConnectionIssue(true);
-          } else {
-            console.log('✅ Reconnection successful');
-          }
-          setReconnecting(false);
-        }, 5000);
-      }, 1000);
-      
+      return !error;
     } catch (error) {
-      console.error('❌ Error during reconnection:', error);
-      setReconnecting(false);
-      setShowConnectionIssue(true);
+      console.warn('Supabase connection check failed:', error);
+      return false;
     }
-  };
+  }, [user]);
 
-  // Don't show for non-authenticated users or if session is not ready
-  if (!user || !session) return null;
+  // Perform full connection check
+  const performConnectionCheck = useCallback(async () => {
+    setConnectionStatus(prev => ({ ...prev, isChecking: true }));
+    
+    const isOnline = navigator.onLine;
+    const supabaseConnected = await checkSupabaseConnection();
+    
+    setConnectionStatus({
+      isOnline,
+      supabaseConnected,
+      lastCheck: new Date(),
+      isChecking: false
+    });
 
-  // Only show if there are confirmed connection issues
-  if (!showConnectionIssue) return null;
+    return { isOnline, supabaseConnected };
+  }, [checkSupabaseConnection]);
+
+  // Manual reconnection attempt
+  const handleReconnect = useCallback(async () => {
+    toast.info('Checking connection...', {
+      description: 'Testing network and database connectivity'
+    });
+
+    const { isOnline, supabaseConnected } = await performConnectionCheck();
+
+    if (isOnline && supabaseConnected) {
+      toast.success('Connection Restored', {
+        description: 'Your connection is working properly'
+      });
+    } else {
+      toast.error('Connection Issues', {
+        description: !isOnline 
+          ? 'No internet connection detected'
+          : 'Database connection failed - please try again'
+      });
+    }
+  }, [performConnectionCheck]);
+
+  // Force page refresh
+  const handleRefreshPage = useCallback(() => {
+    window.location.reload();
+  }, []);
+
+  // Set up connection monitoring
+  useEffect(() => {
+    if (!user) return;
+
+    // Initial check
+    performConnectionCheck();
+
+    // Set up periodic checks
+    const interval = setInterval(performConnectionCheck, 30000); // Every 30 seconds
+
+    // Listen for online/offline events
+    const handleOnline = () => {
+      setConnectionStatus(prev => ({ ...prev, isOnline: true }));
+      performConnectionCheck();
+    };
+
+    const handleOffline = () => {
+      setConnectionStatus(prev => ({ ...prev, isOnline: false, supabaseConnected: false }));
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, [user, performConnectionCheck]);
+
+  // Don't show for non-authenticated users
+  if (!user) return null;
+
+  // Determine overall connection health
+  const isHealthy = connectionStatus.isOnline && connectionStatus.supabaseConnected;
+  const hasIssues = !connectionStatus.isOnline || !connectionStatus.supabaseConnected;
+
+  // Only show the monitor if there are issues or user wants to see details
+  if (!hasIssues && !showDetails) {
+    return (
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => setShowDetails(true)}
+        className="fixed bottom-4 left-4 z-50 opacity-50 hover:opacity-100"
+      >
+        <Wifi className="h-4 w-4 text-green-500" />
+      </Button>
+    );
+  }
 
   return (
-    <Alert className="mb-4 border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-950">
-      <div className="flex items-center gap-2">
-        <WifiOff className="h-4 w-4 text-red-600" />
-        <AlertDescription className="flex-1">
-          <span className="text-red-700 dark:text-red-300">
-            ⚠️ Conexão em tempo real perdida. Você pode não receber notificações instantâneas.
-          </span>
-        </AlertDescription>
-        
-        <div className="flex gap-2">
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={handleReconnect}
-            disabled={reconnecting}
-            className="border-yellow-300 hover:bg-yellow-100 dark:border-yellow-700 dark:hover:bg-yellow-900"
-          >
-            {reconnecting ? (
-              <>
-                <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
-                Reconectando...
-              </>
+    <Card className="fixed bottom-4 left-4 z-50 w-80 shadow-lg border">
+      <CardContent className="p-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            {isHealthy ? (
+              <Wifi className="h-4 w-4 text-green-500" />
             ) : (
-              <>
-                <RefreshCw className="h-3 w-3 mr-1" />
-                Reconectar
-              </>
+              <WifiOff className="h-4 w-4 text-red-500" />
             )}
-          </Button>
-          
+            <span className="font-medium text-sm">Connection Status</span>
+          </div>
           <Button
+            variant="ghost"
             size="sm"
-            variant="outline"
-            onClick={() => window.location.reload()}
-            className="border-yellow-300 hover:bg-yellow-100 dark:border-yellow-700 dark:hover:bg-yellow-900"
+            onClick={() => setShowDetails(!showDetails)}
           >
-            Atualizar Página
+            {showDetails ? '−' : '+'}
           </Button>
         </div>
-      </div>
-    </Alert>
+
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-muted-foreground">Internet</span>
+            <Badge variant={connectionStatus.isOnline ? "default" : "destructive"}>
+              {connectionStatus.isOnline ? 'Connected' : 'Offline'}
+            </Badge>
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-muted-foreground">Database</span>
+            <Badge variant={connectionStatus.supabaseConnected ? "default" : "destructive"}>
+              {connectionStatus.supabaseConnected ? 'Connected' : 'Disconnected'}
+            </Badge>
+          </div>
+          
+          {showDetails && (
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">Last Check</span>
+              <span className="text-xs text-muted-foreground">
+                {connectionStatus.lastCheck.toLocaleTimeString()}
+              </span>
+            </div>
+          )}
+        </div>
+
+        {hasIssues && (
+          <div className="space-y-2 pt-2 border-t">
+            <div className="flex items-start gap-2">
+              <AlertTriangle className="h-4 w-4 text-amber-500 mt-0.5" />
+              <div className="text-sm text-muted-foreground">
+                {!connectionStatus.isOnline 
+                  ? 'No internet connection. Check your network settings.'
+                  : 'Database connection lost. This may cause the app to show blank pages.'
+                }
+              </div>
+            </div>
+            
+            <div className="flex gap-2">
+              <Button 
+                size="sm" 
+                variant="outline" 
+                onClick={handleReconnect}
+                disabled={connectionStatus.isChecking}
+                className="flex-1"
+              >
+                {connectionStatus.isChecking ? (
+                  <RefreshCw className="h-3 w-3 animate-spin mr-1" />
+                ) : (
+                  <RefreshCw className="h-3 w-3 mr-1" />
+                )}
+                Reconnect
+              </Button>
+              
+              <Button 
+                size="sm" 
+                variant="outline" 
+                onClick={handleRefreshPage}
+                className="flex-1"
+              >
+                <RotateCcw className="h-3 w-3 mr-1" />
+                Refresh Page
+              </Button>
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
-};
+}

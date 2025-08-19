@@ -254,8 +254,8 @@ export const AssignmentRulesManager = () => {
     } catch (error) {
       console.error('Error loading categories:', error);
       toast({
-        title: "Error",
-        description: "Failed to load categories",
+        title: t('common.error'),
+        description: t('admin.assignmentRules.errorLoadingCategories', 'Failed to load categories'),
         variant: "destructive",
       });
     }
@@ -281,8 +281,8 @@ export const AssignmentRulesManager = () => {
         if (error) throw error;
 
         toast({
-          title: "Rule updated",
-          description: "Assignment rule has been updated successfully",
+          title: t('admin.assignmentRules.ruleUpdated'),
+          description: t('admin.assignmentRules.ruleUpdatedDesc'),
         });
       } else {
         // Create new rule
@@ -302,8 +302,8 @@ export const AssignmentRulesManager = () => {
         if (error) throw error;
 
         toast({
-          title: "Rule created",
-          description: "New assignment rule has been created successfully",
+          title: t('admin.assignmentRules.ruleCreated'),
+          description: t('admin.assignmentRules.ruleCreatedDesc'),
         });
       }
       
@@ -314,8 +314,8 @@ export const AssignmentRulesManager = () => {
     } catch (error) {
       console.error('Error saving rule:', error);
       toast({
-        title: "Error saving rule",
-        description: "Failed to save assignment rule",
+        title: t('admin.assignmentRules.errorSavingRule'),
+        description: t('admin.assignmentRules.errorSavingRuleDesc'),
         variant: "destructive",
       });
     }
@@ -334,14 +334,14 @@ export const AssignmentRulesManager = () => {
       setRules(prev => prev.filter(r => r.id !== ruleId));
       
       toast({
-        title: "Rule deleted",
-        description: "Assignment rule has been deleted successfully",
+        title: t('admin.assignmentRules.ruleDeleted'),
+        description: t('admin.assignmentRules.ruleDeletedDesc'),
       });
     } catch (error) {
       console.error('Error deleting rule:', error);
       toast({
-        title: "Error deleting rule",
-        description: "Failed to delete assignment rule",
+        title: t('admin.assignmentRules.errorDeletingRule'),
+        description: t('admin.assignmentRules.errorDeletingRuleDesc'),
         variant: "destructive",
       });
     }
@@ -367,14 +367,14 @@ export const AssignmentRulesManager = () => {
       ));
       
       toast({
-        title: enabled ? "Rule enabled" : "Rule disabled",
-        description: `Assignment rule has been ${enabled ? 'enabled' : 'disabled'}`,
+        title: enabled ? t('admin.assignmentRules.ruleEnabled') : t('admin.assignmentRules.ruleDisabled'),
+        description: t('admin.assignmentRules.ruleToggleDesc', 'Assignment rule has been {{status}}', { status: enabled ? t('admin.assignmentRules.enabled') : t('admin.assignmentRules.disabled') }),
       });
     } catch (error) {
       console.error('Error toggling rule:', error);
       toast({
-        title: "Error updating rule",
-        description: "Failed to update rule status",
+        title: t('admin.assignmentRules.errorUpdatingRule'),
+        description: t('admin.assignmentRules.errorUpdatingRuleDesc'),
         variant: "destructive",
       });
     }
@@ -402,15 +402,15 @@ export const AssignmentRulesManager = () => {
       setConfig(newConfig);
       
       toast({
-        title: "Configuration saved",
-        description: "Assignment configuration has been updated successfully",
+        title: t('admin.assignmentRules.configurationSaved'),
+        description: t('admin.assignmentRules.configurationSavedDesc'),
       });
       setIsConfigDialogOpen(false);
     } catch (error) {
       console.error('Error saving configuration:', error);
       toast({
-        title: "Error saving configuration",
-        description: "Failed to save assignment configuration",
+        title: t('admin.assignmentRules.errorSavingConfiguration'),
+        description: t('admin.assignmentRules.errorSavingConfigurationDesc'),
         variant: "destructive",
       });
     }
@@ -458,8 +458,8 @@ export const AssignmentRulesManager = () => {
       } catch (error) {
         console.error('Error updating rule priorities:', error);
         toast({
-          title: "Error",
-          description: "Failed to update rule priorities",
+          title: t('common.error'),
+          description: t('admin.assignmentRules.errorUpdatingPriorities'),
           variant: "destructive",
         });
       }
@@ -471,7 +471,7 @@ export const AssignmentRulesManager = () => {
       <Alert variant="destructive">
         <AlertCircle className="h-4 w-4" />
         <AlertDescription>
-          Access denied. This feature is only available to administrators.
+          {t('admin.assignmentRules.accessDeniedFeature', 'Access denied. This feature is only available to administrators.')}
         </AlertDescription>
       </Alert>
     );
@@ -821,6 +821,7 @@ interface RuleDialogProps {
 }
 
 const RuleDialog = ({ open, onOpenChange, rule, onSave, agents, categories }: RuleDialogProps) => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState<Partial<AssignmentRule>>({
     name: '',
     description: '',
@@ -853,7 +854,7 @@ const RuleDialog = ({ open, onOpenChange, rule, onSave, agents, categories }: Ru
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {rule ? 'Edit Assignment Rule' : 'Create Assignment Rule'}
+            {rule ? t('admin.assignmentRules.editAssignmentRule', 'Edit Assignment Rule') : t('admin.assignmentRules.createAssignmentRule', 'Create Assignment Rule')}
           </DialogTitle>
         </DialogHeader>
 
@@ -865,7 +866,7 @@ const RuleDialog = ({ open, onOpenChange, rule, onSave, agents, categories }: Ru
                 id="name"
                 value={formData.name || ''}
                 onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                placeholder="Enter rule name"
+                placeholder={t('admin.assignmentRules.enterRuleName', 'Enter rule name')}
                 required
               />
             </div>
@@ -885,7 +886,7 @@ const RuleDialog = ({ open, onOpenChange, rule, onSave, agents, categories }: Ru
               id="description"
               value={formData.description || ''}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-              placeholder="Describe what this rule does"
+              placeholder={t('admin.assignmentRules.describeRule', 'Describe what this rule does')}
             />
           </div>
 
@@ -948,7 +949,7 @@ const RuleDialog = ({ open, onOpenChange, rule, onSave, agents, categories }: Ru
                 }))}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select agent (optional)" />
+                  <SelectValue placeholder={t('admin.assignmentRules.selectAgentOptional', 'Select agent (optional)')} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="none">No specific agent</SelectItem>
@@ -994,7 +995,7 @@ const RuleDialog = ({ open, onOpenChange, rule, onSave, agents, categories }: Ru
             </Button>
             <Button type="submit">
               <Save className="h-4 w-4 mr-2" />
-              {rule ? 'Update Rule' : 'Create Rule'}
+              {rule ? t('admin.assignmentRules.updateRule', 'Update Rule') : t('admin.assignmentRules.createRule', 'Create Rule')}
             </Button>
           </DialogFooter>
         </form>
@@ -1012,6 +1013,7 @@ interface ConfigurationDialogProps {
 }
 
 const ConfigurationDialog = ({ open, onOpenChange, config, onSave }: ConfigurationDialogProps) => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState<AssignmentConfig>(config);
 
   useEffect(() => {
@@ -1169,14 +1171,14 @@ const ConfigurationDialog = ({ open, onOpenChange, config, onSave }: Configurati
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="UTC">UTC</SelectItem>
-                    <SelectItem value="America/New_York">Eastern Time</SelectItem>
-                    <SelectItem value="America/Chicago">Central Time</SelectItem>
-                    <SelectItem value="America/Denver">Mountain Time</SelectItem>
-                    <SelectItem value="America/Los_Angeles">Pacific Time</SelectItem>
-                    <SelectItem value="Europe/London">London</SelectItem>
-                    <SelectItem value="Europe/Paris">Paris</SelectItem>
-                    <SelectItem value="Asia/Tokyo">Tokyo</SelectItem>
+                    <SelectItem value="UTC">{t('admin.assignmentRules.utc', 'UTC')}</SelectItem>
+                    <SelectItem value="America/New_York">{t('admin.assignmentRules.easternTime', 'Eastern Time')}</SelectItem>
+                    <SelectItem value="America/Chicago">{t('admin.assignmentRules.centralTime', 'Central Time')}</SelectItem>
+                    <SelectItem value="America/Denver">{t('admin.assignmentRules.mountainTime', 'Mountain Time')}</SelectItem>
+                    <SelectItem value="America/Los_Angeles">{t('admin.assignmentRules.pacificTime', 'Pacific Time')}</SelectItem>
+                    <SelectItem value="Europe/London">{t('admin.assignmentRules.london', 'London')}</SelectItem>
+                    <SelectItem value="Europe/Paris">{t('admin.assignmentRules.paris', 'Paris')}</SelectItem>
+                    <SelectItem value="Asia/Tokyo">{t('admin.assignmentRules.tokyo', 'Tokyo')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

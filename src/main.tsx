@@ -5,22 +5,36 @@ import App from './App.tsx'
 import './index.css'
 import './i18n'
 import './lib/scheduledTasks' // Import scheduled tasks to auto-start them
+import './utils/clearSupabaseState' // Auto-fix for _acquireLock errors
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 // Expose DatabaseService globally for debugging
 declare global {
   interface Window {
     DatabaseService: typeof DatabaseService;
+    clearSupabaseState: () => void;
+    refreshSession: () => Promise<boolean>;
+    getSessionStatus: () => any;
   }
 }
 
 window.DatabaseService = DatabaseService;
 
+// Expose utility functions globally for debugging/emergency use
+import { clearSupabaseState } from './utils/clearSupabaseState';
+import { sessionPersistence } from './services/SessionPersistenceService';
+
+window.clearSupabaseState = clearSupabaseState;
+window.refreshSession = () => sessionPersistence.forceRefresh();
+window.getSessionStatus = () => sessionPersistence.getStatus();
+
 // Force English language setting - PRESERVE AUTH TOKENS AND THEME
 // Save important data before any clearing
 const savedAuthToken = localStorage.getItem('sb-plbmgjqitlxedsmdqpld-auth-token');
 const savedCodeVerifier = localStorage.getItem('sb-plbmgjqitlxedsmdqpld-auth-token-code-verifier');
+const savedPersistentToken = localStorage.getItem('sb-persistent-auth-token');
 const savedTheme = localStorage.getItem('vite-ui-theme'); // Preserve theme setting
+const savedSessionPersist = localStorage.getItem('session-should-persist');
 
 // Clear localStorage but preserve auth tokens and theme
 localStorage.clear();
@@ -32,6 +46,12 @@ if (savedAuthToken) {
 }
 if (savedCodeVerifier) {
   localStorage.setItem('sb-plbmgjqitlxedsmdqpld-auth-token-code-verifier', savedCodeVerifier);
+}
+if (savedPersistentToken) {
+  localStorage.setItem('sb-persistent-auth-token', savedPersistentToken);
+}
+if (savedSessionPersist) {
+  localStorage.setItem('session-should-persist', savedSessionPersist);
 }
 
 // Restore theme preference if it existed
@@ -84,8 +104,28 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
-      retry: 1,
-      staleTime: 1000 * 60, // 1 min
+      retry: (failureCount, error: any) => {
+        // Don't retry on auth errors, let session recovery handle it
+        if (error?.status === 401 || error?.code === 'PGRST301' || error?.message?.includes('JWT')) {
+          return false;
+        }
+        // Retry up to 2 times for other errors
+        return failureCount < 2;
+      },
+      retryDelay: (attemptIndex) => Math.min(1000 * Math.pow(2, attemptIndex), 10000),
+      staleTime: 5 * 60 * 1000, // 5 minutes - longer to reduce pressure during idle periods
+      gcTime: 10 * 60 * 1000, // 10 minutes - keep data longer for better UX during reconnection
+      refetchOnReconnect: true, // Refetch when network reconnects
+      refetchOnMount: false, // Don't always refetch on mount to use cached data during recovery
+    },
+    mutations: {
+      retry: (failureCount, error: any) => {
+        // Don't retry mutations on auth errors
+        if (error?.status === 401 || error?.code === 'PGRST301') {
+          return false;
+        }
+        return failureCount < 1; // Only retry mutations once
+      },
     },
   },
 });

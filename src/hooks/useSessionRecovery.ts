@@ -191,8 +191,8 @@ export function useSessionRecovery() {
       }
     };
 
-    // Run health check every 5 minutes
-    const interval = setInterval(healthCheck, 5 * 60 * 1000);
+    // Run health check every 10 minutes - less aggressive to avoid unnecessary requests
+    const interval = setInterval(healthCheck, 10 * 60 * 1000);
 
     return () => {
       clearInterval(interval);

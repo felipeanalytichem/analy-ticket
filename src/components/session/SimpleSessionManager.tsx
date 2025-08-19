@@ -1,26 +1,27 @@
 import React from 'react';
 import { ErrorNotificationProvider } from '@/components/error/ErrorNotificationSystem';
 import { ErrorBoundary } from '@/components/error/ErrorBoundary';
-import { SessionTimeoutManager } from '@/components/auth/SessionTimeoutManager';
 import { SessionRecoveryProvider } from './SessionRecoveryProvider';
+import { ConnectionMonitor } from '@/components/auth/ConnectionMonitor';
+import { PersistentSessionManager } from './PersistentSessionManager';
 
 interface SimpleSessionManagerProps {
   children: React.ReactNode;
 }
 
 /**
- * A simplified session manager that provides error boundaries, notifications,
- * and session recovery without the complex connection monitoring that was causing issues.
- * This addresses the blank page issue by automatically recovering from session errors.
+ * Session manager that provides persistent sessions, error boundaries, notifications,
+ * and session recovery. Sessions remain active until user explicitly logs out.
  */
 export function SimpleSessionManager({ children }: SimpleSessionManagerProps) {
   return (
     <ErrorBoundary level="critical" showDetails={process.env.NODE_ENV === 'development'}>
       <ErrorNotificationProvider>
         <SessionRecoveryProvider>
-          <SessionTimeoutManager>
+          <PersistentSessionManager>
             {children}
-          </SessionTimeoutManager>
+            <ConnectionMonitor />
+          </PersistentSessionManager>
         </SessionRecoveryProvider>
       </ErrorNotificationProvider>
     </ErrorBoundary>

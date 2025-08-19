@@ -413,6 +413,39 @@ export function TaskManagement({ ticketId, canManageTasks }: TaskManagementProps
                 <div className="text-xs text-gray-500">Overdue</div>
               </div>
             </div>
+
+            {/* Task Assignment Summary */}
+            {(() => {
+              const myTasks = tasks.filter(t => t.assignee?.id === userProfile?.id);
+              const collaborativeTasks = tasks.filter(t => t.assignee && t.assignee.id !== userProfile?.id);
+              const unassignedTasks = tasks.filter(t => !t.assignee);
+              
+              return (myTasks.length > 0 || collaborativeTasks.length > 0 || unassignedTasks.length > 0) && (
+                <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Task Assignment:</div>
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    {myTasks.length > 0 && (
+                      <div className="flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded">
+                        <User className="h-3 w-3" />
+                        <span>{myTasks.length} assigned to me</span>
+                      </div>
+                    )}
+                    {collaborativeTasks.length > 0 && (
+                      <div className="flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 rounded">
+                        <Users className="h-3 w-3" />
+                        <span>{collaborativeTasks.length} collaborative</span>
+                      </div>
+                    )}
+                    {unassignedTasks.length > 0 && (
+                      <div className="flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 rounded">
+                        <AlertCircle className="h-3 w-3" />
+                        <span>{unassignedTasks.length} unassigned</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         )}
       </CardHeader>
@@ -478,9 +511,23 @@ export function TaskManagement({ ticketId, canManageTasks }: TaskManagementProps
                           </Badge>
                           
                           {task.assignee && (
-                            <div className="flex items-center gap-1 text-gray-500">
+                            <div className={cn(
+                              "flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium",
+                              task.assignee.id === userProfile?.id
+                                ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                                : "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200"
+                            )}>
                               <User className="h-3 w-3" />
-                              <span>{task.assignee.name}</span>
+                              <span>
+                                {task.assignee.id === userProfile?.id ? "Assigned to me" : `Assigned to ${task.assignee.name}`}
+                              </span>
+                            </div>
+                          )}
+                          
+                          {!task.assignee && (
+                            <div className="flex items-center gap-1 text-gray-500 text-xs">
+                              <Users className="h-3 w-3" />
+                              <span>Unassigned</span>
                             </div>
                           )}
                           

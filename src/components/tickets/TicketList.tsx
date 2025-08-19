@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,8 +11,7 @@ import { TicketDialog } from "./dialogs/TicketDialog";
 import { TicketResolutionDialog } from "./dialogs/TicketResolutionDialog";
 import { TicketClosureDialog } from "./dialogs/TicketClosureDialog";
 import { TicketReopenDialog } from "./dialogs/TicketReopenDialog";
-import { TicketDetailsDialog } from "./dialogs/TicketDetailsDialog";
-import { QuickAssignDialog } from "./dialogs/QuickAssignDialog";
+
 import { FeedbackViewDialog } from "./FeedbackViewDialog";
 import { Search, Filter, Calendar, User, AlertCircle, Clock, CheckCircle, XCircle, Edit, Eye, MoreHorizontal, RotateCcw, UserCheck, Star, ChevronDown, Plus, RefreshCw, AlertTriangle, MessageSquare, Loader2 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -33,6 +33,7 @@ interface TicketListProps {
 }
 
 export const TicketList = ({ limit, showAll = true, assignedOnly = false, unassignedOnly = false, statusFilter, showAllAgentTickets = false, customTickets }: TicketListProps) => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [localStatusFilter, setLocalStatusFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
@@ -41,8 +42,6 @@ export const TicketList = ({ limit, showAll = true, assignedOnly = false, unassi
   const [isResolutionDialogOpen, setIsResolutionDialogOpen] = useState(false);
   const [isClosureDialogOpen, setIsClosureDialogOpen] = useState(false);
   const [isReopenDialogOpen, setIsReopenDialogOpen] = useState(false);
-  const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
-  const [isQuickAssignDialogOpen, setIsQuickAssignDialogOpen] = useState(false);
   const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState(false);
   const [tickets, setTickets] = useState<TicketWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
@@ -208,13 +207,11 @@ export const TicketList = ({ limit, showAll = true, assignedOnly = false, unassi
   };
 
   const handleViewTicketDetails = (ticket: TicketWithDetails) => {
-    setSelectedTicket(ticket);
-    setIsDetailsDialogOpen(true);
+    navigate(`/ticket/${ticket.id}`);
   };
 
   const handleQuickAssign = (ticket: TicketWithDetails) => {
-    setSelectedTicket(ticket);
-    setIsQuickAssignDialogOpen(true);
+    navigate(`/ticket/${ticket.id}`);
   };
 
   const handleViewFeedback = (ticket: TicketWithDetails) => {
@@ -630,17 +627,7 @@ export const TicketList = ({ limit, showAll = true, assignedOnly = false, unassi
             ticket={selectedTicket}
             onSuccess={reloadTickets}
           />
-          <TicketDetailsDialog
-            open={isDetailsDialogOpen}
-            onOpenChange={setIsDetailsDialogOpen}
-            ticket={selectedTicket}
-          />
-          <QuickAssignDialog
-            open={isQuickAssignDialogOpen}
-            onOpenChange={setIsQuickAssignDialogOpen}
-            ticket={selectedTicket}
-            onAssigned={reloadTickets}
-          />
+
           <FeedbackViewDialog
             open={isFeedbackDialogOpen}
             onOpenChange={setIsFeedbackDialogOpen}

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +25,7 @@ import {
 } from "lucide-react";
 import { DatabaseService, TicketWithDetails } from "@/lib/database";
 import { useAuth } from "@/contexts/AuthContext";
-import { AgentResponseInterface } from "@/components/tickets/AgentResponseInterface";
+// AgentResponseInterface removed - using navigation to UnifiedTicketDetail instead
 import { AgentNotifications } from "@/components/tickets/AgentNotifications";
 import { SLAMonitor } from "@/components/tickets/SLAMonitor";
 import { useToast } from "@/hooks/use-toast";
@@ -40,7 +41,8 @@ interface AgentStats {
 }
 
 export const AgentDashboard = () => {
-  const [selectedTicket, setSelectedTicket] = useState<TicketWithDetails | null>(null);
+  const navigate = useNavigate();
+  // selectedTicket state removed - using navigation to UnifiedTicketDetail instead
   const [tickets, setTickets] = useState<TicketWithDetails[]>([]);
   const [filteredTickets, setFilteredTickets] = useState<TicketWithDetails[]>([]);
   const [stats, setStats] = useState<AgentStats>({
@@ -140,19 +142,19 @@ export const AgentDashboard = () => {
     } else if (activeTab === "closed") {
       filtered = filtered.filter(t => t.status === 'closed');
     } else if (activeTab === "all") {
-      // Na aba "Todos", mostrar todos os tickets relevantes para o agente
-      // Incluir: tickets atribuídos ao agente + tickets não atribuídos (exceto fechados por padrão)
+      // In the "All" tab, show all tickets relevant to the agent
+      // Include: tickets assigned to the agent + unassigned tickets (except closed by default)
       filtered = filtered.filter(t => {
         const isAssignedToAgent = t.assigned_to === userProfile?.id;
         const isUnassigned = !t.assigned_to;
         const isNotClosed = t.status !== 'closed';
         
-        // Para a aba "All", mostrar tickets atribuídos ao agente ou não atribuídos
-        // E aplicar filtro de status apenas se especificamente selecionado no dropdown
+        // For the "All" tab, show tickets assigned to the agent or unassigned
+        // And apply status filter only if specifically selected in the dropdown
         if (statusFilter === "all") {
           return (isAssignedToAgent || isUnassigned) && isNotClosed && t.status !== 'resolved';
         } else {
-          // Se há um filtro de status específico, aplicá-lo
+          // If there's a specific status filter, apply it
           return (isAssignedToAgent || isUnassigned) && t.status === statusFilter;
         }
       });
@@ -202,7 +204,7 @@ export const AgentDashboard = () => {
   }, [tickets, activeTab, statusFilter, priorityFilter, searchTerm, filterTickets]);
 
   const handleTicketSelect = (ticket: TicketWithDetails) => {
-    setSelectedTicket(ticket);
+    navigate(`/ticket/${ticket.id}`);
   };
 
   const handleTicketUpdate = () => {
@@ -271,15 +273,7 @@ export const AgentDashboard = () => {
     );
   }
 
-  if (selectedTicket) {
-    return (
-      <AgentResponseInterface
-        ticket={selectedTicket}
-        onTicketUpdate={handleTicketUpdate}
-        onClose={() => setSelectedTicket(null)}
-      />
-    );
-  }
+  // selectedTicket conditional removed - now using navigation to UnifiedTicketDetail
 
   return (
     <div className="max-w-7xl mx-auto p-4 md:p-6 space-y-4 md:space-y-6">

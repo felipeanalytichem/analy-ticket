@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import SubcategoriesSection from './SubcategoriesSection';
 import { SafeTranslation } from '@/components/ui/SafeTranslation';
+import { useTranslation } from 'react-i18next';
 
 // Enhanced types for the new features
 interface CategoryWithSubcategories extends Category {
@@ -33,6 +34,7 @@ interface CategoryWithSubcategories extends Category {
 }
 
 export const CategoryManagement = () => {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const [categories, setCategories] = useState<CategoryWithSubcategories[]>([]);
 
@@ -81,8 +83,8 @@ export const CategoryManagement = () => {
     const handleOnline = () => {
       setIsOnline(true);
       toast({
-        title: "Connection Restored",
-        description: "You're back online. Changes will be saved automatically.",
+        title: t('admin.categoryManagement.connectionRestored'),
+        description: t('admin.categoryManagement.connectionRestoredDesc'),
         duration: 3000,
       });
     };
@@ -90,8 +92,8 @@ export const CategoryManagement = () => {
     const handleOffline = () => {
       setIsOnline(false);
       toast({
-        title: "Connection Lost",
-        description: "You're offline. Changes will be saved when connection is restored.",
+        title: t('admin.categoryManagement.connectionLost'),
+        description: t('admin.categoryManagement.connectionLostDesc'),
         variant: "destructive",
         duration: 5000,
       });
@@ -237,8 +239,8 @@ export const CategoryManagement = () => {
       // Check network connectivity
       if (!isOnline) {
         toast({
-          title: "No Internet Connection",
-          description: "Please check your internet connection and try again.",
+          title: t('admin.categoryManagement.noInternetConnection'),
+          description: t('admin.categoryManagement.checkConnection'),
           variant: "destructive",
         });
         return null;
@@ -247,7 +249,7 @@ export const CategoryManagement = () => {
       const result = await operation();
 
       toast({
-        title: "Success",
+        title: t('admin.categoryManagement.success'),
         description: successMessage,
       });
 
@@ -264,22 +266,22 @@ export const CategoryManagement = () => {
       // Handle specific error types
       if (error instanceof Error) {
         if (error.message.includes('not found')) {
-          errorDescription = "The requested item was not found. It may have been deleted.";
+          errorDescription = t('admin.categoryManagement.itemNotFound');
         } else if (error.message.includes('network') || error.message.includes('fetch')) {
-          errorDescription = "Network error occurred. Please check your connection and try again.";
+          errorDescription = t('admin.categoryManagement.networkError');
         } else if (error.message.includes('validation')) {
-          errorDescription = `Validation error: ${error.message}`;
+          errorDescription = t('admin.categoryManagement.validationError', 'Validation error: {{message}}', { message: error.message });
         } else if (error.message.includes('duplicate')) {
-          errorDescription = `Duplicate data detected: ${error.message}`;
+          errorDescription = t('admin.categoryManagement.duplicateError', 'Duplicate data detected: {{message}}', { message: error.message });
         } else if (error.message.includes('permission') || error.message.includes('unauthorized')) {
-          errorDescription = "You don't have permission to perform this action.";
+          errorDescription = t('admin.categoryManagement.permissionError');
         } else if (error.message.trim() !== '') {
           errorDescription = error.message;
         }
       }
 
       toast({
-        title: "Error",
+        title: t('admin.categoryManagement.error'),
         description: errorDescription,
         variant: "destructive",
       });
@@ -292,8 +294,8 @@ export const CategoryManagement = () => {
     // Check if we're at the maximum field limit
     if (dynamicFormFields.length >= 20) {
       toast({
-        title: "Maximum Fields Reached",
-        description: "You can have a maximum of 20 custom fields per subcategory.",
+        title: t('admin.categoryManagement.maxFieldsReached'),
+        description: t('admin.categoryManagement.maxFieldsReachedDesc'),
         variant: "destructive",
       });
       return;
@@ -366,8 +368,8 @@ export const CategoryManagement = () => {
     });
 
     toast({
-      title: "Success",
-      description: "Field removed successfully",
+      title: t('admin.categoryManagement.success'),
+      description: t('admin.categoryManagement.fieldRemovedSuccess'),
     });
 
     // Close confirmation dialog
@@ -385,8 +387,8 @@ export const CategoryManagement = () => {
 
     const result = await handleAsyncOperation(
       () => DatabaseService.getSubcategoryFormFields(subcategoryId),
-      "Form fields loaded successfully",
-      "Failed to load form fields",
+      t('admin.categoryManagement.formFieldsLoaded'),
+      t('admin.categoryManagement.formFieldsLoadFailed'),
       (formFields) => {
         setDynamicFormFields(formFields || []);
 
@@ -404,7 +406,7 @@ export const CategoryManagement = () => {
     );
 
     if (!result) {
-      setFormBuilderErrors(['Failed to load form fields. Please try again.']);
+      setFormBuilderErrors([t('admin.categoryManagement.formFieldsLoadFailed')]);
       setDynamicFormFields([]);
     }
 
@@ -420,10 +422,10 @@ export const CategoryManagement = () => {
 
     if (!validation.isValid) {
       setValidationErrors(validation.errors);
-      setFormBuilderErrors(['Please fix the validation errors before saving.']);
+      setFormBuilderErrors([t('admin.categoryManagement.fixFieldErrors')]);
       toast({
-        title: "Validation Error",
-        description: "Please fix the field errors before saving.",
+        title: t('admin.categoryManagement.validationErrorSaving'),
+        description: t('admin.categoryManagement.fixFieldErrors'),
         variant: "destructive",
       });
       return;
@@ -440,10 +442,10 @@ export const CategoryManagement = () => {
     // Filter out fields with empty labels
     const cleanedFields = dynamicFormFields.filter(field => field.label && field.label.trim() !== '');
 
-    const result = await handleAsyncOperation(
+    await handleAsyncOperation(
       () => DatabaseService.saveSubcategoryFormFields(selectedSubcategoryForForm, cleanedFields),
-      "Form fields saved successfully",
-      "Failed to save form fields",
+      t('admin.categoryManagement.formFieldsSaved'),
+      t('admin.categoryManagement.formFieldsSaveFailed'),
       () => {
         setIsFormBuilderOpen(false);
         setHasUnsavedChanges(false);
@@ -453,10 +455,6 @@ export const CategoryManagement = () => {
         setSelectedSubcategoryForForm("");
       }
     );
-
-    if (!result) {
-      setFormBuilderErrors(['Failed to save form fields. Please try again.']);
-    }
 
     setIsSavingFormSchema(false);
   };
@@ -487,14 +485,18 @@ export const CategoryManagement = () => {
             {/* Network Status Indicator */}
             <div className="flex items-center gap-2">
               {isOnline ? (
-                <Wifi className="h-5 w-5 text-green-500" title="Online" />
+                <div title={t('admin.categoryManagement.online', 'Online')}>
+                  <Wifi className="h-5 w-5 text-green-500" />
+                </div>
               ) : (
-                <WifiOff className="h-5 w-5 text-red-500" title="Offline" />
+                <div title={t('admin.categoryManagement.offline', 'Offline')}>
+                  <WifiOff className="h-5 w-5 text-red-500" />
+                </div>
               )}
               {hasUnsavedChanges && (
                 <div className="flex items-center gap-1 text-amber-500">
                   <AlertTriangle className="h-4 w-4" />
-                  <span className="text-sm">Unsaved changes</span>
+                  <span className="text-sm">{t('admin.categoryManagement.unsavedChanges', 'Unsaved changes')}</span>
                 </div>
               )}
             </div>
@@ -699,7 +701,7 @@ export const CategoryManagement = () => {
         if (!open) {
           if (hasUnsavedChanges) {
             const confirmClose = window.confirm(
-              "You have unsaved changes. Are you sure you want to close without saving?"
+              t('admin.categoryManagement.unsavedChangesWarning', 'You have unsaved changes. Are you sure you want to close without saving?')
             );
             if (!confirmClose) return;
           }
@@ -714,9 +716,9 @@ export const CategoryManagement = () => {
       }}>
         <DialogContent className="bg-gray-800 border-gray-700 max-w-4xl">
           <DialogHeader>
-            <DialogTitle className="text-white">Form Builder</DialogTitle>
+            <DialogTitle className="text-white">{t('admin.categoryManagement.formBuilder', 'Form Builder')}</DialogTitle>
             <DialogDescription className="text-gray-300">
-              Configure custom form fields for this subcategory
+              {t('admin.categoryManagement.configureFields', 'Configure custom form fields for this subcategory')}
             </DialogDescription>
           </DialogHeader>
 
@@ -724,7 +726,7 @@ export const CategoryManagement = () => {
           {isFormBuilderLoading && (
             <div className="flex items-center justify-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
-              <span className="ml-3 text-gray-300">Loading form fields...</span>
+              <span className="ml-3 text-gray-300">{t('admin.categoryManagement.loadingFormFields', 'Loading form fields...')}</span>
             </div>
           )}
 
@@ -733,7 +735,7 @@ export const CategoryManagement = () => {
             <div className="bg-red-900/20 border border-red-500 rounded-md p-4 mb-4">
               <div className="flex items-center gap-2 mb-2">
                 <AlertTriangle className="h-4 w-4 text-red-400" />
-                <h4 className="text-red-400 font-medium">Errors:</h4>
+                <h4 className="text-red-400 font-medium">{t('admin.categoryManagement.errors', 'Errors:')}</h4>
               </div>
               <ul className="text-red-300 text-sm space-y-1">
                 {formBuilderErrors.map((error, index) => (
@@ -748,7 +750,7 @@ export const CategoryManagement = () => {
             <div className="bg-amber-900/20 border border-amber-500 rounded-md p-4 mb-4">
               <div className="flex items-center gap-2 mb-2">
                 <AlertTriangle className="h-4 w-4 text-amber-400" />
-                <h4 className="text-amber-400 font-medium">Warnings:</h4>
+                <h4 className="text-amber-400 font-medium">{t('admin.categoryManagement.warnings', 'Warnings:')}</h4>
               </div>
               <ul className="text-amber-300 text-sm space-y-1">
                 {formBuilderWarnings.map((warning, index) => (
@@ -764,8 +766,8 @@ export const CategoryManagement = () => {
               {dynamicFormFields.length === 0 ? (
                 <div className="text-center py-8 text-gray-400">
                   <FormInput className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>No form fields configured yet.</p>
-                  <p className="text-sm">Click "Add Field" to get started.</p>
+                  <p>{t('admin.categoryManagement.noFormFields', 'No form fields configured yet.')}</p>
+                  <p className="text-sm">{t('admin.categoryManagement.clickAddToStart', 'Click "Add Field" to get started.')}</p>
                 </div>
               ) : (
                 dynamicFormFields.map((field, index) => (
@@ -775,7 +777,7 @@ export const CategoryManagement = () => {
                       <div className="mb-3 p-2 bg-red-900/20 border border-red-500 rounded text-sm">
                         <div className="flex items-center gap-1 mb-1">
                           <AlertTriangle className="h-3 w-3 text-red-400" />
-                          <span className="text-red-400 font-medium">Field Errors:</span>
+                          <span className="text-red-400 font-medium">{t('admin.categoryManagement.fieldErrors', 'Field Errors:')}</span>
                         </div>
                         <ul className="text-red-300 text-xs space-y-1">
                           {validationErrors[field.id].map((error, errorIndex) => (
@@ -788,7 +790,7 @@ export const CategoryManagement = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {/* Field Type */}
                       <div>
-                        <Label className="text-gray-300">Type</Label>
+                        <Label className="text-gray-300">{t('admin.categoryManagement.type', 'Type')}</Label>
                         <Select
                           value={field.type}
                           onValueChange={(value) => updateFormField(field.id, { type: value as any })}
@@ -797,24 +799,24 @@ export const CategoryManagement = () => {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="text">Text</SelectItem>
-                            <SelectItem value="textarea">Textarea</SelectItem>
-                            <SelectItem value="select">Select</SelectItem>
-                            <SelectItem value="checkbox">Checkbox</SelectItem>
-                            <SelectItem value="date">Date</SelectItem>
-                            <SelectItem value="number">Number</SelectItem>
+                            <SelectItem value="text">{t('admin.categoryManagement.text', 'Text')}</SelectItem>
+                            <SelectItem value="textarea">{t('admin.categoryManagement.textarea', 'Textarea')}</SelectItem>
+                            <SelectItem value="select">{t('admin.categoryManagement.select', 'Select')}</SelectItem>
+                            <SelectItem value="checkbox">{t('admin.categoryManagement.checkbox', 'Checkbox')}</SelectItem>
+                            <SelectItem value="date">{t('admin.categoryManagement.date', 'Date')}</SelectItem>
+                            <SelectItem value="number">{t('admin.categoryManagement.number', 'Number')}</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
 
                       {/* Field Label */}
                       <div>
-                        <Label className="text-gray-300">Label</Label>
+                        <Label className="text-gray-300">{t('admin.categoryManagement.label', 'Label')}</Label>
                         <Input
                           value={field.label}
                           onChange={(e) => updateFormField(field.id, { label: e.target.value })}
                           className="bg-gray-600 border-gray-500 text-white"
-                          placeholder="Enter field label"
+                          placeholder={t('admin.categoryManagement.enterFieldLabel', 'Enter field label')}
                         />
                       </div>
 
@@ -825,14 +827,14 @@ export const CategoryManagement = () => {
                             checked={field.required}
                             onCheckedChange={(checked) => updateFormField(field.id, { required: checked })}
                           />
-                          <Label className="text-gray-300">Required</Label>
+                          <Label className="text-gray-300">{t('admin.categoryManagement.required', 'Required')}</Label>
                         </div>
                         <div className="flex items-center space-x-2">
                           <Switch
                             checked={field.enabled}
                             onCheckedChange={(checked) => updateFormField(field.id, { enabled: checked })}
                           />
-                          <Label className="text-gray-300">Enabled</Label>
+                          <Label className="text-gray-300">{t('admin.categoryManagement.enabled', 'Enabled')}</Label>
                         </div>
                       </div>
 
@@ -851,14 +853,14 @@ export const CategoryManagement = () => {
                     {/* Select Options */}
                     {field.type === 'select' && (
                       <div className="mt-3">
-                        <Label className="text-gray-300">Options (comma-separated)</Label>
+                        <Label className="text-gray-300">{t('admin.categoryManagement.options', 'Options (comma-separated)')}</Label>
                         <Input
                           value={field.options?.join(', ') || ''}
                           onChange={(e) => updateFormField(field.id, { 
                             options: e.target.value.split(',').map(opt => opt.trim()).filter(opt => opt.length > 0)
                           })}
                           className="bg-gray-600 border-gray-500 text-white"
-                          placeholder="Option 1, Option 2, Option 3"
+                          placeholder={t('admin.categoryManagement.selectOptions', 'Option 1, Option 2, Option 3')}
                         />
                       </div>
                     )}
@@ -866,12 +868,12 @@ export const CategoryManagement = () => {
                     {/* Placeholder */}
                     {['text', 'textarea', 'number'].includes(field.type) && (
                       <div className="mt-3">
-                        <Label className="text-gray-300">Placeholder</Label>
+                        <Label className="text-gray-300">{t('admin.categoryManagement.placeholder', 'Placeholder')}</Label>
                         <Input
                           value={field.placeholder || ''}
                           onChange={(e) => updateFormField(field.id, { placeholder: e.target.value })}
                           className="bg-gray-600 border-gray-500 text-white"
-                          placeholder="Enter placeholder text"
+                          placeholder={t('admin.categoryManagement.enterPlaceholder', 'Enter placeholder text')}
                         />
                       </div>
                     )}
@@ -890,7 +892,7 @@ export const CategoryManagement = () => {
               className="text-gray-300 border-gray-500 hover:bg-gray-700"
             >
               <Plus className="h-4 w-4 mr-2" />
-              Add Field
+              {t('admin.categoryManagement.addField', 'Add Field')}
             </Button>
 
             <div className="flex items-center gap-3">
@@ -899,7 +901,7 @@ export const CategoryManagement = () => {
                 onClick={() => setIsFormBuilderOpen(false)}
                 className="text-gray-300 hover:bg-gray-700"
               >
-                Cancel
+                {t('admin.categoryManagement.cancel', 'Cancel')}
               </Button>
               <Button
                 onClick={saveFormSchema}
@@ -909,10 +911,10 @@ export const CategoryManagement = () => {
                 {isSavingFormSchema ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Saving...
+                    {t('admin.categoryManagement.saving', 'Saving...')}
                   </>
                 ) : (
-                  'Save Schema'
+                  t('admin.categoryManagement.saveSchema', 'Save Schema')
                 )}
               </Button>
             </div>
@@ -926,13 +928,13 @@ export const CategoryManagement = () => {
           <AlertDialogHeader>
             <AlertDialogTitle className="text-white flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-red-400" />
-              Confirm Field Deletion
+              {t('admin.categoryManagement.confirmFieldDeletion', 'Confirm Field Deletion')}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-gray-300">
-              Are you sure you want to delete this form field? This action cannot be undone.
+              {t('admin.categoryManagement.confirmFieldDeletionDesc', 'Are you sure you want to delete this form field? This action cannot be undone.')}
               {fieldToDelete && (
                 <div className="mt-2 p-2 bg-gray-700 rounded text-sm">
-                  <strong>Field to delete:</strong> {dynamicFormFields.find(f => f.id === fieldToDelete)?.label || 'Unnamed field'}
+                  <strong>{t('admin.categoryManagement.fieldToDelete', 'Field to delete:')}</strong> {dynamicFormFields.find(f => f.id === fieldToDelete)?.label || t('admin.categoryManagement.unnamedField', 'Unnamed field')}
                 </div>
               )}
             </AlertDialogDescription>
@@ -945,7 +947,7 @@ export const CategoryManagement = () => {
               }}
               className="bg-gray-600 text-white hover:bg-gray-500"
             >
-              Cancel
+              {t('admin.categoryManagement.cancel', 'Cancel')}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
@@ -955,7 +957,7 @@ export const CategoryManagement = () => {
               }}
               className="bg-red-600 hover:bg-red-700 text-white"
             >
-              Delete Field
+              {t('admin.categoryManagement.deleteField', 'Delete Field')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

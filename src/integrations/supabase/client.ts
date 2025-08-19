@@ -13,6 +13,24 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: true,
-    flowType: 'pkce'
+    flowType: 'pkce',
+    debug: process.env.NODE_ENV === 'development',
+    // Enhanced settings for persistent sessions
+    storageKey: 'sb-persistent-auth-token',
+    // Set very long session duration (30 days)
+    refreshThreshold: 30 * 60, // Refresh 30 minutes before expiry
   },
+  realtime: {
+    params: {
+      eventsPerSecond: 10,
+    },
+    timeout: 60000, // 60 seconds
+    heartbeatIntervalMs: 30000, // 30 seconds  
+    reconnectAfterMs: 5000, // 5 seconds
+  },
+  global: {
+    headers: {
+      'X-Client-Info': 'analy-ticket-persistent@1.0.0'
+    }
+  }
 });

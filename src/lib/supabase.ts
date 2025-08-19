@@ -77,12 +77,33 @@ const createEnhancedSupabaseClient = (): SupabaseClient<Database> => {
   try {
     debugLog('Creating enhanced Supabase client', { config: enhancedConfig });
     
+    // Clear any problematic localStorage keys that might cause _acquireLock errors
+    try {
+      const problematicKeys = Object.keys(localStorage).filter(key => 
+        key.includes('sb-') && (key.includes('lock') || key.includes('session'))
+      );
+      problematicKeys.forEach(key => {
+        localStorage.removeItem(key);
+        debugLog('Removed problematic localStorage key', { key });
+      });
+    } catch (storageError) {
+      debugLog('Could not clear localStorage', { error: storageError });
+    }
+    
     const client = createClient<Database>(
       enhancedConfig.url,
       enhancedConfig.anonKey,
       {
         auth: enhancedConfig.auth,
-        global: enhancedConfig.global
+        global: enhancedConfig.global,
+        realtime: {
+          params: {
+            eventsPerSecond: 10,
+          },
+          timeout: 60000, // 60 seconds
+          heartbeatIntervalMs: 30000, // 30 seconds  
+          reconnectAfterMs: 5000, // 5 seconds
+        }
       }
     );
 
@@ -291,45 +312,8 @@ export const getSupabaseClient = (): SupabaseClient<Database> => {
   }
 };
 
-// Export the client instance (with lazy initialization)
-export const supabase = new Proxy({} as SupabaseClient<Database>, {
-  get(_target, prop) {
-    const client = getSupabaseClient();
-    const value = (client as any)[prop];
-    
-    // Wrap methods to add error handling
-    if (typeof value === 'function') {
-      return (...args: any[]) => {
-        try {
-          return value.apply(client, args);
-        } catch (error) {
-          const err = error as Error;
-          debugLog(`Method ${String(prop)} failed`, { error: err.message });
-          
-          // Check for the specific _acquireLock error
-          if (err.message.includes('_acquireLock is not a function')) {
-            debugLog('Detected _acquireLock error, attempting client recovery');
-            
-            // Mark client as corrupted and attempt recovery
-            updateClientHealth(false, true);
-            
-            // Try to reinitialize and retry the operation
-            try {
-              const newClient = await reinitializeClient();
-              return (newClient as any)[prop].apply(newClient, args);
-            } catch (recoveryError) {
-              throw new Error(`Operation failed and recovery unsuccessful: ${(recoveryError as Error).message}`);
-            }
-          }
-          
-          throw err;
-        }
-      };
-    }
-    
-    return value;
-  }
-});
+// Export the client instance directly - let the session recovery handle errors
+export const supabase = getSupabaseClient();
 
 /**
  * Get detailed session information for debugging

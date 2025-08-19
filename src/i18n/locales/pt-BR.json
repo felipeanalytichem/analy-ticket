@@ -112,7 +112,7 @@
     "administration": "Administração",
     "workloadDashboard": "Painel de Carga de Trabalho",
     "slaNotifications": "Notificações SLA",
-    "sessionTimeout": "Timeout de Sessão",
+
     "assignmentRules": "Regras de Atribuição",
     "categoryExpertise": "Expertise por Categoria"
   },
@@ -779,7 +779,13 @@
     "tagsHelp": "Pressione Enter ou clique em + para adicionar",
     "notificationsSection": "Notificações",
     "emailReminderLabel": "Lembretes por Email",
-    "emailReminderDesc": "Receber notificações por email sobre esta tarefa"
+    "emailReminderDesc": "Receber notificações por email sobre esta tarefa",
+    "overdue": "Atrasado {{count}} dia",
+    "overdue_plural": "Atrasado {{count}} dias",
+    "dueToday": "Vence hoje",
+    "dueTomorrow": "Vence amanhã",
+    "dueInDays": "Vence em {{count}} dia",
+    "dueInDays_plural": "Vence em {{count}} dias"
   },
   "agentDashboard": {
     "title": "Dashboard do Agente",

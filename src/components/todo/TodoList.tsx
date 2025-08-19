@@ -51,6 +51,7 @@ import DatabaseService from '@/lib/database';
 import { toast } from 'sonner';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useTranslation } from "react-i18next";
+import i18n from "@/i18n";
 
 interface TodoTask {
   id: string;

@@ -193,6 +193,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       } catch (error) {
         console.error('Error initializing auth:', error);
+        
+        // If it's a token-related error, clear the problematic tokens
+        const errorMessage = (error as Error).message.toLowerCase();
+        if (errorMessage.includes('refresh token') || errorMessage.includes('_acquirelock') || errorMessage.includes('invalid')) {
+          console.log('🧹 Clearing problematic auth tokens...');
+          
+          try {
+            // Clear auth-related localStorage
+            Object.keys(localStorage).forEach(key => {
+              if (key.includes('supabase') || key.includes('auth-token')) {
+                localStorage.removeItem(key);
+              }
+            });
+            
+            // Clear session storage
+            sessionStorage.clear();
+            
+            console.log('✅ Auth tokens cleared, please refresh the page');
+          } catch (clearError) {
+            console.error('Failed to clear tokens:', clearError);
+          }
+        }
+        
         if (mounted) {
           setAuthError(error as Error);
         }
