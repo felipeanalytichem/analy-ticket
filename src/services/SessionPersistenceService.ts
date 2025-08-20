@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase';
+import { QueryClient } from '@tanstack/react-query';
 
 /**
  * Service to ensure sessions remain persistent and never expire
@@ -9,6 +10,7 @@ export class SessionPersistenceService {
   private keepAliveInterval: NodeJS.Timeout | null = null;
   private isActive = false;
   private lastRefresh: Date | null = null;
+  private queryClient: QueryClient | null = null;
 
   private constructor() {}
 
@@ -17,6 +19,13 @@ export class SessionPersistenceService {
       SessionPersistenceService.instance = new SessionPersistenceService();
     }
     return SessionPersistenceService.instance;
+  }
+
+  /**
+   * Set the query client for data refetching
+   */
+  setQueryClient(queryClient: QueryClient): void {
+    this.queryClient = queryClient;
   }
 
   /**
@@ -75,12 +84,46 @@ export class SessionPersistenceService {
       
       if (error) {
         console.warn('⚠️ Session refresh warning:', error.message);
+        
+        // If refresh fails, try to test database connection
+        try {
+          const { error: dbError } = await supabase
+            .from('tickets_new')
+            .select('id')
+            .limit(1);
+          
+          if (dbError) {
+            console.warn('⚠️ Database also unreachable during session refresh');
+          } else {
+            console.log('✅ Database is accessible despite session refresh failure');
+          }
+        } catch (dbTestError) {
+          console.warn('⚠️ Could not test database during session refresh failure');
+        }
+        
         return false;
       }
 
       if (data.session) {
         this.lastRefresh = new Date();
         console.log('✅ Session refreshed at', this.lastRefresh.toLocaleTimeString());
+        
+        // Test database connection after successful refresh
+        try {
+          const { error: dbError } = await supabase
+            .from('tickets_new')
+            .select('id')
+            .limit(1);
+          
+          if (dbError) {
+            console.warn('⚠️ Session refreshed but database connection failed:', dbError.message);
+          } else {
+            console.log('✅ Session and database both working properly');
+          }
+        } catch (dbTestError) {
+          console.warn('⚠️ Could not verify database after session refresh');
+        }
+        
         return true;
       }
 
@@ -150,16 +193,31 @@ export class SessionPersistenceService {
     // Handle page visibility changes
     document.addEventListener('visibilitychange', async () => {
       if (!document.hidden && this.isActive) {
-        console.log('👁️ Page visible - refreshing session');
+        console.log('👁️ Page visible - refreshing session and data');
         await this.refreshSession();
+        
+        // Invalidate all queries to refetch fresh data after idle
+        if (this.queryClient) {
+          console.log('🔄 Invalidating queries after idle period');
+          await this.queryClient.invalidateQueries();
+        }
       }
     });
 
     // Handle page focus
     window.addEventListener('focus', async () => {
       if (this.isActive) {
-        console.log('🎯 Page focused - ensuring session is alive');
+        console.log('🎯 Page focused - ensuring session is alive and data is fresh');
         await this.refreshSession();
+        
+        // Refetch stale data when user returns focus
+        if (this.queryClient) {
+          console.log('🔄 Refetching stale data after focus');
+          await this.queryClient.refetchQueries({ 
+            stale: true,
+            type: 'active'
+          });
+        }
       }
     });
 

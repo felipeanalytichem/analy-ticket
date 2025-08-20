@@ -51,6 +51,8 @@ import { ptBR, enUS, es, fr, nl, de } from 'date-fns/locale';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useTheme } from '@/components/theme-provider';
 import { AvatarEditor } from '@/components/profile/AvatarEditor';
+import { useProfile } from '@/hooks/useProfile';
+import { useLoadingTimeout } from '@/hooks/useLoadingTimeout';
 import i18n from '@/i18n';
 
 interface UserStats {
@@ -78,9 +80,20 @@ const Profile: React.FC = () => {
   const { user, userProfile, updateProfile } = useAuth();
   const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
-  const [stats, setStats] = useState<UserStats | null>(null);
-  const [recentActivities, setRecentActivities] = useState<RecentActivity[]>([]);
-  const [loading, setLoading] = useState(true);
+  
+  // Use React Query for profile data
+  const {
+    stats,
+    recentActivities,
+    isLoading: loading,
+    isError,
+    error,
+    refetch,
+    handleStuckLoading
+  } = useProfile();
+
+  // Setup loading timeout protection
+  useLoadingTimeout(loading, 30000); // 30 second timeout
   
   // Edit profile state
   const [isEditingProfile, setIsEditingProfile] = useState(false);
@@ -105,55 +118,13 @@ const Profile: React.FC = () => {
   const [toastNotifications, setToastNotifications] = useState(true);
   const [notificationFrequency, setNotificationFrequency] = useState('realtime');
 
-  const loadUserData = useCallback(async () => {
-    if (!user || !userProfile) return;
-    
-    try {
-      setLoading(true);
-      
-      // Load real user statistics
-      const realStats = await DatabaseService.getDashboardStats(user.id, userProfile.role);
-      const userStats: UserStats = {
-        totalCreated: realStats.myTickets,
-        totalAssigned: realStats.assignedToMe,
-        avgResolutionTime: '0h 0m', // TODO: Calculate real average resolution time
-        statusBreakdown: {
-          open: realStats.openTickets,
-          in_progress: 0, // TODO: Get in_progress count
-          resolved: realStats.resolvedTickets,
-          closed: realStats.closedTickets
-        }
-      };
-      setStats(userStats);
-      
-      // Load real recent activities from tickets
-      try {
-        const userTickets = await DatabaseService.getTickets({
-          userId: user.id,
-          limit: 5
-        });
-        
-        const activities: RecentActivity[] = userTickets.map(ticket => ({
-          id: ticket.id,
-          type: 'created',
-          ticket_number: ticket.ticket_number || 'N/A',
-          title: ticket.title,
-          created_at: ticket.created_at
-        }));
-        
-        setRecentActivities(activities);
-      } catch (error) {
-        console.error('Error loading recent activities:', error);
-        setRecentActivities([]);
-      }
-      
-    } catch (error) {
-      console.error('Error loading user data:', error);
+  // Show error toast for React Query errors
+  useEffect(() => {
+    if (isError && error) {
+      console.error('❌ Profile loading error:', error);
       toast.error(t('messages.errorLoadingProfile'));
-    } finally {
-      setLoading(false);
     }
-  }, [user?.id, userProfile?.role, t]);
+  }, [isError, error, t]);
 
   const loadPreferences = useCallback(() => {
     try {
@@ -190,9 +161,7 @@ const Profile: React.FC = () => {
     }
   }, []);
 
-  useEffect(() => {
-    loadUserData();
-  }, [loadUserData]);
+
 
   useEffect(() => {
     loadPreferences();

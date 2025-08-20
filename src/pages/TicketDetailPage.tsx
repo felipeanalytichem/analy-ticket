@@ -13,7 +13,7 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   ArrowLeft,
@@ -51,7 +51,18 @@ import {
   Target,
   Settings,
   Trash2,
-  X
+  X,
+  ChevronDown,
+  ChevronUp,
+  Maximize2,
+  Minimize2,
+  MoreHorizontal,
+  Pin,
+  PinOff,
+  Zap,
+  GitBranch,
+  Timer,
+  UserPlus
 } from "lucide-react";
 
 // Import existing components that we'll integrate
@@ -75,6 +86,13 @@ import { useTranslation } from "react-i18next";
 import { DatabaseService } from "@/lib/database";
 import { supabase } from "@/lib/supabase";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 
 // Types
 interface Agent {
@@ -134,9 +152,12 @@ export function TicketDetailPage() {
   const { data: assigneeProfile } = useUser(ticket?.assigned_to ?? undefined);
 
   // UI State
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeView, setActiveView] = useState<'overview' | 'conversation' | 'tasks' | 'activity'>('overview');
   const [refreshKey, setRefreshKey] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [rightPanelPinned, setRightPanelPinned] = useState(false);
+  const [rightPanelExpanded, setRightPanelExpanded] = useState(true);
+  const [conversationExpanded, setConversationExpanded] = useState(false);
 
   // Status Management
   const [isEditingStatus, setIsEditingStatus] = useState(false);
@@ -192,9 +213,7 @@ export function TicketDetailPage() {
         userRole === 'user' && 
         userProfile?.id === ticket.user_id && 
         ticket.status === 'resolved'
-        // Note: feedback_submitted check removed as it's not in the TicketWithDetails interface
       ) {
-        // Small delay to allow page to render first
         const timer = setTimeout(() => {
           setShowFeedbackPopup(true);
         }, 1000);
@@ -242,6 +261,21 @@ export function TicketDetailPage() {
       minute: '2-digit'
     });
   }, []);
+
+  const formatDateRelative = useMemo(() => (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+
+    if (minutes < 1) return 'Just now';
+    if (minutes < 60) return `${minutes} min ago`;
+    if (hours < 24) return `${hours}h ago`;
+    if (days < 7) return `${days}d ago`;
+    return formatDate(dateString);
+  }, [formatDate]);
 
   const copyToClipboard = async (text: string) => {
     try {
@@ -291,7 +325,6 @@ export function TicketDetailPage() {
       return;
     }
 
-    // Special handling for "resolved" status
     if (newStatus === 'resolved') {
       setShowResolutionDialog(true);
       return;
@@ -304,7 +337,6 @@ export function TicketDetailPage() {
         updated_at: new Date().toISOString()
       });
 
-      // Add activity log
       await DatabaseService.addTicketComment(
         ticket.id,
         userProfile?.id || '',
@@ -328,7 +360,7 @@ export function TicketDetailPage() {
         description: t('tickets.statusUpdateError'),
         variant: "destructive",
       });
-      setNewStatus(ticket.status); // Reset to original status
+      setNewStatus(ticket.status);
     } finally {
       setIsLoading(false);
     }
@@ -345,10 +377,8 @@ export function TicketDetailPage() {
         updated_at: new Date().toISOString()
       });
 
-      // Create notification for self-assignment
       await DatabaseService.createTicketNotification(ticket.id, 'assignment_changed', userProfile.id);
 
-      // Add activity log
       await DatabaseService.addTicketComment(
         ticket.id,
         userProfile.id,
@@ -418,13 +448,11 @@ export function TicketDetailPage() {
 
     setIsTransferring(true);
     try {
-      // Update ticket assignment
       await DatabaseService.updateTicket(ticket.id, {
         assigned_to: transferForm.agent_id,
         updated_at: new Date().toISOString()
       });
 
-      // Add transfer comment if requested
       if (transferForm.add_comment) {
         await DatabaseService.addTicketComment(
           ticket.id,
@@ -434,7 +462,6 @@ export function TicketDetailPage() {
         );
       }
 
-      // Create notification for the new agent
       await DatabaseService.createNotification({
         user_id: transferForm.agent_id,
         type: 'ticket_assigned',
@@ -477,7 +504,6 @@ export function TicketDetailPage() {
 
     setIsCreatingTodo(true);
     try {
-      // Create a Ticket Task (not a Todo Task) so it appears in the TaskManagement component
       const taskData = {
         ticket_id: ticket.id,
         title: todoForm.title,
@@ -490,7 +516,6 @@ export function TicketDetailPage() {
 
       await DatabaseService.createTicketTask(taskData);
 
-      // If collaborative, create notification for assigned agent
       if (todoForm.is_collaborative && collaborativeAssignee && collaborativeAssignee !== userProfile?.id) {
         const assignedAgent = agents.find(agent => agent.id === collaborativeAssignee);
         await DatabaseService.createNotification({
@@ -545,7 +570,6 @@ export function TicketDetailPage() {
 
     setIsLoading(true);
     try {
-      // Use the proper resolveTicket method which handles feedback notifications
       await DatabaseService.resolveTicket(
         ticket.id,
         resolutionNotes.trim(),
@@ -557,7 +581,6 @@ export function TicketDetailPage() {
         description: t('tickets.resolve.successDescription'),
       });
 
-      // Show feedback popup to customer (if they are the requester)
       if (userRole === 'user' && userProfile?.id === ticket.user_id) {
         setShowFeedbackPopup(true);
       }
@@ -610,13 +633,32 @@ export function TicketDetailPage() {
     }
   };
 
+  const getPriorityIcon = (priority: string) => {
+    switch (priority) {
+      case 'urgent': return <Zap className="h-3 w-3" />;
+      case 'high': return <ArrowLeft className="h-3 w-3 rotate-90" />;
+      case 'medium': return <ArrowLeft className="h-3 w-3" />;
+      case 'low': return <ArrowLeft className="h-3 w-3 -rotate-90" />;
+      default: return <ArrowLeft className="h-3 w-3" />;
+    }
+  };
+
   // Loading state
   if (isTicketLoading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-4">
-        <Skeleton className="h-10 w-1/3" />
-        <Skeleton className="h-6 w-full" />
+      <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+        <div className="container max-w-7xl mx-auto px-4 py-6">
+          <div className="grid grid-cols-12 gap-6">
+            <div className="col-span-12 lg:col-span-8 space-y-6">
+              <Skeleton className="h-16 w-full" />
         <Skeleton className="h-96 w-full" />
+            </div>
+            <div className="col-span-12 lg:col-span-4 space-y-6">
+              <Skeleton className="h-32 w-full" />
+              <Skeleton className="h-48 w-full" />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -650,7 +692,7 @@ export function TicketDetailPage() {
     const errorContent = getErrorContent();
 
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+      <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 flex items-center justify-center">
         <div className="max-w-md w-full mx-4">
           <Card>
             <CardContent className="pt-6">
@@ -689,25 +731,30 @@ export function TicketDetailPage() {
 
   // Main render
   return (
-    <div className="min-h-screen bg-zinc-950">
-      {/* Header */}
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+      {/* Floating Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="sticky top-0 z-50 bg-zinc-900/95 backdrop-blur-sm border-b border-zinc-800"
+        className="sticky top-0 z-50 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-lg border-b border-zinc-200 dark:border-zinc-800"
       >
-        <div className="container py-4">
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-            {/* Left side - Back button and ticket info */}
-            <div className="flex items-center gap-4 min-w-0 flex-1">
-              <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
+        <div className="container max-w-7xl mx-auto px-4 py-3">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            {/* Left Section */}
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => navigate(-1)}
+                className="flex-shrink-0"
+              >
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                {t('tickets.detail.back')}
+                Back
               </Button>
               
               <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-sm text-zinc-500 font-mono">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-xs font-mono text-zinc-500 bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded">
                     #{ticket.ticket_number || ticket.id.slice(0, 8)}
                   </span>
                   <Badge variant={getStatusVariant(ticket.status)} className="text-xs">
@@ -715,84 +762,81 @@ export function TicketDetailPage() {
                     <span className="ml-1">{t(`status.${ticket.status}`)}</span>
                   </Badge>
                   <Badge variant={getPriorityVariant(ticket.priority)} className="text-xs">
-                    {t(`priority.${ticket.priority}`)}
+                    {getPriorityIcon(ticket.priority)}
+                    <span className="ml-1">{t(`priority.${ticket.priority}`)}</span>
                   </Badge>
                 </div>
-                <h1 className="text-lg font-semibold text-zinc-100 truncate">
+                <h1 className="text-lg font-semibold text-zinc-900 dark:text-white truncate">
                   {ticket.title}
                 </h1>
               </div>
             </div>
 
-            {/* Right side - Action buttons */}
+            {/* Right Section */}
             <div className="flex items-center gap-2 flex-shrink-0">
-              <Button variant="outline" size="sm" onClick={() => window.print()}>
-                <Printer className="h-4 w-4 mr-2" />
-                {t('tickets.detail.print')}
+              {/* Quick Actions Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <MoreHorizontal className="h-4 w-4" />
               </Button>
-              <Button variant="outline" size="sm" onClick={() => copyToClipboard(window.location.href)}>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem onClick={() => window.print()}>
+                    <Printer className="h-4 w-4 mr-2" />
+                    Print Ticket
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => copyToClipboard(window.location.href)}>
                 <Share2 className="h-4 w-4 mr-2" />
-                {t('tickets.detail.share')}
-              </Button>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Main Content */}
-      <div className="container py-6">
-        <div className="grid grid-cols-12 gap-6">
-          {/* Left Column - Main Content */}
-          <div className="col-span-12 xl:col-span-8 space-y-6">
-            {/* Ticket Details Card */}
-            <Card>
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="space-y-1">
-                    <CardTitle className="text-xl">{ticket.title}</CardTitle>
-                    <div className="flex items-center gap-4 text-sm text-zinc-500">
-                      <span>Created {formatDate(ticket.created_at)}</span>
-                      <span>•</span>
-                      <span>By {requesterProfile?.full_name || 'Unknown User'}</span>
-                      {ticket.updated_at !== ticket.created_at && (
-                        <>
-                          <span>•</span>
-                          <span>Updated {formatDate(ticket.updated_at)}</span>
+                    Copy Link
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  {canViewInternalFeatures && (
+                    <>
+                      <DropdownMenuItem onClick={() => setShowCommentForm(true)}>
+                        <MessageSquare className="h-4 w-4 mr-2" />
+                        Add Comment
+                      </DropdownMenuItem>
+                      {canTransfer() && (
+                        <DropdownMenuItem onClick={() => setShowTransferDialog(true)}>
+                          <Users className="h-4 w-4 mr-2" />
+                          Transfer Ticket
+                        </DropdownMenuItem>
+                      )}
+                      {canManageTodos() && (
+                        <DropdownMenuItem onClick={() => setShowTodoForm(true)}>
+                          <Plus className="h-4 w-4 mr-2" />
+                          Add Task
+                        </DropdownMenuItem>
+                      )}
                         </>
                       )}
-                    </div>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Description */}
-                <div>
-                  <Label className="text-sm font-medium mb-2 block">Description</Label>
-                  <div className="prose prose-zinc dark:prose-invert max-w-none bg-zinc-50 dark:bg-zinc-900 p-4 rounded-lg">
-                    {ticket.description}
-                  </div>
-                </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
 
-                {/* Attachments */}
-                {ticket.attachments && ticket.attachments.length > 0 && (
-                  <div>
-                    <Label className="text-sm font-medium mb-2 block">Attachments</Label>
-                    <AttachmentViewer attachments={ticket.attachments} />
-                  </div>
-                )}
+              {/* Primary Action */}
+              {canAssignToSelf() && (
+                <Button size="sm" onClick={handleAssignToMe} disabled={isAssigning}>
+                  {isAssigning ? (
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  ) : (
+                    <UserCheck className="h-4 w-4 mr-2" />
+                  )}
+                  Assign to Me
+                </Button>
+              )}
 
-                {/* Quick Actions Bar - Only for agents/admins */}
-                {canViewInternalFeatures && (
-                  <div className="border-t pt-6">
-                    <Label className="text-sm font-medium mb-4 block">Quick Actions</Label>
-                    <div className="flex flex-wrap gap-2">
-                      {/* Status Update */}
-                      {canEditTicket() && (
+              {canEditTicket() && !isEditingStatus && (
+                <Button size="sm" onClick={() => setIsEditingStatus(true)}>
+                  <Edit className="h-4 w-4 mr-2" />
+                  Update Status
+                </Button>
+              )}
+
+              {isEditingStatus && (
                         <div className="flex items-center gap-2">
-                          {isEditingStatus ? (
-                            <>
                               <Select value={newStatus} onValueChange={setNewStatus}>
-                                <SelectTrigger className="w-40">
+                    <SelectTrigger className="w-32">
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -802,11 +846,7 @@ export function TicketDetailPage() {
                                   <SelectItem value="closed">Closed</SelectItem>
                                 </SelectContent>
                               </Select>
-                              <Button 
-                                size="sm" 
-                                onClick={handleStatusUpdate}
-                                disabled={isLoading}
-                              >
+                  <Button size="sm" onClick={handleStatusUpdate} disabled={isLoading}>
                                 {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                               </Button>
                               <Button 
@@ -819,193 +859,170 @@ export function TicketDetailPage() {
                               >
                                 <X className="h-4 w-4" />
                               </Button>
-                            </>
-                          ) : (
-                            <Button 
-                              size="sm" 
-                              variant="outline" 
-                              onClick={() => setIsEditingStatus(true)}
-                            >
-                              <Edit className="h-4 w-4 mr-2" />
-                              Update Status
-                            </Button>
-                          )}
+                        </div>
+                      )}
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Main Content */}
+      <div className="container max-w-7xl mx-auto px-4 py-6">
+        <div className="grid grid-cols-12 gap-6">
+          {/* Left Column - Main Content */}
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className={`col-span-12 ${rightPanelExpanded ? 'lg:col-span-8' : 'lg:col-span-10'} space-y-6`}
+          >
+            {/* Navigation Tabs */}
+            <Card className="overflow-hidden">
+              <div className="border-b border-zinc-200 dark:border-zinc-800">
+                <nav className="flex space-x-8 px-6" aria-label="Tabs">
+                  {[
+                    { id: 'overview', label: 'Overview', icon: Eye },
+                    { id: 'conversation', label: 'Conversation', icon: MessageCircle },
+                    { id: 'tasks', label: 'Tasks', icon: CheckSquare, adminOnly: true },
+                    { id: 'activity', label: 'Activity', icon: Activity }
+                  ].map((tab) => {
+                    const Icon = tab.icon;
+                    const isActive = activeView === tab.id;
+                    const shouldShow = !tab.adminOnly || canViewInternalFeatures;
+                    
+                    if (!shouldShow) return null;
+                    
+                    return (
+                      <button
+                        key={tab.id}
+                        onClick={() => setActiveView(tab.id as any)}
+                        className={`
+                          whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors
+                          ${isActive 
+                            ? 'border-blue-500 text-blue-600 dark:text-blue-400' 
+                            : 'border-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300'
+                          }
+                        `}
+                      >
+                        <div className="flex items-center gap-2">
+                          <Icon className="h-4 w-4" />
+                          {tab.label}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </nav>
+              </div>
+
+              {/* Tab Content */}
+              <CardContent className="p-6">
+                <AnimatePresence mode="wait">
+                  {activeView === 'overview' && (
+                    <motion.div
+                      key="overview"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      className="space-y-6"
+                    >
+                      {/* Ticket Description */}
+                      <div>
+                        <h3 className="text-lg font-semibold mb-3">Description</h3>
+                        <div className="prose prose-zinc dark:prose-invert max-w-none bg-zinc-50 dark:bg-zinc-900 p-4 rounded-lg border">
+                          {ticket.description}
+                    </div>
+                  </div>
+
+                      {/* Attachments */}
+                      {ticket.attachments && ticket.attachments.length > 0 && (
+                        <div>
+                          <h3 className="text-lg font-semibold mb-3">Attachments</h3>
+                          <AttachmentViewer attachments={ticket.attachments} />
                         </div>
                       )}
 
-                      {/* Assign to Self */}
-                      {canAssignToSelf() && (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={handleAssignToMe}
-                          disabled={isAssigning}
-                        >
-                          {isAssigning ? (
-                            <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                          ) : (
-                            <UserCheck className="h-4 w-4 mr-2" />
-                          )}
-                          Assign to Me
-                        </Button>
-                      )}
-
-                      {/* Transfer */}
-                      {canTransfer() && (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => setShowTransferDialog(true)}
-                        >
-                          <Users className="h-4 w-4 mr-2" />
-                          Transfer
-                        </Button>
-                      )}
-
-                      {/* Add Comment */}
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setShowCommentForm(true)}
-                      >
-                        <MessageSquare className="h-4 w-4 mr-2" />
-                        Add Comment
-                      </Button>
-
-                      {/* Add Task */}
-                      {canManageTodos() && (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => setShowTodoForm(true)}
-                        >
-                          <Plus className="h-4 w-4 mr-2" />
-                          Add Task
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Tabbed Content */}
-            <Card>
-              <CardContent className="p-0">
-                <Tabs value={activeTab} onValueChange={setActiveTab}>
-                  <TabsList className="w-full justify-start border-b border-zinc-200 dark:border-zinc-800 rounded-none bg-transparent p-0">
-                    <TabsTrigger
-                      value="overview"
-                      className="data-[state=active]:bg-zinc-100 dark:data-[state=active]:bg-zinc-800 rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500"
-                    >
-                      <Eye className="h-4 w-4 mr-2" />
-                      Overview
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="chat"
-                      className="data-[state=active]:bg-zinc-100 dark:data-[state=active]:bg-zinc-800 rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500"
-                    >
-                      <MessageCircle className="h-4 w-4 mr-2" />
-                      Public Chat
-                    </TabsTrigger>
-                    {canViewInternalFeatures && (
-                      <TabsTrigger
-                        value="comments"
-                        className="data-[state=active]:bg-zinc-100 dark:data-[state=active]:bg-zinc-800 rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500"
-                      >
-                        <MessageSquare className="h-4 w-4 mr-2" />
-                        Internal Comments
-                      </TabsTrigger>
-                    )}
-                    {canViewInternalFeatures && (
-                      <TabsTrigger
-                        value="tasks"
-                        className="data-[state=active]:bg-zinc-100 dark:data-[state=active]:bg-zinc-800 rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500"
-                      >
-                        <CheckSquare className="h-4 w-4 mr-2" />
-                        Tasks
-                      </TabsTrigger>
-                    )}
-                    <TabsTrigger
-                      value="activity"
-                      className="data-[state=active]:bg-zinc-100 dark:data-[state=active]:bg-zinc-800 rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500"
-                    >
-                      <Activity className="h-4 w-4 mr-2" />
-                      Activity
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="feedback"
-                      className="data-[state=active]:bg-zinc-100 dark:data-[state=active]:bg-zinc-800 rounded-none border-b-2 border-transparent data-[state=active]:border-blue-500"
-                    >
-                      <Star className="h-4 w-4 mr-2" />
-                      Feedback
-                    </TabsTrigger>
-                  </TabsList>
-                  
-                  <div className="p-6">
-                    <TabsContent value="overview" className="m-0 space-y-6">
-                      {/* Ticket Overview with all details */}
+                      {/* Ticket Details Grid */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                          <h3 className="font-medium mb-3">Ticket Information</h3>
+                        <div className="space-y-4">
+                          <h3 className="text-lg font-semibold">Ticket Information</h3>
                           <div className="space-y-3">
-                            <div className="flex justify-between">
-                              <span className="text-sm text-zinc-500">Status:</span>
-                              <Badge variant={getStatusVariant(ticket.status)} className="text-xs">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm text-zinc-500">Status</span>
+                              <Badge variant={getStatusVariant(ticket.status)}>
                                 {getStatusIcon(ticket.status)}
                                 <span className="ml-1">{t(`status.${ticket.status}`)}</span>
                               </Badge>
                             </div>
-                            <div className="flex justify-between">
-                              <span className="text-sm text-zinc-500">Priority:</span>
-                              <Badge variant={getPriorityVariant(ticket.priority)} className="text-xs">
-                                {t(`priority.${ticket.priority}`)}
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm text-zinc-500">Priority</span>
+                              <Badge variant={getPriorityVariant(ticket.priority)}>
+                                {getPriorityIcon(ticket.priority)}
+                                <span className="ml-1">{t(`priority.${ticket.priority}`)}</span>
                               </Badge>
                             </div>
-                            <div className="flex justify-between">
-                              <span className="text-sm text-zinc-500">Category:</span>
-                              <span className="text-sm">
-                                {typeof ticket.category === 'string' ? ticket.category : ticket.category?.name || '—'}
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm text-zinc-500">Category</span>
+                              <span className="text-sm font-medium">
+                                {typeof ticket.category === 'string' ? ticket.category : ticket.category?.name || 'Uncategorized'}
                               </span>
                             </div>
-                            <div className="flex justify-between">
-                              <span className="text-sm text-zinc-500">Department:</span>
-                              <span className="text-sm">{ticket.department || '—'}</span>
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm text-zinc-500">Department</span>
+                              <span className="text-sm font-medium">{ticket.department || 'General'}</span>
                             </div>
-                            {/* Due date removed as it's not in TicketWithDetails interface */}
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm text-zinc-500">Created</span>
+                              <span className="text-sm font-medium">{formatDateRelative(ticket.created_at)}</span>
+                            </div>
+                            {ticket.updated_at !== ticket.created_at && (
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm text-zinc-500">Last Updated</span>
+                                <span className="text-sm font-medium">{formatDateRelative(ticket.updated_at)}</span>
+                              </div>
+                            )}
                           </div>
                         </div>
                         
-                        <div>
-                          <h3 className="font-medium mb-3">People</h3>
+                        <div className="space-y-4">
+                          <h3 className="text-lg font-semibold">People</h3>
                           <div className="space-y-3">
                             <div>
-                              <span className="text-sm text-zinc-500 block mb-1">Requester:</span>
-                              <div className="flex items-center gap-2">
-                                <Avatar className="h-6 w-6">
+                              <span className="text-sm text-zinc-500 block mb-2">Requester</span>
+                              <div className="flex items-center gap-3">
+                                <Avatar className="h-8 w-8">
                                   <AvatarImage src={(requesterProfile as any)?.avatar_url} />
                                   <AvatarFallback className="text-xs">
-                                    {requesterProfile?.full_name?.split(' ').map(n => n[0]).join('')}
+                                    {requesterProfile?.full_name?.split(' ').map(n => n[0]).join('') || 'U'}
                                   </AvatarFallback>
                                 </Avatar>
-                                <span className="text-sm">{requesterProfile?.full_name || 'Unknown'}</span>
+                                <div>
+                                  <div className="text-sm font-medium">{requesterProfile?.full_name || 'Unknown User'}</div>
+                                  <div className="text-xs text-zinc-500">{(requesterProfile as any)?.email || ''}</div>
+                                </div>
                               </div>
                             </div>
                             
                             <div>
-                              <span className="text-sm text-zinc-500 block mb-1">Assignee:</span>
+                              <span className="text-sm text-zinc-500 block mb-2">Assignee</span>
                               {assigneeProfile ? (
-                                <div className="flex items-center gap-2">
-                                  <Avatar className="h-6 w-6">
+                                <div className="flex items-center gap-3">
+                                  <Avatar className="h-8 w-8">
                                     <AvatarImage src={(assigneeProfile as any)?.avatar_url} />
                                     <AvatarFallback className="text-xs">
-                                      {assigneeProfile?.full_name?.split(' ').map(n => n[0]).join('')}
+                                      {assigneeProfile?.full_name?.split(' ').map(n => n[0]).join('') || 'A'}
                                     </AvatarFallback>
                                   </Avatar>
-                                  <span className="text-sm">{assigneeProfile?.full_name}</span>
+                                  <div>
+                                    <div className="text-sm font-medium">{assigneeProfile?.full_name}</div>
+                                    <div className="text-xs text-zinc-500">{(assigneeProfile as any)?.email || ''}</div>
+                                  </div>
                                 </div>
                               ) : (
+                                <div className="flex items-center gap-3">
+                                  <div className="h-8 w-8 bg-zinc-100 dark:bg-zinc-800 rounded-full flex items-center justify-center">
+                                    <UserPlus className="h-4 w-4 text-zinc-500" />
+                                  </div>
                                 <span className="text-sm text-zinc-500">Unassigned</span>
+                                </div>
                               )}
                             </div>
                           </div>
@@ -1014,7 +1031,7 @@ export function TicketDetailPage() {
                       
                       {/* SLA Monitor */}
                       <div>
-                        <h3 className="font-medium mb-3">SLA Monitoring</h3>
+                        <h3 className="text-lg font-semibold mb-3">SLA Monitoring</h3>
                         <SLAMonitor
                           key={`sla-${refreshKey}`}
                           ticketId={ticket.id}
@@ -1026,56 +1043,137 @@ export function TicketDetailPage() {
                           closedAt={ticket.closed_at}
                         />
                       </div>
-                    </TabsContent>
+                    </motion.div>
+                  )}
 
-                    <TabsContent value="chat" className="m-0">
+                  {activeView === 'conversation' && (
+                    <motion.div
+                      key="conversation"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      className="space-y-6"
+                    >
+                      {/* Conversation Toggle */}
+                      {canViewInternalFeatures && (
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-lg font-semibold">Conversation</h3>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setConversationExpanded(!conversationExpanded)}
+                            >
+                              {conversationExpanded ? (
+                                <Minimize2 className="h-4 w-4 mr-2" />
+                              ) : (
+                                <Maximize2 className="h-4 w-4 mr-2" />
+                              )}
+                              {conversationExpanded ? 'Minimize' : 'Expand'}
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Public Chat */}
+                      <div className={conversationExpanded ? 'h-[80vh]' : 'h-96'}>
                       <ModernTicketChat key={`chat-${refreshKey}`} ticketId={ticket.id} />
-                    </TabsContent>
+                      </div>
 
+                      {/* Internal Comments (for agents/admins) */}
                     {canViewInternalFeatures && (
-                      <TabsContent value="comments" className="m-0">
+                        <div className="border-t pt-6">
+                          <h4 className="text-md font-semibold mb-3">Internal Comments</h4>
+                          <div className="h-64">
                         <InternalComments 
                           key={`comments-${refreshKey}`}
                           ticketId={ticket.id} 
                           userRole={userRole}
                           assignedUserId={ticket.assigned_to ?? null}
                         />
-                      </TabsContent>
-                    )}
+                          </div>
+                        </div>
+                      )}
+                    </motion.div>
+                  )}
 
-                    {canViewInternalFeatures && (
-                      <TabsContent value="tasks" className="m-0">
+                  {activeView === 'tasks' && canViewInternalFeatures && (
+                    <motion.div
+                      key="tasks"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      className="space-y-6"
+                    >
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-lg font-semibold">Task Management</h3>
+                        {canManageTodos() && (
+                          <Button size="sm" onClick={() => setShowTodoForm(true)}>
+                            <Plus className="h-4 w-4 mr-2" />
+                            Add Task
+                          </Button>
+                        )}
+                      </div>
                         <TaskManagement 
                           key={`tasks-${refreshKey}`}
                           ticketId={ticket.id} 
                           canManageTasks={canManageTodos()}
                         />
-                      </TabsContent>
-                    )}
+                    </motion.div>
+                  )}
 
-                    <TabsContent value="activity" className="m-0">
+                  {activeView === 'activity' && (
+                    <motion.div
+                      key="activity"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      className="space-y-6"
+                    >
+                      <h3 className="text-lg font-semibold">Activity Log</h3>
                       <ActivityLog key={`activity-${refreshKey}`} ticketId={ticket.id} />
-                    </TabsContent>
-
-                    <TabsContent value="feedback" className="m-0">
-                      <TicketFeedback 
-                        key={`feedback-${refreshKey}`}
-                        ticketId={ticket.id} 
-                        status={ticket.status}
-                        agentName={assigneeProfile?.full_name ?? ''}
-                      />
-                    </TabsContent>
-                  </div>
-                </Tabs>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </CardContent>
             </Card>
+          </motion.div>
+
+          {/* Right Column - Properties Sidebar */}
+          <AnimatePresence>
+            {rightPanelExpanded && (
+              <motion.div 
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                className="col-span-12 lg:col-span-4 space-y-6"
+              >
+                {/* Sidebar Header */}
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg font-semibold">Properties</h2>
+                  <div className="flex items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setRightPanelPinned(!rightPanelPinned)}
+                    >
+                      {rightPanelPinned ? <PinOff className="h-4 w-4" /> : <Pin className="h-4 w-4" />}
+                    </Button>
+                    {!isMobile && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setRightPanelExpanded(false)}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
           </div>
 
-          {/* Right Column - Sidebar */}
-          <div className="col-span-12 xl:col-span-4 space-y-6">
             {/* Tags */}
             <Card>
-              <CardHeader>
+                  <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium flex items-center gap-2">
                   <Tag className="h-4 w-4" />
                   Tags
@@ -1084,7 +1182,7 @@ export function TicketDetailPage() {
               <CardContent>
                 <TicketTags
                   ticketId={ticket.id}
-                  selectedTags={[]} // Tags not available in TicketWithDetails interface
+                      selectedTags={[]}
                   onTagsChange={() => setRefreshKey(prev => prev + 1)}
                   mode={canEditTicket() ? 'edit' : 'display'}
                 />
@@ -1093,7 +1191,7 @@ export function TicketDetailPage() {
 
             {/* Knowledge Base */}
             <Card>
-              <CardHeader>
+                  <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium flex items-center gap-2">
                   <BookOpen className="h-4 w-4" />
                   Related Articles
@@ -1103,10 +1201,49 @@ export function TicketDetailPage() {
                 <KnowledgeBase embedded ticketCategory={ticket.category_id ?? undefined} />
               </CardContent>
             </Card>
-          </div>
+
+                {/* Feedback */}
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm font-medium flex items-center gap-2">
+                      <Star className="h-4 w-4" />
+                      Customer Feedback
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <TicketFeedback 
+                      key={`feedback-${refreshKey}`}
+                      ticketId={ticket.id} 
+                      status={ticket.status}
+                      agentName={assigneeProfile?.full_name ?? ''}
+                    />
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Sidebar Toggle Button (when collapsed) */}
+          {!rightPanelExpanded && !isMobile && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="fixed right-4 top-1/2 -translate-y-1/2 z-40"
+            >
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setRightPanelExpanded(true)}
+                className="bg-white dark:bg-zinc-900 shadow-lg"
+              >
+                <ChevronDown className="h-4 w-4 -rotate-90" />
+              </Button>
+            </motion.div>
+          )}
         </div>
       </div>
 
+      {/* Dialogs remain the same... */}
       {/* Comment Dialog */}
       <Dialog open={showCommentForm} onOpenChange={setShowCommentForm}>
         <DialogContent className="max-w-2xl">

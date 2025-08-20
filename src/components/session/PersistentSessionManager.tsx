@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { usePersistentSession } from '@/hooks/usePersistentSession';
 import { sessionPersistence } from '@/services/SessionPersistenceService';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface PersistentSessionManagerProps {
   children: React.ReactNode;
@@ -14,10 +15,14 @@ interface PersistentSessionManagerProps {
 export function PersistentSessionManager({ children }: PersistentSessionManagerProps) {
   const { user } = useAuth();
   const { isSessionPersistent } = usePersistentSession();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (user) {
       console.log('🔐 User authenticated - initializing persistent session');
+      
+      // Set the query client for data refetching
+      sessionPersistence.setQueryClient(queryClient);
       
       // Start the session persistence service
       sessionPersistence.start();
@@ -28,7 +33,7 @@ export function PersistentSessionManager({ children }: PersistentSessionManagerP
       console.log('👤 No user - session persistence not needed');
       // Service will stop automatically when user logs out
     }
-  }, [user]);
+  }, [user, queryClient]);
 
   // Debug info in development
   useEffect(() => {

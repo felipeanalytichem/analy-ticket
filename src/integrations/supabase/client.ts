@@ -22,11 +22,11 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
   },
   realtime: {
     params: {
-      eventsPerSecond: 10,
+      eventsPerSecond: 5, // Reduced to prevent connection issues
     },
-    timeout: 60000, // 60 seconds
-    heartbeatIntervalMs: 30000, // 30 seconds  
-    reconnectAfterMs: 5000, // 5 seconds
+    timeout: 30000, // 30 seconds - reduced timeout
+    heartbeatIntervalMs: 15000, // 15 seconds - reduced heartbeat
+    reconnectAfterMs: 3000, // 3 seconds - faster reconnection
   },
   global: {
     headers: {

@@ -29,13 +29,36 @@ export function ConnectionMonitor() {
     if (!user) return false;
     
     try {
-      const { error } = await supabase
-        .from('users')
+      // First check auth status
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !sessionData.session) {
+        console.warn('No valid session for database check:', sessionError);
+        return false;
+      }
+
+      // Test database connection with a simple query
+      const { data, error } = await supabase
+        .from('tickets_new')
         .select('id')
-        .eq('id', user.id)
-        .single();
+        .limit(1);
       
-      return !error;
+      if (error) {
+        console.warn('Database connection check failed:', error);
+        // Try alternative table if tickets fails
+        const { error: altError } = await supabase
+          .from('users')
+          .select('id')
+          .eq('id', user.id)
+          .limit(1);
+        
+        if (altError) {
+          console.warn('Alternative database check also failed:', altError);
+          return false;
+        }
+      }
+      
+      console.log('✅ Database connection check successful');
+      return true;
     } catch (error) {
       console.warn('Supabase connection check failed:', error);
       return false;
@@ -140,7 +163,7 @@ export function ConnectionMonitor() {
     <Card className="fixed bottom-4 left-4 z-50 w-80 shadow-lg border">
       <CardContent className="p-4 space-y-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2">
             {isHealthy ? (
               <Wifi className="h-4 w-4 text-green-500" />
             ) : (
@@ -177,7 +200,7 @@ export function ConnectionMonitor() {
               <span className="text-sm text-muted-foreground">Last Check</span>
               <span className="text-xs text-muted-foreground">
                 {connectionStatus.lastCheck.toLocaleTimeString()}
-              </span>
+          </span>
             </div>
           )}
         </div>
@@ -193,34 +216,34 @@ export function ConnectionMonitor() {
                 }
               </div>
             </div>
-            
-            <div className="flex gap-2">
-              <Button 
-                size="sm" 
-                variant="outline" 
-                onClick={handleReconnect}
+        
+        <div className="flex gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={handleReconnect}
                 disabled={connectionStatus.isChecking}
                 className="flex-1"
               >
                 {connectionStatus.isChecking ? (
                   <RefreshCw className="h-3 w-3 animate-spin mr-1" />
                 ) : (
-                  <RefreshCw className="h-3 w-3 mr-1" />
-                )}
+                <RefreshCw className="h-3 w-3 mr-1" />
+            )}
                 Reconnect
-              </Button>
-              
-              <Button 
-                size="sm" 
-                variant="outline" 
+          </Button>
+          
+          <Button
+            size="sm"
+            variant="outline"
                 onClick={handleRefreshPage}
                 className="flex-1"
-              >
+          >
                 <RotateCcw className="h-3 w-3 mr-1" />
                 Refresh Page
-              </Button>
-            </div>
-          </div>
+          </Button>
+        </div>
+      </div>
         )}
       </CardContent>
     </Card>

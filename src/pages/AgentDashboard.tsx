@@ -23,13 +23,15 @@ import {
   Calendar,
   BarChart3
 } from "lucide-react";
-import { DatabaseService, TicketWithDetails } from "@/lib/database";
+import { TicketWithDetails } from "@/lib/database";
 import { useAuth } from "@/contexts/AuthContext";
 // AgentResponseInterface removed - using navigation to UnifiedTicketDetail instead
 import { AgentNotifications } from "@/components/tickets/AgentNotifications";
 import { SLAMonitor } from "@/components/tickets/SLAMonitor";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
+import { useAgentDashboard } from "@/hooks/useAgentDashboard";
+import { useLoadingTimeout } from "@/hooks/useLoadingTimeout";
 
 interface AgentStats {
   totalAssigned: number;
@@ -43,17 +45,7 @@ interface AgentStats {
 export const AgentDashboard = () => {
   const navigate = useNavigate();
   // selectedTicket state removed - using navigation to UnifiedTicketDetail instead
-  const [tickets, setTickets] = useState<TicketWithDetails[]>([]);
   const [filteredTickets, setFilteredTickets] = useState<TicketWithDetails[]>([]);
-  const [stats, setStats] = useState<AgentStats>({
-    totalAssigned: 0,
-    openTickets: 0,
-    inProgressTickets: 0,
-    resolvedToday: 0,
-    avgResponseTime: 0,
-    slaCompliance: 0
-  });
-  const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("assigned");
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -62,72 +54,33 @@ export const AgentDashboard = () => {
   const { userProfile } = useAuth();
   const { toast } = useToast();
   const { t } = useTranslation();
+  
+  // Use React Query hook for data management
+  const { 
+    tickets, 
+    stats, 
+    isLoading, 
+    isError, 
+    error, 
+    refetch, 
+    handleStuckLoading,
+    isRefetching 
+  } = useAgentDashboard();
 
-  const loadAgentData = useCallback(async () => {
-    if (!userProfile?.id) return;
-    
-    setIsLoading(true);
-    try {
-      // Carregar todos os tickets relevantes de uma vez para evitar duplicatas
-      const allTickets = await DatabaseService.getTickets({
-        userRole: userProfile.role,
-        showAll: true
-      });
+  // Setup loading timeout to handle stuck states
+  useLoadingTimeout(isLoading, 20000); // 20 second timeout
 
-      // Filtrar tickets relevantes para o agente
-      const relevantTickets = allTickets.filter(ticket => {
-        // Incluir tickets atribuídos ao agente
-        if (ticket.assigned_to === userProfile.id) return true;
-        
-        // Incluir tickets não atribuídos (para que o agente possa assumir)
-        if (!ticket.assigned_to) return true;
-        
-        return false;
-      });
-
-      // Remover duplicatas baseado no ID (caso ainda existam)
-      const uniqueTickets = relevantTickets.filter((ticket, index, self) => 
-        index === self.findIndex(t => t.id === ticket.id)
-      );
-
-      setTickets(uniqueTickets);
-
-      // Calcular estatísticas baseadas nos tickets atribuídos
-      const assignedTickets = uniqueTickets.filter(t => t.assigned_to === userProfile.id);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      const stats: AgentStats = {
-        totalAssigned: assignedTickets.length,
-        openTickets: assignedTickets.filter(t => t.status === 'open').length,
-        inProgressTickets: assignedTickets.filter(t => t.status === 'in_progress').length,
-        resolvedToday: assignedTickets.filter(t => 
-          t.status === 'resolved' && 
-          t.resolved_at && 
-          new Date(t.resolved_at) >= today
-        ).length,
-        avgResponseTime: 2.5, // Mock - seria calculado baseado em dados reais
-        slaCompliance: 95 // Mock - seria calculado baseado em SLA real
-      };
-
-      setStats(stats);
-    } catch (error) {
-      // Error logging removed for production
+  // Show error toast when React Query encounters an error
+  useEffect(() => {
+    if (isError && error) {
+      console.error('❌ Agent dashboard error:', error);
       toast({
         title: t('common.error'),
         description: t('agentDashboard.loadError'),
         variant: "destructive",
       });
-    } finally {
-      setIsLoading(false);
     }
-  }, [userProfile?.id, userProfile?.role, toast, t]);
-
-  useEffect(() => {
-    if (userProfile?.id && (userProfile.role === 'agent' || userProfile.role === 'admin')) {
-      loadAgentData();
-    }
-  }, [userProfile, loadAgentData]);
+  }, [isError, error, toast, t]);
 
   const filterTickets = useCallback(() => {
     let filtered = tickets;
@@ -290,11 +243,38 @@ export const AgentDashboard = () => {
         
         <div className="flex items-center gap-2 md:gap-4 w-full sm:w-auto">
           <AgentNotifications onTicketSelect={handleTicketSelect} />
-          <Button onClick={loadAgentData} variant="outline" size="sm" className="flex-1 sm:flex-none">
-            <RefreshCw className="h-4 w-4 mr-2" />
-            <span className="hidden sm:inline">{t('common.refresh')}</span>
-            <span className="sm:hidden">{t('common.refresh')}</span>
+          <Button 
+            onClick={() => {
+              console.log('🔄 Refresh triggered...');
+              refetch();
+            }} 
+            variant="outline" 
+            size="sm" 
+            className="flex-1 sm:flex-none"
+            disabled={isLoading || isRefetching}
+          >
+            <RefreshCw className={`h-4 w-4 mr-2 ${(isLoading || isRefetching) ? 'animate-spin' : ''}`} />
+            <span className="hidden sm:inline">
+              {(isLoading || isRefetching) ? 'Loading...' : t('common.refresh')}
+            </span>
+            <span className="sm:hidden">
+              {(isLoading || isRefetching) ? 'Loading...' : t('common.refresh')}
+            </span>
           </Button>
+          
+          {/* Emergency Force Refresh Button - only show if loading for too long */}
+          {(isLoading && !isRefetching) && (
+            <Button 
+              onClick={() => {
+                console.log('🚨 Emergency force refresh triggered...');
+                handleStuckLoading();
+              }} 
+              variant="destructive" 
+              size="sm"
+            >
+              Force Refresh
+            </Button>
+          )}
         </div>
       </div>
 

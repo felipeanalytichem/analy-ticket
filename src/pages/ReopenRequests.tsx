@@ -22,6 +22,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { useTranslation } from "react-i18next";
+import { useReopenRequests } from '@/hooks/useReopenRequests';
+import { useLoadingTimeout } from '@/hooks/useLoadingTimeout';
 
 interface ReopenRequest {
   id: string;
@@ -59,9 +61,19 @@ const formatDate = (dateString: string, language: string) => {
 };
 
 export const ReopenRequests = () => {
-  const [requests, setRequests] = useState<ReopenRequest[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // Use React Query for reopen requests data
+  const {
+    requests,
+    isLoading: loading,
+    isError,
+    error: queryError,
+    refetch,
+    handleStuckLoading
+  } = useReopenRequests();
+
+  // Setup loading timeout protection
+  useLoadingTimeout(loading, 30000); // 30 second timeout
+
   const [selectedRequest, setSelectedRequest] = useState<ReopenRequest | null>(null);
   const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
   const [reviewAction, setReviewAction] = useState<'approve' | 'reject' | null>(null);
@@ -72,29 +84,17 @@ export const ReopenRequests = () => {
   const { toast } = useToast();
   const { t, i18n } = useTranslation();
 
+  // Show error toast for React Query errors
   useEffect(() => {
-    loadReopenRequests();
-  }, []);
-
-  const loadReopenRequests = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      const data = await ReopenService.getReopenRequests();
-      setRequests(data);
-    } catch (err) {
-      console.error('Error loading reopen requests:', err);
-      setError(t('reopen.loadError'));
+    if (isError && queryError) {
+      console.error('❌ Reopen requests loading error:', queryError);
       toast({
         title: t('common.error'),
         description: t('reopen.loadError'),
         variant: "destructive",
       });
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [isError, queryError, toast, t]);
 
   const handleReviewRequest = (request: ReopenRequest, action: 'approve' | 'reject') => {
     setSelectedRequest(request);
@@ -159,7 +159,7 @@ export const ReopenRequests = () => {
       setSelectedRequest(null);
       setReviewAction(null);
       setReviewComment("");
-      loadReopenRequests();
+      refetch();
 
     } catch (err) {
       console.error('Error reviewing request:', err);
@@ -235,12 +235,14 @@ export const ReopenRequests = () => {
     );
   }
 
-  if (error) {
+  if (isError && queryError) {
     return (
       <div className="container mx-auto px-4 py-8 max-w-5xl">
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription>
+            {queryError instanceof Error ? queryError.message : String(queryError)}
+          </AlertDescription>
         </Alert>
       </div>
     );
@@ -257,11 +259,12 @@ export const ReopenRequests = () => {
         <Button
           variant="outline"
           size="sm"
-          onClick={loadReopenRequests}
+          onClick={refetch}
+          disabled={loading}
           className="flex items-center gap-2"
         >
-          <RotateCcw className="h-4 w-4" />
-          {t('common.refresh')}
+          <RotateCcw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+          {loading ? t('common.loading', 'Loading...') : t('common.refresh')}
         </Button>
       </div>
 
@@ -462,8 +465,8 @@ export const ReopenRequests = () => {
             <Button
               onClick={submitReview}
               disabled={isProcessing}
-                              variant={reviewAction === 'approve' ? 'default' : 'destructive'}
-                className={reviewAction === 'approve' ? 'bg-green-600 hover:bg-green-700 text-white' : ''}
+              variant={reviewAction === 'approve' ? 'default' : 'destructive'}
+              className={reviewAction === 'approve' ? 'bg-green-600 hover:bg-green-700 text-white' : ''}
             >
               {isProcessing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {reviewAction === 'approve' ? t('reopen.approve') : t('reopen.reject')}

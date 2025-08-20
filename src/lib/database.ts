@@ -4126,7 +4126,18 @@ export class DatabaseService {
   // Get ticket activity logs
   static async getTicketActivityLogs(ticketId: string): Promise<TicketActivityLog[]> {
     try {
-      const { data, error } = await db
+      // Check if table exists first
+      const { error: tableCheckError } = await supabase
+        .from('ticket_activity_logs')
+        .select('id')
+        .limit(1);
+
+      if (tableCheckError) {
+        console.warn('⚠️ ticket_activity_logs table not accessible:', tableCheckError.message);
+        return [];
+      }
+
+      const { data, error } = await supabase
         .from('ticket_activity_logs')
         .select(`
           *,
@@ -4361,14 +4372,20 @@ export class DatabaseService {
   // Helper function to check if chat tables exist
   private static async checkChatTablesExist(): Promise<boolean> {
     try {
-      // Check if ticket_comments_new exists (which we know it does)
-      const { error } = await db
+      // Check if ticket_comments_new exists
+      const { error } = await supabase
         .from('ticket_comments_new')
         .select('id')
         .limit(1);
 
-      return !error;
+      if (error) {
+        console.warn('⚠️ ticket_comments_new table not accessible:', error.message);
+        return false;
+      }
+
+      return true;
     } catch (error) {
+      console.warn('⚠️ Error checking ticket_comments_new table:', error);
       return false;
     }
   }

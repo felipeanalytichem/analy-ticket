@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -11,8 +11,10 @@ import { useTicketCount } from "@/contexts/TicketCountContext";
 import { TicketDialog } from "@/components/tickets/dialogs/TicketDialog";
 import { TicketList } from "@/components/tickets/TicketList";
 import { AdvancedFilters } from "@/components/tickets/AdvancedFilters";
-import { DatabaseService, TicketWithDetails } from "@/lib/database";
+import { TicketWithDetails } from "@/lib/database";
 import { useToast } from "@/hooks/use-toast";
+import { useTickets } from "@/hooks/useTickets";
+import { useLoadingTimeout } from "@/hooks/useLoadingTimeout";
 import { cn } from "@/lib/utils";
 
 const TicketsPage = () => {
@@ -25,16 +27,7 @@ const TicketsPage = () => {
   const [filters, setFilters] = useState({});
   const [ticketListKey, setTicketListKey] = useState(0);
   const [showFilters, setShowFilters] = useState(false);
-  const [tickets, setTickets] = useState<TicketWithDetails[]>([]);
-  const [statistics, setStatistics] = useState({
-    total: 0,
-    todayCount: 0,
-    weekCount: 0,
-    avgResolutionTime: 0
-  });
-  const [isLoadingStats, setIsLoadingStats] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [isRefreshing, setIsRefreshing] = useState(false);
+
   const { toast } = useToast();
 
   const getStatusFilter = () => {
@@ -48,259 +41,149 @@ const TicketsPage = () => {
     }
   };
 
-  // Load tickets and calculate statistics with enhanced filtering logic
-  useEffect(() => {
-    const loadTicketsAndStats = async () => {
-      if (!userProfile) {
-        setError(t('tickets.pleaseLoginToViewTickets', 'Please log in to view tickets'));
-        setIsLoadingStats(false);
-        return;
-      }
+  // Use React Query for tickets data
+  const {
+    tickets,
+    isLoading: isLoadingStats,
+    isError,
+    error,
+    refetch,
+    isRefetching,
+    handleStuckLoading
+  } = useTickets({
+    statusFilter: getStatusFilter(),
+    showAll: userRole !== "user",
+    includeClosedTickets: userRole === "user"
+  });
 
-      setIsLoadingStats(true);
-      setError(null);
+  // Setup loading timeout protection
+  useLoadingTimeout(isLoadingStats, 25000); // 25 second timeout
+
+  // Calculate statistics from React Query tickets data
+  // Calculate statistics from tickets data - memoized to prevent infinite loops
+  const statistics = useMemo(() => {
+    if (!tickets || tickets.length === 0) {
+      return { total: 0, todayCount: 0, weekCount: 0, avgResolutionTime: 0 };
+    }
+
+    console.log('🔍 Calculating statistics for', tickets.length, 'tickets');
+    
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0];
+    
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    
+    // Filter tickets based on current status
+    let relevantTickets = tickets;
+    switch (status) {
+      case "open":
+        relevantTickets = tickets.filter(t => t.status === 'open');
+        break;
+      case "in-progress":
+        relevantTickets = tickets.filter(t => t.status === 'in_progress');
+        break;
+      case "resolved":
+        relevantTickets = tickets.filter(t => t.status === 'resolved');
+        break;
+      case "closed":
+        relevantTickets = tickets.filter(t => t.status === 'closed');
+        break;
+      case "all":
+        relevantTickets = tickets;
+        break;
+      default:
+        relevantTickets = tickets.filter(t => t.user_id === userProfile?.id);
+    }
+    
+    const todayCount = relevantTickets.filter(t => {
+      if (status === "resolved") {
+        return t.resolved_at && t.resolved_at.startsWith(todayStr);
+      } else if (status === "closed") {
+        return t.closed_at && t.closed_at.startsWith(todayStr);
+      } else {
+        return t.created_at && t.created_at.startsWith(todayStr);
+      }
+    }).length;
+    
+    const weekCount = relevantTickets.filter(t => {
+      if (status === "resolved") {
+        return t.resolved_at && new Date(t.resolved_at) >= weekAgo;
+      } else if (status === "closed") {
+        return t.closed_at && new Date(t.closed_at) >= weekAgo;
+      } else {
+        return t.created_at && new Date(t.created_at) >= weekAgo;
+      }
+    }).length;
+    
+    let avgResolutionTime = 0;
+    if (status === "resolved" || status === "closed") {
+      const resolvedTickets = relevantTickets.filter(t => 
+        t.created_at && t.resolved_at
+      );
       
-      try {
-        // Enhanced filtering options based on user role and requirements
-        const options = {
-          userId: userProfile.id,
-          userRole: userRole,
-          statusFilter: getStatusFilter(),
-          // For regular users, enforce strict filtering
-          showAll: userRole !== "user",
-          // Include closed tickets with 7-day visibility window for users
-          includeClosedTickets: userRole === "user" ? true : undefined,
-        };
-        
-        console.log('🔍 Enhanced filtering options:', {
-          userId: options.userId,
-          userRole: options.userRole,
-          statusFilter: options.statusFilter,
-          showAll: options.showAll,
-          includeClosedTickets: options.includeClosedTickets
-        });
-        
-        const loadedTickets = await DatabaseService.getTickets(options);
-        
-        if (!Array.isArray(loadedTickets)) {
-          throw new Error(t('tickets.error', 'Invalid ticket data received from server'));
-        }
-        
-        setTickets(loadedTickets);
-        
-        console.log('🔍 Statistics Debug:', {
-          totalLoadedTickets: loadedTickets.length,
-          status,
-          userRole,
-          options
-        });
-        
-        // Calculate statistics from loaded tickets
-        const today = new Date();
-        const todayStr = today.toISOString().split('T')[0];
-        
-        const weekAgo = new Date();
-        weekAgo.setDate(weekAgo.getDate() - 7);
-        
-        // Filter tickets based on current status
-        let relevantTickets = loadedTickets;
-        switch (status) {
-          case "open":
-            relevantTickets = loadedTickets.filter(t => t.status === 'open');
-            break;
-          case "in-progress":
-            relevantTickets = loadedTickets.filter(t => t.status === 'in_progress');
-            break;
-          case "resolved":
-            relevantTickets = loadedTickets.filter(t => t.status === 'resolved');
-            break;
-          case "closed":
-            // For closed tickets, apply additional time-based filtering for users
-            relevantTickets = loadedTickets.filter(t => {
-              if (t.status !== 'closed') return false;
-              
-              // For users, check if closed ticket is within 7-day visibility window
-              if (userRole === 'user') {
-                return DatabaseService.isClosedTicketVisible(t.closed_at);
-              }
-              
-              return true;
-            });
-            break;
-          default:
-            relevantTickets = loadedTickets;
-        }
-        
-        const total = relevantTickets.length;
-        
-        const todayCount = relevantTickets.filter(t => {
-          if (status === "resolved") {
-            return t.resolved_at && t.resolved_at.startsWith(todayStr);
-          } else if (status === "closed") {
-            return t.closed_at && t.closed_at.startsWith(todayStr);
-          } else {
-            return t.created_at && t.created_at.startsWith(todayStr);
-          }
-        }).length;
-        
-        const weekCount = relevantTickets.filter(t => {
-          if (status === "resolved") {
-            return t.resolved_at && new Date(t.resolved_at) >= weekAgo;
-          } else if (status === "closed") {
-            return t.closed_at && new Date(t.closed_at) >= weekAgo;
-          } else {
-            return t.created_at && new Date(t.created_at) >= weekAgo;
-          }
-        }).length;
-        
-        // Calculate average resolution time for resolved/closed tickets
-        let avgResolutionTime = 0;
-        if (status === "resolved" || status === "closed") {
-          const resolvedTickets = relevantTickets.filter(t => 
-            t.created_at && t.resolved_at
-          );
-          
-          if (resolvedTickets.length > 0) {
-            const totalHours = resolvedTickets.reduce((sum, ticket) => {
-              const created = new Date(ticket.created_at);
-              const resolved = new Date(ticket.resolved_at!);
-              const hours = (resolved.getTime() - created.getTime()) / (1000 * 60 * 60);
-              return sum + hours;
-            }, 0);
-            avgResolutionTime = totalHours / resolvedTickets.length;
-          }
-        }
-        
-        setStatistics({
-          total,
-          todayCount,
-          weekCount,
-          avgResolutionTime
-        });
-        
-      } catch (error: unknown) {
-        const errorMessage = error instanceof Error ? error.message : t('tickets.errorLoadingTickets', 'Failed to load tickets');
-        console.error('Error loading tickets and statistics:', error);
-        
-        // Handle specific error types
-        if (error instanceof Error) {
-          if (error.name === 'UnauthorizedAccess') {
-            setError(t('tickets.accessDeniedMessage', 'Access denied: You can only view your own tickets'));
-            toast({
-              title: t('common.accessDenied', 'Access Denied'),
-              description: t('tickets.canOnlyViewOwnTickets', 'You can only view tickets that belong to you'),
-              variant: "destructive",
-            });
-          } else if (error.name === 'NotFound') {
-            setError(t('tickets.noTicketsMessage', 'No tickets are available at the moment'));
-          } else {
-            setError(errorMessage);
-            toast({
-              title: t('tickets.errorLoadingTickets', 'Error loading tickets'),
-              description: errorMessage,
-              variant: "destructive",
-            });
-          }
-        } else {
-          setError(t('common.unexpectedError', 'An unexpected error occurred. Please try again.'));
-          toast({
-            title: t('tickets.errorLoadingTickets', 'Error loading tickets'),
-            description: t('common.unexpectedError', 'An unexpected error occurred. Please try again.'),
-            variant: "destructive",
-          });
-        }
-        
-        // Reset tickets and statistics on error
-        setTickets([]);
-        setStatistics({
-          total: 0,
-          todayCount: 0,
-          weekCount: 0,
-          avgResolutionTime: 0
-        });
-        
-      } finally {
-        setIsLoadingStats(false);
+      if (resolvedTickets.length > 0) {
+        const totalHours = resolvedTickets.reduce((sum, ticket) => {
+          const created = new Date(ticket.created_at);
+          const resolved = new Date(ticket.resolved_at!);
+          const hours = (resolved.getTime() - created.getTime()) / (1000 * 60 * 60);
+          return sum + hours;
+        }, 0);
+        avgResolutionTime = totalHours / resolvedTickets.length;
       }
+    }
+    
+    return {
+      total: relevantTickets.length,
+      todayCount,
+      weekCount,
+      avgResolutionTime
     };
+  }, [tickets, status, userProfile?.id]);
 
-    loadTicketsAndStats();
-  }, [status, userProfile, userRole, toast]);
+  // Show error toast for React Query errors
+  useEffect(() => {
+    if (isError && error) {
+      console.error('❌ Tickets loading error:', error);
+      toast({
+        title: t('tickets.errorLoadingTickets', 'Error loading tickets'),
+        description: error?.message || t('tickets.genericError', 'An error occurred while loading tickets'),
+        variant: "destructive",
+      });
+    }
+  }, [isError, error, toast, t]);
 
   const handleFiltersChange = (newFilters: Record<string, unknown>) => {
     setFilters(newFilters);
   };
 
   const handleTicketCreated = () => {
-    // Force re-render of TicketList components
     setTicketListKey(prev => prev + 1);
-    // Trigger sidebar count refresh
     triggerRefresh();
   };
 
-  // Refresh function for manual ticket reload
-  const handleRefresh = async () => {
-    if (!userProfile || isRefreshing) return;
-
-    setIsRefreshing(true);
-    setError(null);
-
-    try {
-      const options = {
-        userId: userProfile.id,
-        userRole: userRole,
-        statusFilter: getStatusFilter(),
-        showAll: userRole !== "user",
-        includeClosedTickets: userRole === "user" ? true : undefined,
-      };
-
-      const loadedTickets = await DatabaseService.getTickets(options);
-      
-      if (!Array.isArray(loadedTickets)) {
-        throw new Error(t('tickets.error', 'Invalid ticket data received from server'));
-      }
-
-      setTickets(loadedTickets);
-      setTicketListKey(prev => prev + 1);
-      triggerRefresh();
-
-      toast({
-        title: t('tickets.ticketsRefreshedSuccessfully', 'Tickets refreshed successfully'),
-        description: t('tickets.ticketsRefreshedSuccessfully', 'Your ticket list has been updated successfully'),
-      });
-
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : t('tickets.errorRefreshingTickets', 'Failed to refresh tickets');
-      console.error('Error refreshing tickets:', error);
-      
-      setError(errorMessage);
-      toast({
-        title: t('tickets.errorRefreshingTickets', 'Error refreshing tickets'),
-        description: errorMessage,
-        variant: "destructive",
-      });
-    } finally {
-      setIsRefreshing(false);
-    }
+  const handleRefresh = () => {
+    console.log('🔄 Refreshing tickets...');
+    refetch();
   };
 
   const getStatusTheme = () => {
     switch (status) {
       case "open":
         return {
-          gradient: "bg-gradient-to-r from-orange-500 to-red-500",
-          bgGradient: "bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20",
-          borderColor: "border-orange-200 dark:border-orange-800",
-          textColor: "text-orange-700 dark:text-orange-300",
-          icon: "🔥",
+          gradient: "bg-gradient-to-r from-blue-500 to-cyan-500",
+          bgGradient: "bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20",
+          borderColor: "border-blue-200 dark:border-blue-800",
+          textColor: "text-blue-700 dark:text-blue-300",
+          icon: "🆕",
           name: t('navigation.openTickets', 'Open Tickets')
         };
       case "in-progress":
         return {
-          gradient: "bg-gradient-to-r from-blue-500 to-indigo-500",
-          bgGradient: "bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20",
-          borderColor: "border-blue-200 dark:border-blue-800",
-          textColor: "text-blue-700 dark:text-blue-300",
+          gradient: "bg-gradient-to-r from-amber-500 to-orange-500",
+          bgGradient: "bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20",
+          borderColor: "border-amber-200 dark:border-amber-800",
+          textColor: "text-amber-700 dark:text-amber-300",
           icon: "⚡",
           name: t('navigation.inProgressTickets', 'In Progress')
         };
@@ -353,7 +236,6 @@ const TicketsPage = () => {
       statusFilter: getStatusFilter(),
       userRole: userRole,
       userId: userProfile?.id,
-      // Pass enhanced filtering options to TicketList
       useEnhancedFiltering: true,
       includeClosedTickets: userRole === "user" ? true : undefined,
     };
@@ -363,224 +245,193 @@ const TicketsPage = () => {
         return { 
           ...baseProps, 
           showAll: userRole !== "user",
-          assignedOnly: userRole === "agent" 
+        };
+      case "resolved":
+        return { 
+          ...baseProps,
+          showAll: userRole !== "user",
+        };
+      case "closed":
+        return { 
+          ...baseProps,
+          showAll: userRole !== "user",
         };
       case "all":
-        return {
+        return { 
           ...baseProps,
           showAll: userRole !== "user",
-          unassignedOnly: userRole !== "user"
-        };
-      case "open":
-      case "resolved":
-      case "closed":
-        return {
-          ...baseProps,
-          showAll: userRole !== "user",
-          assignedOnly: userRole === "agent"
         };
       default:
-        return { 
-          ...baseProps, 
-          showAll: userRole !== "user",
-          assignedOnly: userRole === "agent" 
-        };
+        return baseProps;
     }
   };
 
-  const showCreateButton = !status || ["open", "in-progress", "all"].includes(status);
   const theme = getStatusTheme();
 
-  const formatTime = (hours: number) => {
-    if (hours < 1) return `${Math.round(hours * 60)}m`;
-    if (hours < 24) return `${Math.round(hours)}h`;
-    return `${Math.round(hours / 24)}d`;
-  };
-
   return (
-    <div className="space-y-4 md:space-y-6 p-4 md:p-6">
-      {/* Enhanced Header with Gradient */}
-      <div className={cn("rounded-xl p-4 md:p-6 border", theme.bgGradient, theme.borderColor)}>
-        <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
-          <div className="space-y-2 flex-1">
-            <div className="flex items-center gap-2 md:gap-3">
-              <div className={cn("p-1.5 md:p-2 rounded-lg text-white", theme.gradient)}>
-                <span className="text-lg md:text-2xl">{theme.icon}</span>
+    <div className="container mx-auto p-6 space-y-6">
+      {/* Header */}
+      <Card className={cn("border-0 shadow-lg", theme.bgGradient, theme.borderColor)}>
+        <CardHeader className="pb-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className={cn("p-3 rounded-lg", theme.gradient)}>
+                <span className="text-2xl text-white">{theme.icon}</span>
               </div>
               <div>
-                <h1 className="text-xl md:text-3xl font-bold text-gray-900 dark:text-white">
+                <CardTitle className={cn("text-2xl", theme.textColor)}>
                   {getPageTitle()}
-                </h1>
-                <p className={cn("text-xs md:text-sm", theme.textColor)}>
-                  {status === "open" && t('tickets.openTicketsDescription', 'Tickets waiting for assignment and initial response')}
-                  {status === "in-progress" && t('tickets.inProgressDescription', 'Tickets currently being worked on by agents')}
-                  {status === "resolved" && t('tickets.resolvedDescription', 'Tickets marked as resolved, awaiting closure')}
-                  {status === "closed" && t('tickets.closedDescription', 'Completed tickets that have been closed')}
-                  {status === "all" && "All unassigned tickets requiring attention"}
-                  {!status && "Your personal tickets and requests"}
+                </CardTitle>
+                <p className="text-muted-foreground">
+                  {t('tickets.manageYourTicketsEfficiently', 'Manage your tickets efficiently')}
                 </p>
               </div>
             </div>
-          </div>
-          <div className="flex gap-2">
-            <Button
-              type="button"
-              onClick={handleRefresh}
-              disabled={isRefreshing || isLoadingStats}
-              variant="outline"
-              size="default"
-              className="shadow-lg hover:shadow-xl transition-all duration-200"
-            >
-              <RefreshCw className={cn("h-4 w-4 md:h-5 md:w-5", isRefreshing && "animate-spin")} />
-              <span className="hidden sm:inline ml-2">
-                {isRefreshing ? t('tickets.refreshing') : t('common.refresh')}
-              </span>
-            </Button>
-            {showCreateButton && (
+            <div className="flex items-center space-x-2">
               <Button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  console.log('🎫 Create Ticket button clicked in TicketsPage');
-                  console.log('🔍 Current isCreateDialogOpen state:', isCreateDialogOpen);
-                  setIsCreateDialogOpen(true);
-                  console.log('✅ setIsCreateDialogOpen(true) called');
-                  console.log('🎯 Dialog should now be open');
-                }}
-                className={cn("shadow-lg hover:shadow-xl transition-all duration-200 w-full sm:w-auto", theme.gradient)}
-                size="default"
+                variant="outline"
+                size="sm"
+                onClick={() => setShowFilters(!showFilters)}
+                className="flex items-center space-x-2"
               >
-                <Plus className="h-4 w-4 md:h-5 md:w-5 mr-2" />
-                <span className="hidden sm:inline">{t('tickets.newTicket')}</span>
-                <span className="sm:hidden">{t('tickets.newTicket')}</span>
+                {showFilters ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                <span>{t('tickets.filters', 'Filters')}</span>
               </Button>
-            )}
+              <Button
+                onClick={handleRefresh}
+                disabled={isLoadingStats || isRefetching}
+                variant="outline"
+                size="sm"
+              >
+                <RefreshCw className={cn("h-4 w-4 mr-2", (isLoadingStats || isRefetching) && "animate-spin")} />
+                {(isLoadingStats || isRefetching) ? t('common.loading', 'Loading...') : t('common.refresh', 'Refresh')}
+              </Button>
+              {/* Emergency force refresh for stuck loading */}
+              {(isLoadingStats && !isRefetching) && (
+                <Button 
+                  onClick={handleStuckLoading} 
+                  variant="destructive" 
+                  size="sm"
+                >
+                  Force Refresh
+                </Button>
+              )}
+              {userRole !== 'user' && (
+                <Button
+                  onClick={() => setIsCreateDialogOpen(true)}
+                  className="flex items-center space-x-2"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>{t('tickets.createNew', 'Create New')}</span>
+                </Button>
+              )}
+            </div>
           </div>
-        </div>
+        </CardHeader>
 
-        {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-          <Card className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm border-white/20 hover:bg-white/80 dark:hover:bg-gray-900/80 transition-all duration-200">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400 flex items-center gap-2">
-                <BarChart3 className="h-4 w-4" />
-                {t('common.totalTickets')} {theme.name}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">
+        {/* Statistics */}
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="bg-white/50 dark:bg-gray-900/50 rounded-lg p-4 text-center">
+              <div className="flex items-center justify-center mb-2">
+                <BarChart3 className={cn("h-5 w-5 mr-2", theme.textColor)} />
+                <span className="text-sm font-medium text-muted-foreground">
+                  {t('tickets.total', 'Total')}
+                </span>
+              </div>
+              <div className={cn("text-2xl font-bold", theme.textColor)}>
                 {isLoadingStats ? "..." : statistics.total}
               </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm border-white/20 hover:bg-white/80 dark:hover:bg-gray-900/80 transition-all duration-200">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400 flex items-center gap-2">
-                <Calendar className="h-4 w-4" />
-                {t('dashboard.createdToday', 'Created Today')}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">
+            </div>
+            
+            <div className="bg-white/50 dark:bg-gray-900/50 rounded-lg p-4 text-center">
+              <div className="flex items-center justify-center mb-2">
+                <Calendar className={cn("h-5 w-5 mr-2", theme.textColor)} />
+                <span className="text-sm font-medium text-muted-foreground">
+                  {t('tickets.today', 'Today')}
+                </span>
+              </div>
+              <div className={cn("text-2xl font-bold", theme.textColor)}>
                 {isLoadingStats ? "..." : statistics.todayCount}
               </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm border-white/20 hover:bg-white/80 dark:hover:bg-gray-900/80 transition-all duration-200">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400 flex items-center gap-2">
-                <TrendingUp className="h-4 w-4" />
-                {t('dashboard.thisWeek', 'This Week')}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">
+            </div>
+            
+            <div className="bg-white/50 dark:bg-gray-900/50 rounded-lg p-4 text-center">
+              <div className="flex items-center justify-center mb-2">
+                <TrendingUp className={cn("h-5 w-5 mr-2", theme.textColor)} />
+                <span className="text-sm font-medium text-muted-foreground">
+                  {t('tickets.thisWeek', 'This Week')}
+                </span>
+              </div>
+              <div className={cn("text-2xl font-bold", theme.textColor)}>
                 {isLoadingStats ? "..." : statistics.weekCount}
               </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white/60 dark:bg-gray-900/60 backdrop-blur-sm border-white/20 hover:bg-white/80 dark:hover:bg-gray-900/80 transition-all duration-200">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400 flex items-center gap-2">
-                <Clock className="h-4 w-4" />
-                {t('common.avgResolution')}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                {isLoadingStats ? "..." : formatTime(statistics.avgResolutionTime)}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-
-      {/* Collapsible Advanced Filters */}
-      <Card className="overflow-hidden">
-        <CardHeader 
-          className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors duration-200"
-          onClick={() => setShowFilters(!showFilters)}
-        >
-          <CardTitle className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className={cn("p-1.5 rounded-md text-white", theme.gradient)}>
-                <BarChart3 className="h-4 w-4" />
-              </div>
-              <span>{t('tickets.advancedFilters')}</span>
             </div>
-            <Badge variant="outline" className="flex items-center gap-1">
-              {showFilters ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
-              {showFilters ? t('common.hide', 'Hide') : t('common.show', 'Show')}
-            </Badge>
-          </CardTitle>
-        </CardHeader>
-        {showFilters && (
-          <CardContent className={cn("border-t", theme.bgGradient)}>
+            
+            <div className="bg-white/50 dark:bg-gray-900/50 rounded-lg p-4 text-center">
+              <div className="flex items-center justify-center mb-2">
+                <Clock className={cn("h-5 w-5 mr-2", theme.textColor)} />
+                <span className="text-sm font-medium text-muted-foreground">
+                  {t('tickets.avgResolution', 'Avg Resolution')}
+                </span>
+              </div>
+              <div className={cn("text-2xl font-bold", theme.textColor)}>
+                {isLoadingStats ? "..." : `${Math.round(statistics.avgResolutionTime)}h`}
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Filters */}
+      {showFilters && (
+        <Card>
+          <CardContent className="pt-6">
             <AdvancedFilters onFiltersChange={handleFiltersChange} />
           </CardContent>
-        )}
-      </Card>
-      
+        </Card>
+      )}
+
       {/* Error Display */}
-      {error && (
+      {isError && error && (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>{t('tickets.error')}</AlertTitle>
           <AlertDescription className="flex items-center justify-between">
-            <span>{error}</span>
+            <span>{error?.message || t('tickets.genericError', 'An error occurred while loading tickets')}</span>
             <Button
               variant="outline"
               size="sm"
               onClick={handleRefresh}
-              disabled={isRefreshing}
+              disabled={isLoadingStats || isRefetching}
               className="ml-4"
             >
-              <RefreshCw className={cn("h-3 w-3 mr-1", isRefreshing && "animate-spin")} />
-              {t('tickets.retry')}
+              <RefreshCw className={cn("h-4 w-4 mr-2", (isLoadingStats || isRefetching) && "animate-spin")} />
+              {t('common.retry', 'Retry')}
             </Button>
           </AlertDescription>
         </Alert>
       )}
 
-      {/* Enhanced Ticket List */}
-      <div className="space-y-4">
-        <TicketList key={`tickets-${status}-${ticketListKey}`} {...getTicketListProps()} />
-      </div>
+      {/* Ticket List */}
+      <Card>
+        <CardContent className="p-0">
+          <TicketList
+            key={ticketListKey}
+            {...getTicketListProps()}
+            filters={filters}
+          />
+        </CardContent>
+      </Card>
 
+      {/* Create Ticket Dialog */}
       <TicketDialog
         open={isCreateDialogOpen}
         onOpenChange={setIsCreateDialogOpen}
-        onTicketCreated={handleTicketCreated}
+        onSuccess={handleTicketCreated}
       />
-      
-      {/* Debug logging */}
-      {console.log('🔍 TicketsPage render - isCreateDialogOpen:', isCreateDialogOpen)}
     </div>
   );
 };
 
-export default TicketsPage; 
+export default TicketsPage;
